@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using Microsoft.Owin;
 using Owin;
 using TaskManager.Api.Models.DataModel;
+using System.Web.Http;
 
 [assembly: OwinStartup(typeof(TaskManager.Api.Startup))]
 
@@ -12,14 +13,15 @@ namespace TaskManager.Api
     {
         public void Configuration(IAppBuilder app)
         {
-            var cc = new TaskDbContext();
-            cc.Priorities.ToString();
             app.MapSignalR();
-            app.Run(context =>
-            {
-                context.Response.ContentType = "text/html; charset=utf-8";
-                return context.Response.WriteAsync("<h2>Привет мир!</h2>");
-            });
+            
+            // Configure Web API for self-host. 
+            HttpConfiguration config = new HttpConfiguration();
+
+            //  Enable attribute based routing
+            config.MapHttpAttributeRoutes();
+            config.Formatters.Remove(config.Formatters.XmlFormatter);
+            app.UseWebApi(config);
         }
     }
 }

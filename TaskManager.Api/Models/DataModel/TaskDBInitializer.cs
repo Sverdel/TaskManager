@@ -15,8 +15,12 @@ namespace TaskManager.Api.Models.DataModel
             context.Priorities.Add(new Priority { Id = 2, Name = "Low" });
 
             context.States.Add(new State { Id = 0, Name = "Created" });
-            context.States.Add(new State { Id = 0, Name = "Active" });
-            context.States.Add(new State { Id = 0, Name = "Closed" });
+            context.States.Add(new State { Id = 1, Name = "Active" });
+            context.States.Add(new State { Id = 2, Name = "Closed" });
+
+            context.Users.Add(new User { Id = 1, Name = "test user" });
+
+            
         }
     }
 }

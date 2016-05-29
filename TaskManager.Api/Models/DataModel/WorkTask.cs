@@ -13,9 +13,9 @@ namespace TaskManager.Api.Models.DataModel
         [Key]
         public long Id { get; set; }
 
-        //[Required]
-        //[StringLength(200)]
-        //public string Name { get; set; }
+        [Required]
+        [StringLength(200)]
+        public string Name { get; set; }
 
         [StringLength(4000)]
         public string Description { get; set; }
@@ -23,7 +23,8 @@ namespace TaskManager.Api.Models.DataModel
         [Required]
         public DateTime CreateDateTime { get; set; }
 
-        public DateTime ChangeDatetime { get; set; }
+        //[Required]
+        //public DateTime ChangeDatetime { get; set; }
 
         public int Version { get; set; }
 
@@ -31,6 +32,7 @@ namespace TaskManager.Api.Models.DataModel
 
         public double ActualTimeCost { get; set; }
 
+        [Index]
         public int UserId { get; set; }
 
         [ForeignKey("UserId")]
