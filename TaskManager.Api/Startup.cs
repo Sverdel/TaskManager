@@ -2,6 +2,7 @@
 using System.Threading.Tasks;
 using Microsoft.Owin;
 using Owin;
+using TaskManager.Api.Models.DataModel;
 
 [assembly: OwinStartup(typeof(TaskManager.Api.Startup))]
 
@@ -11,6 +12,8 @@ namespace TaskManager.Api
     {
         public void Configuration(IAppBuilder app)
         {
+            var cc = new TaskDbContext();
+            cc.Priorities.ToString();
             app.MapSignalR();
             app.Run(context =>
             {
