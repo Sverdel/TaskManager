@@ -2,18 +2,24 @@
     'use strict';
 
     angular
-        .module('app')
-        .controller('controller', controller);
+        .module('taskApp')
+        .controller('taskController', ['$scope', '$http',
+            function ($scope, $http) {
+                var baseAddress = "http://localhost:800/api/";
 
-    controller.$inject = ['$location']; 
+                function httpPost(action, params) {
+                    return $http.post(
+                        baseAddress.concat(action),
+                        params
+                    );
+                };
 
-    function controller($location) {
-        /* jshint validthis:true */
-        var vm = this;
-        vm.title = 'controller';
+                $scope.getAllTask = function () {
+                    return httpPost("users/1/tasks")
+                        .success(function (data) {
+                            $scope.taskList = JSON.parse(data);
+                        })
 
-        activate();
-
-        function activate() { }
-    }
+                }
+            }]);
 })();

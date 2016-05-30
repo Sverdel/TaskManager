@@ -1,13 +1,8 @@
 ﻿(function () {
     'use strict';
 
-    angular.module('app', [
+    angular.module('taskApp', [
         // Angular modules 
         'ngRoute'
-
-        // Custom modules 
-
-        // 3rd Party Modules
-        
     ]);
 })();
