@@ -9,6 +9,7 @@
     <script src="Scripts/angular.min.js"></script>
     <script src="Scripts/jquery-2.2.3.min.js"></script>
     <script src="Scripts/bootstrap.min.js"></script>
+    <script src="Scripts/angular-route.min.js"></script>
     <script src="app/app.js"></script>
     <script src="app/main.js"></script>
     <script src="app/controller.js"></script>
@@ -17,7 +18,7 @@
 <body>
     <div ng-app="taskApp">
         <div ng-controller="taskController">
-            <a onclick="getAllTask()">Test</a>
+            <div ng-click="getAllTask()">Test</div>
             <ul>
                 <li ng-repeat="task in tasks">{{ task.Name }}</li>
             </ul>
