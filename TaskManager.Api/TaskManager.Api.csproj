@@ -137,16 +137,19 @@
     <Content Include="Web.config" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Controllers\TaskManagerController.cs" />
+    <Compile Include="Controllers\ResourceController.cs" />
+    <Compile Include="Controllers\TaskController.cs" />
+    <Compile Include="Controllers\UsersController.cs" />
     <Compile Include="Models\DataModel\Priority.cs" />
     <Compile Include="Models\DataModel\State.cs" />
     <Compile Include="Models\DataModel\TaskDbContext.cs" />
     <Compile Include="Models\DataModel\TaskDBInitializer.cs" />
     <Compile Include="Models\DataModel\User.cs" />
     <Compile Include="Models\DataModel\WorkTask.cs" />
+    <Compile Include="Models\Dto\TaskDto.cs" />
+    <Compile Include="Models\Dto\UserDto.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Startup.cs" />
-    <Compile Include="WebApiConfig.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="packages.config" />

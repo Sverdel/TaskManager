@@ -21,7 +21,9 @@ namespace TaskManager.Api
             //  Enable attribute based routing
             config.MapHttpAttributeRoutes();
             config.Formatters.Remove(config.Formatters.XmlFormatter);
+            config.EnsureInitialized();
             app.UseWebApi(config);
+
         }
     }
 }

@@ -1,14 +1,12 @@
 ﻿
-1. Create dictionary controller 
-2. Create routing for task controller
-3. Make controllers async
+1. UserDto - is it really necessary?
+2. Add comments
 
-5.
 
 Required:
 Tests!
 
 Not sure
 1. Database project insteed of EF.
-2. Task change history - tfs like changes
+2. Task change history - tfs-like changes
  
