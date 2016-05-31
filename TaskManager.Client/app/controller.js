@@ -7,18 +7,35 @@
             function ($scope, $http) {
                 var baseAddress = "http://localhost:8000/api/";
 
-                function httpPost(action, params) {
-                    return $http.get(
-                        baseAddress.concat(action),
-                        params
-                    )
+                function httpSend(action, method, params) {
+                    return $http({
+                        url: baseAddress.concat(action),
+                        method: method,
+                        data: params
+                        })
                 };
 
-                $scope.getAllTask = function () {
-                    return $http.get(baseAddress.concat("users/1/tasks"))
-                        .success(function(data, status, headers, config) {
+                httpSend("users/1/tasks", "GET")
+                        .success(function (data, status, headers, config) {
                             $scope.taskList = data;
-                        })
+                        });
+                
+                $scope.getTask = function (id) {
+                    return httpSend("users/1/tasks/" + id, "GET")
+                        .success(function (data, status, headers, config) {
+                            $scope.currentTask = data;
+                        });
                 }
+
+                //fill dictionaties
+                httpSend("resources/states", "GET")
+                        .success(function (data, status, headers, config) {
+                            $scope.stateList = data;
+                        });
+
+                httpSend("resources/priorities", "GET")
+                        .success(function (data, status, headers, config) {
+                            $scope.priorityList = data;
+                        });
             }]);
 })();
