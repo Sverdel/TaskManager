@@ -5,6 +5,8 @@
         .module('taskApp')
         .controller('taskController', ['$scope', '$http',
             function ($scope, $http) {
+                $scope.listHeight = window.innerHeight;
+
                 var baseAddress = "http://localhost:8000/api/";
 
                 function httpSend(action, method, params) {

@@ -2,7 +2,7 @@
 <html>
 <head>
     <title></title>
-	<meta charset="utf-8" />
+    <meta charset="utf-8" />
 
     <link href="Content/bootstrap.min.css" rel="stylesheet" type="text/css">
 
@@ -18,21 +18,58 @@
 <body>
     <div ng-app="taskApp">
         <div ng-controller="taskController">
-            <div class="col-mod-4">
-                <ul>
-                    <li ng-repeat="task in taskList"><a ng-click="getTask(task.Id)">{{ task.Name }}</a></li>
-                </ul>
-            </div>
+            <nav class="navbar navbar-default">
+                <div class="container-fluid container">
+                    <div class="navbar-header navbar-brand">Task Manager</div>
+                    
+                    <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1" >
+                        <form class="navbar-form navbar-right" role="form" ng-show="userId == null">
+                            <div class="form-group">
+                                <input type="text" class="form-control" placeholder="Login">
+                            </div>
+                            <div class="form-group">
+                                <input type="password" class="form-control" placeholder="Password">
+                            </div>
+                            <button type="submit" class="btn btn-default">Login</button>
+                        </form>
 
-            <div class="col-mod-4">
-                <div class="form-group">
-                    <div>Name</div>
-                    <div>{{ currentTask.Name }}</div>
-                </div>
+                        <form class="navbar-form navbar-right" role="form" ng-show="userId != null">
+                            <p class="navbar-text">Hello, {{userName}} !</p>
+                            <button type="submit" class="btn btn-default">Login</button>
+                        </form>
+                    </div><!-- /.navbar-collapse -->
+                </div><!-- /.container-fluid -->
+            </nav>
+            
 
-                <div class="form-group">
-                    <div>Description</div>
-                    <div>{{ currentTask.Description }}</div>
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-3"> 
+                        <div class="panel panel-default">
+                            <div class="panel-heading">
+                                <h3 class="panel-title">Work items</h3>
+                            </div>
+                            <div class="panel-body" ng-style="{ 'max-height' : 0.8 * listHeight + 'px', 'overflow-y' : 'auto' }">
+                                <ul>
+                                    <li ng-repeat="task in taskList"><a ng-click="getTask(task.Id)">{{ task.Name }}</a></li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-9">
+                        <div class="panel">
+                            <div class="form-group">
+                                <label>Name</label>
+                                <input type="text" class="form-control" ng-model="{{ currentTask.Name }}">
+                            </div>
+
+                            <div class="form-group">
+                                <label>Description</label>
+                                <input type="text" class="form-control" ng-model="{{ currentTask.Description }}">
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
