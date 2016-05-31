@@ -5,21 +5,20 @@
         .module('taskApp')
         .controller('taskController', ['$scope', '$http',
             function ($scope, $http) {
-                var baseAddress = "http://localhost:800/api/";
+                var baseAddress = "http://localhost:8000/api/";
 
                 function httpPost(action, params) {
-                    return $http.post(
+                    return $http.get(
                         baseAddress.concat(action),
                         params
-                    );
+                    )
                 };
 
                 $scope.getAllTask = function () {
-                    return httpPost("users/1/tasks")
-                        .success(function (data) {
-                            $scope.taskList = JSON.parse(data);
+                    return $http.get(baseAddress.concat("users/1/tasks"))
+                        .success(function(data, status, headers, config) {
+                            $scope.taskList = data;
                         })
-
                 }
             }]);
 })();
