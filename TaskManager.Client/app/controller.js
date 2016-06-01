@@ -17,15 +17,28 @@
                         })
                 };
 
-                httpSend("users/1/tasks", "GET")
+                $scope.getTasks = function () {
+                    if ($scope.userId == null) { return; }
+
+                    var url = "users/" + $scope.userId + "/tasks";
+                    return httpSend(url, "GET")
                         .success(function (data, status, headers, config) {
                             $scope.taskList = data;
                         });
+                }
                 
                 $scope.getTask = function (id) {
-                    return httpSend("users/1/tasks/" + id, "GET")
+                    return httpSend("users/" + $scope.userId + "/tasks/" + id, "GET")
                         .success(function (data, status, headers, config) {
                             $scope.currentTask = data;
+                        });
+                }
+
+                $scope.getUser = function () {
+                    return httpSend("users/" + $scope.userName + "/" + $scope.password, "GET")
+                        .success(function (data, status, headers, config) {
+                            $scope.userId = data.Id;
+                            $scope.getTasks();
                         });
                 }
 

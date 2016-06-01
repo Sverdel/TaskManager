@@ -29,13 +29,18 @@ namespace TaskManager.Api.Controllers
             return Ok(_dbContext.Users.ToList().Select(x => ToDto(x)));
         }
 
-        [Route("{id:int}")]
-        public async Task<IHttpActionResult> GetUser(int id)
+        [Route("{name}/{password}")]
+        public async Task<IHttpActionResult> GetUser(string name, string password)
         {
-            User user = await _dbContext.Users.FindAsync(id);
+            User user = await _dbContext.Users.FirstOrDefaultAsync(x => x.Name == name);
             if (user == null)
             {
                 return NotFound();
+            }
+
+            if (user.Password != password)
+            {
+                return StatusCode(HttpStatusCode.Unauthorized);
             }
 
             return Ok(ToDto(user));

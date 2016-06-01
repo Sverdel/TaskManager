@@ -18,7 +18,7 @@ namespace TaskManager.Api.Models.DataModel
             context.States.Add(new State { Id = 1, Name = "Active" });
             context.States.Add(new State { Id = 2, Name = "Closed" });
 
-            context.Users.Add(new User { Id = 1, Name = "test user" });
+            context.Users.Add(new User { Id = 1, Name = "test user", Password = "12345" });
 
             context.Tasks.Add(new WorkTask { Id = 1, CreateDateTime = DateTime.Now, Name = "Temp task", UserId = 1 });
         }
