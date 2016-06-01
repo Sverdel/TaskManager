@@ -32,6 +32,8 @@ namespace TaskManager.Api.Models.DataModel
 
         public double ActualTimeCost { get; set; }
 
+        public double RemainingTimeCost { get; set; }
+
         [Index]
         public int UserId { get; set; }
 

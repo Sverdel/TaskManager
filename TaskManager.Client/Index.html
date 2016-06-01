@@ -13,6 +13,7 @@
     <script src="app/app.js"></script>
     <script src="app/main.js"></script>
     <script src="app/controller.js"></script>
+    <script src="app/directive.js"></script>
 
 </head>
 <body>
@@ -21,8 +22,8 @@
             <nav class="navbar navbar-default">
                 <div class="container-fluid container">
                     <div class="navbar-header navbar-brand">Task Manager</div>
-                    
-                    <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1" >
+
+                    <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
                         <form class="navbar-form navbar-right" role="form" ng-show="userId == null">
                             <div class="form-group">
                                 <input type="text" class="form-control" placeholder="Login">
@@ -40,16 +41,16 @@
                     </div><!-- /.navbar-collapse -->
                 </div><!-- /.container-fluid -->
             </nav>
-            
+
 
             <div class="container">
                 <div class="row">
-                    <div class="col-md-3"> 
+                    <div class="col-md-3">
                         <div class="panel panel-default">
                             <div class="panel-heading">
                                 <h3 class="panel-title">Work items</h3>
                             </div>
-                            <div class="panel-body" ng-style="{ 'max-height' : 0.8 * listHeight + 'px', 'overflow-y' : 'auto' }">
+                            <div class="panel-body" ng-style="{ 'max-height' : 0.8 * listHeight + 'px', 'height' : 0.8 * listHeight + 'px', 'overflow-y' : 'auto' }">
                                 <ul>
                                     <li ng-repeat="task in taskList"><a ng-click="getTask(task.Id)">{{ task.Name }}</a></li>
                                 </ul>
@@ -58,15 +59,74 @@
                     </div>
 
                     <div class="col-md-9">
-                        <div class="panel">
-                            <div class="form-group">
-                                <label>Name</label>
-                                <input type="text" class="form-control" ng-model="{{ currentTask.Name }}">
-                            </div>
+                        <div class="panel panel-default">
+                            <div class="panel-body">
+                                <div class="form-group">
+                                    <label>Name</label>
+                                    <input type="text" class="form-control" ng-model="currentTask.Name">
+                                </div>
 
-                            <div class="form-group">
-                                <label>Description</label>
-                                <input type="text" class="form-control" ng-model="{{ currentTask.Description }}">
+                                <div class="form-group row">
+                                    <label class="col-md-1">State</label>
+                                    <div class="btn-group col-md-11">
+                                        <a class="btn btn-default dropdown-toggle" data-toggle="dropdown" href="#">{{ currentTask.StateId | fromDictionary:stateList }} <span class="caret"></span></a>
+                                        <ul class="dropdown-menu">
+                                            <li ng-repeat="state in stateList"><a href="#" ng-click="setState(state.Id)" >{{ state.Name }}</a></li>
+                                        </ul>
+                                    </div>
+                                </div>
+
+                                <div class="form-group row">
+                                    <label class="col-md-1">Priority</label>
+                                    <div class="btn-group col-md-11">
+                                        <a class="btn btn-default dropdown-toggle" data-toggle="dropdown" href="#">{{ currentTask.PriorityId | fromDictionary:priorityList }} <span class="caret"></span></a>
+                                        <ul class="dropdown-menu">
+                                            <li ng-repeat="priority in priorityList"><a href="#" ng-click="setPriority(priority.Id)">{{ priority.Name }}</a></li>
+                                        </ul>
+                                    </div>
+                                </div>
+
+                                <div class="form-group row">
+                                    <div class="col-md-3">
+                                        <label>Initial cost</label>
+                                        <input type="number" class="form-control" ng-model="currentTask.PlanedTimeCost" min="0">
+                                    </div>
+
+                                    <div class="col-md-3">
+                                        <label>Actual cost</label>
+                                        <input type="number" class="form-control" ng-model="currentTask.ActualTimeCost" min="0">
+                                    </div>
+
+                                    <div class="col-md-3">
+                                        <label>Remaining cost</label>
+                                        <input type="number" class="form-control" ng-model="currentTask.RemainingTimeCost" min="0">
+                                    </div>
+                                </div>
+
+                                <div class="form-group row">
+                                    <div class="form-inline col-md-7">
+                                        <label class="col-md-6 row">Create date</label>
+                                        <input type="text" class="form-control" readonly="readonly" ng-model="currentTask.CreateDateTime">
+                                    </div>
+                                </div>
+
+                                <div class="form-group row">
+                                    <div class="form-inline col-md-7">
+                                        <label class="col-md-6 row">Last change date</label>
+                                        <input type="text" class="form-control" readonly="readonly" ng-model="currentTask.ChangeDatetime">
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label>Description</label>
+                                    <textarea class="form-control" ng-model="currentTask.Description" rows="5" style="resize:none"></textarea>
+                                </div>
+
+                                <div class="form-group pull-right">
+                                    <button type="submit" class="btn btn-default">Save</button>
+                                    <button type="submit" class="btn btn-default">Cancel</button>
+                                    <button type="submit" class="btn btn-default">Delete</button>
+                                </div>
                             </div>
                         </div>
                     </div>

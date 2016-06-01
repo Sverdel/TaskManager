@@ -24,6 +24,8 @@ namespace TaskManager.Api.Models.Dto
 
         public double ActualTimeCost { get; set; }
 
+        public double RemainingTimeCost { get; set; }
+
         public int UserId { get; set; }
 
         public byte StateId { get; set; }

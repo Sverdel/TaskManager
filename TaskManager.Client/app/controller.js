@@ -29,6 +29,18 @@
                         });
                 }
 
+                $scope.setState = function (id) {
+                    if ($scope.currentTask != null) {
+                        $scope.currentTask.StateId = id;
+                    }
+                };
+
+                $scope.setPriority = function (id) {
+                    if ($scope.currentTask != null) {
+                        $scope.currentTask.PriorityId = id;
+                    }
+                };
+
                 //fill dictionaties
                 httpSend("resources/states", "GET")
                         .success(function (data, status, headers, config) {
