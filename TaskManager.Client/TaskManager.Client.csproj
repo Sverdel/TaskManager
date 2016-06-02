@@ -67,6 +67,10 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="app\directive.js" />
+    <Content Include="app\httpService.js" />
+    <Content Include="app\resourceService.js" />
+    <Content Include="app\taskService.js" />
+    <Content Include="app\usersService.js" />
     <Content Include="packages.config" />
     <Content Include="Scripts\angular-route.js" />
     <Content Include="Scripts\angular-route.min.js" />

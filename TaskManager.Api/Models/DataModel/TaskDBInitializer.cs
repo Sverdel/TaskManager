@@ -6,7 +6,7 @@ using System.Web;
 
 namespace TaskManager.Api.Models.DataModel
 {
-    public class TaskDBInitializer : CreateDatabaseIfNotExists<TaskDbContext>
+    public class TaskDBInitializer : DropCreateDatabaseIfModelChanges<TaskDbContext>
     {
         protected override void Seed(TaskDbContext context)
         {
@@ -20,7 +20,10 @@ namespace TaskManager.Api.Models.DataModel
 
             context.Users.Add(new User { Id = 1, Name = "test user", Password = "12345" });
 
-            context.Tasks.Add(new WorkTask { Id = 1, CreateDateTime = DateTime.Now, Name = "Temp task", UserId = 1 });
+            for (int i = 0; i < 10; i++)
+            {
+                context.Tasks.Add(new WorkTask { Id = i, CreateDateTime = DateTime.Now, Name = "Temp task " + i, UserId = 1 });
+            }
         }
     }
 }

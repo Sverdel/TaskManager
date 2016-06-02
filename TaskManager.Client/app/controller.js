@@ -3,8 +3,8 @@
 
     angular
         .module('taskApp')
-        .controller('taskController', ['$scope', '$http',
-            function ($scope, $http) {
+        .controller('taskController', ['$scope', '$http', 'httpService', 'usersApi', 'resourceApi', 'tasksApi',
+            function ($scope, $http, httpService, usersApi, resourceApi, tasksApi) {
                 $scope.listHeight = window.innerHeight;
 
                 var baseAddress = "http://localhost:8000/api/";
@@ -20,22 +20,21 @@
                 $scope.getTasks = function () {
                     if ($scope.userId == null) { return; }
 
-                    var url = "users/" + $scope.userId + "/tasks/all";
-                    return httpSend(url, "GET")
+                    return tasksApi.getAllTasks(baseAddress, $scope.userId)
                         .success(function (data, status, headers, config) {
                             $scope.taskList = data;
                         });
                 }
                 
                 $scope.getTask = function (id) {
-                    return httpSend("users/" + $scope.userId + "/tasks/" + id, "GET")
+                    return tasksApi.getTask(baseAddress, $scope.userId, id)
                         .success(function (data, status, headers, config) {
                             $scope.currentTask = data;
                         });
                 }
 
                 $scope.getUser = function () {
-                    return httpSend("users/" + $scope.userName + "/" + $scope.password, "GET")
+                    return usersApi.login(baseAddress, $scope.userName, $scope.password)
                         .success(function (data, status, headers, config) {
                             $scope.userId = data.Id;
                             $scope.getTasks();
@@ -74,13 +73,13 @@
                 };
 
                 //fill dictionaties
-                httpSend("resources/states", "GET")
-                        .success(function (data, status, headers, config) {
+                resourceApi.getStates(baseAddress)
+                        .success(function (data) {
                             $scope.stateList = data;
                         });
 
-                httpSend("resources/priorities", "GET")
-                        .success(function (data, status, headers, config) {
+                resourceApi.getPriorities(baseAddress)
+                        .success(function (data) {
                             $scope.priorityList = data;
                         });
 
@@ -89,7 +88,7 @@
                 $scope.userName = 'test user';
                 $scope.password = null;
                 var url = "users/" + $scope.userId + "/tasks/all";
-                return httpSend(url, "GET")
+                return $http({url: baseAddress.concat(url), method: "GET"})
                     .success(function (data, status, headers, config) {
                         $scope.taskList = data;
                     });
