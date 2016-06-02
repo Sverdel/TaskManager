@@ -8,33 +8,26 @@
                 $scope.listHeight = window.innerHeight;
 
                 var baseAddress = "http://localhost:8000/api/";
-
-                function httpSend(action, method, params) {
-                    return $http({
-                        url: baseAddress.concat(action),
-                        method: method,
-                        data: params
-                        })
-                };
+                httpService.init(baseAddress);
 
                 $scope.getTasks = function () {
                     if ($scope.userId == null) { return; }
 
-                    return tasksApi.getAllTasks(baseAddress, $scope.userId)
+                    return tasksApi.getAllTasks($scope.userId)
                         .success(function (data, status, headers, config) {
                             $scope.taskList = data;
                         });
                 }
                 
                 $scope.getTask = function (id) {
-                    return tasksApi.getTask(baseAddress, $scope.userId, id)
+                    return tasksApi.getTask($scope.userId, id)
                         .success(function (data, status, headers, config) {
                             $scope.currentTask = data;
                         });
                 }
 
                 $scope.getUser = function () {
-                    return usersApi.login(baseAddress, $scope.userName, $scope.password)
+                    return usersApi.login($scope.userName, $scope.password)
                         .success(function (data, status, headers, config) {
                             $scope.userId = data.Id;
                             $scope.getTasks();
@@ -73,12 +66,12 @@
                 };
 
                 //fill dictionaties
-                resourceApi.getStates(baseAddress)
+                resourceApi.getStates()
                         .success(function (data) {
                             $scope.stateList = data;
                         });
 
-                resourceApi.getPriorities(baseAddress)
+                resourceApi.getPriorities()
                         .success(function (data) {
                             $scope.priorityList = data;
                         });

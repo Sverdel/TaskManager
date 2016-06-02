@@ -6,7 +6,12 @@
         .service('httpService', ["$http",
 
     function ($http) {
-        this.send = function(baseAddress, action, method, params) {
+        var baseAddress = null;
+        this.init = function (address) {
+            baseAddress = address;
+        };
+
+        this.send = function(action, method, params) {
             return $http({
                 url: baseAddress.concat(action),
                 method: method,
