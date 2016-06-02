@@ -20,7 +20,7 @@
                 $scope.getTasks = function () {
                     if ($scope.userId == null) { return; }
 
-                    var url = "users/" + $scope.userId + "/tasks";
+                    var url = "users/" + $scope.userId + "/tasks/all";
                     return httpSend(url, "GET")
                         .success(function (data, status, headers, config) {
                             $scope.taskList = data;
@@ -41,6 +41,13 @@
                             $scope.getTasks();
                         });
                 }
+
+                $scope.logout = function () {
+                    $scope.userId = null;
+                    $scope.userName = null;
+                    $scope.password = null;
+                }
+
 
                 $scope.setState = function (id) {
                     if ($scope.currentTask != null) {
@@ -64,5 +71,16 @@
                         .success(function (data, status, headers, config) {
                             $scope.priorityList = data;
                         });
+
+                //////test
+                $scope.userId = 1;
+                $scope.userName = 'test user';
+                $scope.password = null;
+                var url = "users/" + $scope.userId + "/tasks/all";
+                return httpSend(url, "GET")
+                    .success(function (data, status, headers, config) {
+                        $scope.taskList = data;
+                    });
+                //////test
             }]);
 })();

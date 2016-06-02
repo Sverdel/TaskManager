@@ -17,7 +17,7 @@ namespace TaskManager.Api.Controllers
     {
         private TaskDbContext _dbContext = new TaskDbContext();
 
-        [Route("tasks", Name = "GetTaskRoute")]
+        [Route("tasks/all", Name = "GetTaskRoute")]
         public async Task<IHttpActionResult> GetList(int userId)
         {
             return Ok(_dbContext.Tasks.Where(x => x.UserId == userId).ToList().Select(x => new { Id = x.Id, Name = x.Name }));
