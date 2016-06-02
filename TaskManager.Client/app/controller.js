@@ -39,7 +39,11 @@
                         .success(function (data, status, headers, config) {
                             $scope.userId = data.Id;
                             $scope.getTasks();
+                        })
+                        .error(function (data, status, headers, config) {
+                            alert("Incorrect user name or password");
                         });
+
                 }
 
                 $scope.logout = function () {
@@ -59,6 +63,14 @@
                     if ($scope.currentTask != null) {
                         $scope.currentTask.PriorityId = id;
                     }
+                };
+
+                $scope.createTask = function (id) {
+                    return;
+                };
+
+                $scope.removeTask = function (id) {
+                    return;
                 };
 
                 //fill dictionaties

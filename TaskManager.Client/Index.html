@@ -5,6 +5,7 @@
     <meta charset="utf-8" />
 
     <link href="Content/bootstrap.min.css" rel="stylesheet" type="text/css">
+    
 
     <script src="Scripts/angular.min.js"></script>
     <script src="Scripts/jquery-2.2.3.min.js"></script>
@@ -52,11 +53,23 @@
                     <div class="col-md-3">
                         <div class="panel panel-default">
                             <div class="panel-heading">
-                                <h3 class="panel-title">Work items</h3>
+                                <div class="panel-title">Work items
+                                    <div class="pull-right">
+                                        <span class="glyphicon glyphicon-plus" aria-hidden="true" ng-click="createTask()"></span>
+                                    </div>
+                                </div>
+                                
                             </div>
-                            <div class="panel-body" ng-style="{ 'max-height' : 0.8 * listHeight + 'px', 'height' : 0.8 * listHeight + 'px', 'overflow-y' : 'auto' }">
-                                <ul>
-                                    <li ng-repeat="task in taskList"><a ng-click="getTask(task.Id)">{{ task.Name }}</a></li>
+                            <div  ng-style="{ 'max-height' : 0.8 * listHeight + 'px', 'height' : 0.8 * listHeight + 'px', 'overflow-y' : 'auto' }">
+
+                                <ul class="list-group">
+                                    <li ng-repeat="task in taskList" class="list-group-item" ng-class="{active: currentTask.Id == task.Id}">
+                                        <div ng-click="getTask(task.Id)" class="list-group-item-heading">{{ task.Name }}
+                                            <div class="pull-right" ng-show="currentTask.Id == task.Id">
+                                                <span class="glyphicon glyphicon-trash" aria-hidden="true" ng-click="removeTask()"></span>
+                                            </div>
+                                        </div>
+                                    </li>
                                 </ul>
                             </div>
                         </div>
@@ -127,9 +140,8 @@
                                 </div>
 
                                 <div class="form-group pull-right">
-                                    <button type="submit" class="btn btn-default">Save</button>
-                                    <button type="submit" class="btn btn-default">Cancel</button>
-                                    <button type="submit" class="btn btn-default">Delete</button>
+                                    <button type="submit" class="btn btn-default" ng-click="saveTask()">Save</button>
+                                    <button type="submit" class="btn btn-default" ng-click="cancelChanges()">Cancel</button>
                                 </div>
                             </div>
                         </div>
