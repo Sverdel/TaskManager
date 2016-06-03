@@ -3,7 +3,7 @@
 
     angular
         .module('taskApp')
-        .service('usersApi', ['httpService',
+        .service('userService', ['httpService',
         function (httpService) {
 
             this.login = function (userName, password) {
@@ -11,11 +11,11 @@
             }
 
             this.register = function (user) {
-                return httpService.send("users", "POST", { user: user });
+                return httpService.send("users", "POST", user );
             }
 
             this.edit = function (user) {
-                return httpService.send("users/" + user.Id, "PUT", { user: user });
+                return httpService.send("users/" + user.Id, "PUT", user );
             }
 
             this.remove = function (userId) {

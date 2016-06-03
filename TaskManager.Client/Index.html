@@ -16,7 +16,7 @@
     <script src="app/controller.js"></script>
     <script src="app/directive.js"></script>
     <script src="app/services/httpService.js"></script>
-    <script src="app/services/usersService.js"></script>
+    <script src="app/services/userService.js"></script>
     <script src="app/services/resourceService.js"></script>
     <script src="app/services/taskService.js"></script>
 
@@ -29,18 +29,18 @@
                     <div class="navbar-header navbar-brand">Task Manager</div>
 
                     <div class="collapse navbar-collapse">
-                        <form class="navbar-form navbar-right" role="form" ng-show="userId == null">
+                        <form class="navbar-form navbar-right" role="form" ng-show="user == null">
                             <div class="form-group">
-                                <input type="text" class="form-control" placeholder="Login" ng-model="userName">
+                                <input type="text" class="form-control" placeholder="Login" ng-model="user.Name">
                             </div>
                             <div class="form-group">
-                                <input type="password" class="form-control" placeholder="Password" ng-model="password">
+                                <input type="password" class="form-control" placeholder="Password" ng-model="user.Password">
                             </div>
                             <button type="submit" class="btn btn-default"  ng-click="getUser()">Login</button>
                         </form>
                         
-                        <div class="dropdown navbar-form navbar-right" role="form" ng-show="userId != null">
-                            <button class="dropdown-toggle btn btn-default" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">{{userName}} <span class="caret"></span></button>
+                        <div class="dropdown navbar-form navbar-right" role="form" ng-show="user != null">
+                            <button class="dropdown-toggle btn btn-default" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">{{user.Name}} <span class="caret"></span></button>
                             <ul class="dropdown-menu">
                                 <li><a href="#">Edit profile</a></li>
                                 <li role="separator" class="divider"></li>
@@ -52,7 +52,7 @@
             </nav>
 
 
-            <div class="container" ng-show="userId != null">
+            <div class="container" ng-show="user != null">
                 <div class="row">
                     <div class="col-md-3">
                         <div class="panel panel-default">
@@ -100,7 +100,7 @@
                                 <div class="form-group row">
                                     <label class="col-md-1">Priority</label>
                                     <div class="btn-group col-md-11">
-                                        <a class="btn btn-default dropdown-toggle" data-toggle="dropdown" href="#">{{ currentTask.PriorityId | fromDictionary:priorityList }} <span class="caret"></span></a>
+                                        <a class="btn btn-default dropdown-toggle" data-toggle="dropdown" href="#" ng-model="currentTask.PriorityId" >{{ currentTask.PriorityId | fromDictionary:priorityList }} <span class="caret"></span></a>
                                         <ul class="dropdown-menu">
                                             <li ng-repeat="priority in priorityList"><a href="#" ng-click="setPriority(priority.Id)">{{ priority.Name }}</a></li>
                                         </ul>
@@ -144,8 +144,8 @@
                                 </div>
 
                                 <div class="form-group pull-right">
-                                    <button type="submit" class="btn btn-default" ng-click="saveTask()">Save</button>
-                                    <button type="submit" class="btn btn-default" ng-click="cancelChanges()">Cancel</button>
+                                    <button type="submit" class="btn btn-default" ng-click="saveTask()" ng-disabled="!changed">Save</button>
+                                    <button type="submit" class="btn btn-default" ng-click="cancelChanges()" ng-disabled="!changed">Cancel</button>
                                 </div>
                             </div>
                         </div>

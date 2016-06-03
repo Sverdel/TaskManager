@@ -3,7 +3,7 @@
 
     angular
         .module('taskApp')
-        .service('resourceApi', ['httpService',
+        .service('resourceService', ['httpService',
         function (httpService) {
 
             this.getStates = function () {

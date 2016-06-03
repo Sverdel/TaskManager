@@ -70,7 +70,7 @@
     <Content Include="app\services\httpService.js" />
     <Content Include="app\services\resourceService.js" />
     <Content Include="app\services\taskService.js" />
-    <Content Include="app\services\usersService.js" />
+    <Content Include="app\services\userService.js" />
     <Content Include="packages.config" />
     <Content Include="Scripts\angular-route.js" />
     <Content Include="Scripts\angular-route.min.js" />

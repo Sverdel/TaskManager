@@ -3,33 +3,34 @@
 
     angular
         .module('taskApp')
-        .controller('taskController', ['$scope', '$http', 'httpService', 'usersApi', 'resourceApi', 'tasksApi',
-            function ($scope, $http, httpService, usersApi, resourceApi, tasksApi) {
+        .controller('taskController', ['$scope', '$http', 'httpService', 'userService', 'resourceService', 'taskService',
+            function ($scope, $http, httpService, userService, resourceService, taskService) {
                 $scope.listHeight = window.innerHeight;
 
                 var baseAddress = "http://localhost:8000/api/";
                 httpService.init(baseAddress);
 
                 $scope.getTasks = function () {
-                    if ($scope.userId == null) { return; }
+                    if ($scope.user.Id == null) { return; }
 
-                    return tasksApi.getAllTasks($scope.userId)
+                    return taskService.getAllTasks($scope.user.Id)
                         .success(function (data, status, headers, config) {
                             $scope.taskList = data;
                         });
                 }
                 
                 $scope.getTask = function (id) {
-                    return tasksApi.getTask($scope.userId, id)
+                    return taskService.getTask($scope.user.Id, id)
                         .success(function (data, status, headers, config) {
                             $scope.currentTask = data;
+                            $scope.shadowCopy = angular.copy(data);
                         });
                 }
 
                 $scope.getUser = function () {
-                    return usersApi.login($scope.userName, $scope.password)
+                    return userService.login($scope.userName, $scope.password)
                         .success(function (data, status, headers, config) {
-                            $scope.userId = data.Id;
+                            $scope.user = data;
                             $scope.getTasks();
                         })
                         .error(function (data, status, headers, config) {
@@ -39,9 +40,9 @@
                 }
 
                 $scope.logout = function () {
-                    $scope.userId = null;
-                    $scope.userName = null;
-                    $scope.password = null;
+                    $scope.user = null;
+                    $scope.currentTask = null;
+                    $scope.shadowCopy = null;
                 }
 
 
@@ -57,30 +58,46 @@
                     }
                 };
 
-                $scope.createTask = function (id) {
+                $scope.createTask = function () {
                     return;
                 };
 
-                $scope.removeTask = function (id) {
+                $scope.saveTask = function () {
+                    taskService.editTask($scope.user.Id, $scope.currentTask);
+                    $scope.shadowCopy = angular.copy($scope.currentTask);
+                    $scope.changed = false;
+                };
+
+                $scope.removeTask = function () {
+
                     return;
                 };
+
+                $scope.cancelChanges = function () {
+                    $scope.currentTask = angular.copy($scope.shadowCopy);
+                };
+
+                $scope.$watch('currentTask', function () {
+                    if ($scope.currentTask == null) { return }
+
+                    $scope.changed = JSON.stringify($scope.currentTask) != JSON.stringify($scope.shadowCopy);
+
+                }, true);
 
                 //fill dictionaties
-                resourceApi.getStates()
+                resourceService.getStates()
                         .success(function (data) {
                             $scope.stateList = data;
                         });
 
-                resourceApi.getPriorities()
+                resourceService.getPriorities()
                         .success(function (data) {
                             $scope.priorityList = data;
                         });
 
                 //////test
-                $scope.userId = 1;
-                $scope.userName = 'test user';
-                $scope.password = null;
-                var url = "users/" + $scope.userId + "/tasks/all";
+                $scope.user = { Id: 1, Name: 'test user', Password: null }
+                var url = "users/" + $scope.user.Id + "/tasks/all";
                 return $http({url: baseAddress.concat(url), method: "GET"})
                     .success(function (data, status, headers, config) {
                         $scope.taskList = data;

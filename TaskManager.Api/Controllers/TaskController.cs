@@ -37,15 +37,15 @@ namespace TaskManager.Api.Controllers
 
         [Route("tasks/{id:int}")]
         [HttpPost]
-        public async Task<IHttpActionResult> Post(int userId, [FromBody]TaskDto taskDto)
+        public async Task<IHttpActionResult> Post(int userId, [FromBody]TaskDto task)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
-            var task = FromDto(taskDto);
-            _dbContext.Tasks.Add(task);
+            var workTask = FromDto(task);
+            _dbContext.Tasks.Add(workTask);
             await _dbContext.SaveChangesAsync();
 
             return CreatedAtRoute("GetTaskRoute", new { userId, task.Id }, task);
@@ -53,20 +53,20 @@ namespace TaskManager.Api.Controllers
 
         [Route("tasks/{id:int}")]
         [HttpPut]
-        public async Task<IHttpActionResult> Put(int userId, int id, [FromBody]TaskDto taskDto)
+        public async Task<IHttpActionResult> Put(int userId, int id, [FromBody]TaskDto task)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
-            if (id != taskDto.Id)
+            if (id != task.Id)
             {
                 return BadRequest();
             }
 
-            var task = FromDto(taskDto);
-            _dbContext.Entry(task).State = EntityState.Modified;
+            var workTask = FromDto(task);
+            _dbContext.Entry(workTask).State = EntityState.Modified;
 
             try
             {

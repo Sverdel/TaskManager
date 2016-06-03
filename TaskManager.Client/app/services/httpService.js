@@ -7,6 +7,7 @@
 
     function ($http) {
         var baseAddress = null;
+
         this.init = function (address) {
             baseAddress = address;
         };

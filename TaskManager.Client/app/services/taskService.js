@@ -3,7 +3,7 @@
 
     angular
         .module('taskApp')
-        .service('tasksApi', ['httpService',
+        .service('taskService', ['httpService',
         function (httpService) {
 
             this.getAllTask = function (userId) {
@@ -15,11 +15,11 @@
             }
 
             this.createTask = function (userId, task) {
-                return httpService.send("users/" + userId + "/tasks", "POST", { task: task });
+                return httpService.send("users/" + userId + "/tasks", "POST", task );
             }
 
             this.editTask = function (userId, task) {
-                return httpService.send("users/" + userId + "/tasks/" + taskId, "PUT", { task: task });
+                return httpService.send("users/" + userId + "/tasks/" + task.Id, "PUT", task);
             }
 
             this.deleteTask = function (userId, taskId) {

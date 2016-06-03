@@ -15,8 +15,7 @@ namespace TaskManager.Api.Models.Dto
 
         public DateTime CreateDateTime { get; set; }
 
-        //[Required]
-        //public DateTime ChangeDatetime { get; set; }
+        public DateTime ChangeDatetime { get; set; }
 
         public int Version { get; set; }
 
