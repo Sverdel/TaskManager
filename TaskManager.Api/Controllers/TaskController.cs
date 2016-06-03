@@ -17,13 +17,13 @@ namespace TaskManager.Api.Controllers
     {
         private TaskDbContext _dbContext = new TaskDbContext();
 
-        [Route("tasks/all", Name = "GetTaskRoute")]
+        [Route("tasks/all")]
         public async Task<IHttpActionResult> GetList(int userId)
         {
             return Ok(_dbContext.Tasks.Where(x => x.UserId == userId).ToList().Select(x => new { Id = x.Id, Name = x.Name }));
         }
 
-        [Route("tasks/{id:int}")]
+        [Route("tasks/{id:int}", Name = "GetTaskRoute")]
         public async Task<IHttpActionResult> Get(int userId, int id)
         {
             WorkTask workTask = await _dbContext.Tasks.FindAsync(id);
@@ -35,7 +35,7 @@ namespace TaskManager.Api.Controllers
             return Ok(ToDto(workTask));
         }
 
-        [Route("tasks/{id:int}")]
+        [Route("tasks")]
         [HttpPost]
         public async Task<IHttpActionResult> Post(int userId, [FromBody]TaskDto task)
         {
@@ -45,10 +45,11 @@ namespace TaskManager.Api.Controllers
             }
 
             var workTask = FromDto(task);
+            workTask.CreateDateTime = DateTime.Now;
             _dbContext.Tasks.Add(workTask);
             await _dbContext.SaveChangesAsync();
 
-            return CreatedAtRoute("GetTaskRoute", new { userId, task.Id }, task);
+            return CreatedAtRoute("GetTaskRoute", new { userId, task.Id }, workTask);
         }
 
         [Route("tasks/{id:int}")]
@@ -100,7 +101,7 @@ namespace TaskManager.Api.Controllers
             _dbContext.Tasks.Remove(workTask);
             await _dbContext.SaveChangesAsync();
 
-            return Ok(ToDto(workTask));
+            return Ok(new { Id = workTask.Id, Name = workTask.Name });
         }
 
         protected override void Dispose(bool disposing)

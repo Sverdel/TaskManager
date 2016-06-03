@@ -23,7 +23,7 @@
             }
 
             this.deleteTask = function (userId, taskId) {
-                return httpService.send("users/" + userId + "/tasks/" + taskId, "DELTE");
+                return httpService.send("users/" + userId + "/tasks/" + taskId, "DELETE");
             }
 
         }]);

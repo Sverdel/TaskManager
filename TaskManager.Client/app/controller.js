@@ -59,18 +59,34 @@
                 };
 
                 $scope.createTask = function () {
-                    return;
+                    $scope.currentTask = {
+                        PriorityId: 0, StateId: 0, UserId: $scope.user.Id
+                    };
                 };
 
                 $scope.saveTask = function () {
-                    taskService.editTask($scope.user.Id, $scope.currentTask);
+                    if ($scope.currentTask.CreateDateTime == null) {
+                        taskService.createTask($scope.user.Id, $scope.currentTask)
+                            .success(function(data, status, headers, config) {
+                                $scope.currentTask = data;
+                                $scope.taskList.push({ Id: data.Id, Name: data.Name});
+                            });
+                    }
+                    else {
+                        taskService.editTask($scope.user.Id, $scope.currentTask);
+                    }
+
                     $scope.shadowCopy = angular.copy($scope.currentTask);
                     $scope.changed = false;
                 };
 
                 $scope.removeTask = function () {
-
-                    return;
+                    taskService.deleteTask($scope.user.Id, $scope.currentTask.Id)
+                    .success(function (data) {
+                        $scope.taskList = $scope.taskList.filter(function (e) { return e.Id !== data.Id });
+                        $scope.currentTask = null;
+                        $scope.shadowCopy = null;
+                    });
                 };
 
                 $scope.cancelChanges = function () {
@@ -90,7 +106,7 @@
                             $scope.stateList = data;
                         });
 
-                resourceService.getPriorities()
+                $scope.priorityList = resourceService.getPriorities()
                         .success(function (data) {
                             $scope.priorityList = data;
                         });
