@@ -1,12 +1,11 @@
 ﻿
 1. UserDto - is it really necessary?
 2. Add comments
-
+3. Fix mtssages on auth error - send message from api, show on main window
+4. Add confirm dialogs to delete/save/cancel/leave events
+6. create partial view
 
 Required:
 Tests!
 
-Not sure
-1. Database project insteed of EF.
-2. Task change history - tfs-like changes
  
