@@ -7,19 +7,19 @@
         function (httpService) {
 
             this.login = function (userName, password) {
-                return httpService.send("users/" + userName + "/" + password, "GET");
+                return httpService.send("/users/" + userName + "/" + password, "GET");
             }
 
             this.register = function (user) {
-                return httpService.send("users", "POST", user );
+                return httpService.send("/users", "POST", user );
             }
 
             this.edit = function (user) {
-                return httpService.send("users/" + user.Id, "PUT", user );
+                return httpService.send("/users/" + user.Id, "PUT", user );
             }
 
             this.remove = function (userId) {
-                return httpService.send("users/" + userId, "DELTE");
+                return httpService.send("/users/" + userId, "DELTE");
             }
 
         }]);

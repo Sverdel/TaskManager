@@ -23,8 +23,8 @@ namespace TaskManager.Api.Models.DataModel
         [Required]
         public DateTime CreateDateTime { get; set; }
 
-        //[Required]
-        //public DateTime ChangeDatetime { get; set; }
+        [Required]
+        public DateTime ChangeDatetime { get; set; }
 
         public int Version { get; set; }
 

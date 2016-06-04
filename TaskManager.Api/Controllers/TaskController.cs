@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.AspNet.SignalR;
+using System;
 using System.Collections.Generic;
 using System.Data.Entity;
 using System.Data.Entity.Infrastructure;
@@ -7,6 +8,7 @@ using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
 using System.Web.Http;
+using TaskManager.Api.Models;
 using TaskManager.Api.Models.DataModel;
 using TaskManager.Api.Models.Dto;
 
@@ -16,6 +18,7 @@ namespace TaskManager.Api.Controllers
     public class TaskController : ApiController
     {
         private TaskDbContext _dbContext = new TaskDbContext();
+        private IHubContext _hub = GlobalHost.ConnectionManager.GetHubContext<TaskHub>();
 
         [Route()]
         public async Task<IHttpActionResult> GetList(int userId)
@@ -46,10 +49,14 @@ namespace TaskManager.Api.Controllers
 
             var workTask = FromDto(task);
             workTask.CreateDateTime = DateTime.Now;
+            workTask.ChangeDatetime = DateTime.Now;
             _dbContext.Tasks.Add(workTask);
             await _dbContext.SaveChangesAsync();
 
-            return CreatedAtRoute("GetTaskRoute", new { userId, task.Id }, workTask);
+            var newTask = ToDto(workTask);
+            _hub.Clients.Group(userId.ToString()).createTask(newTask);
+
+            return CreatedAtRoute("GetTaskRoute", new { userId, task.Id }, newTask);
         }
 
         [Route("{id:int}")]
@@ -67,11 +74,13 @@ namespace TaskManager.Api.Controllers
             }
 
             var workTask = FromDto(task);
+            workTask.ChangeDatetime = DateTime.Now;
             _dbContext.Entry(workTask).State = EntityState.Modified;
 
             try
             {
                 await _dbContext.SaveChangesAsync();
+                _hub.Clients.Group(userId.ToString()).editTask(ToDto(workTask));
             }
             catch (DbUpdateConcurrencyException)
             {
@@ -84,6 +93,7 @@ namespace TaskManager.Api.Controllers
                     throw;
                 }
             }
+
 
             return StatusCode(HttpStatusCode.NoContent);
         }
@@ -100,6 +110,8 @@ namespace TaskManager.Api.Controllers
 
             _dbContext.Tasks.Remove(workTask);
             await _dbContext.SaveChangesAsync();
+
+            _hub.Clients.Group(userId.ToString()).deleteTask(ToDto(workTask));
 
             return Ok(new { Id = workTask.Id, Name = workTask.Name });
         }
@@ -122,6 +134,7 @@ namespace TaskManager.Api.Controllers
                 Description = dto.Description,
                 ActualTimeCost = dto.ActualTimeCost,
                 CreateDateTime = dto.CreateDateTime,
+                ChangeDatetime = dto.ChangeDatetime,
                 PlanedTimeCost = dto.PlanedTimeCost,
                 RemainingTimeCost = dto.RemainingTimeCost,
                 PriorityId = dto.PriorityId,
@@ -140,6 +153,7 @@ namespace TaskManager.Api.Controllers
                 Description = task.Description,
                 ActualTimeCost = task.ActualTimeCost,
                 CreateDateTime = task.CreateDateTime,
+                ChangeDatetime = task.ChangeDatetime,
                 PlanedTimeCost = task.PlanedTimeCost,
                 RemainingTimeCost = task.RemainingTimeCost,
                 PriorityId = task.PriorityId,

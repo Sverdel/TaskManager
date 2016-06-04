@@ -36,4 +36,6 @@
         });
     }]);
 
+    app.value('backendServerUrl', 'http://localhost:8000/api');
+
 })();

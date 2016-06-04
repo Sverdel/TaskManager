@@ -7,11 +7,11 @@
         function (httpService) {
 
             this.getStates = function () {
-                return httpService.send("resources/states", "GET");
+                return httpService.send("/resources/states", "GET");
             }
 
             this.getPriorities = function () {
-                return httpService.send("resources/priorities", "GET");
+                return httpService.send("/resources/priorities", "GET");
             }
 
         }]);

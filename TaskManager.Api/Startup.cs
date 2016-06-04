@@ -4,6 +4,7 @@ using Microsoft.Owin;
 using Owin;
 using TaskManager.Api.Models.DataModel;
 using System.Web.Http;
+using Microsoft.AspNet.SignalR;
 
 [assembly: OwinStartup(typeof(TaskManager.Api.Startup))]
 
@@ -14,8 +15,12 @@ namespace TaskManager.Api
         public void Configuration(IAppBuilder app)
         {
             app.UseCors(Microsoft.Owin.Cors.CorsOptions.AllowAll);
-            app.MapSignalR();
-            
+
+            var hubConfiguration = new HubConfiguration();
+            hubConfiguration.EnableDetailedErrors = true;
+            //hubConfiguration.EnableJavaScriptProxies = false;
+            app.MapSignalR("/api/signalr", hubConfiguration);
+
             // Configure Web API for self-host. 
             HttpConfiguration config = new HttpConfiguration();
 

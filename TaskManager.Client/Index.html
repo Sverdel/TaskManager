@@ -14,6 +14,8 @@
     <script src="Scripts/angular-route.min.js"></script>
     <script src="Scripts/angular-ui/ui-bootstrap.min.js"></script>
     <script src="Scripts/angular-ui/ui-bootstrap-tpls.min.js"></script>
+    <script src="Scripts/jquery.signalR-2.2.0.min.js"></script>
+    <script src="Scripts/angular-signalr-hub.min.js"></script>
     <script src="app/app.js"></script>
     <script src="app/main.js"></script>
     <script src="app/controller.js"></script>
@@ -22,6 +24,7 @@
     <script src="app/services/userService.js"></script>
     <script src="app/services/resourceService.js"></script>
     <script src="app/services/taskService.js"></script>
+    <script src="app/services/hubService.js"></script>
 
 </head>
 <body>
@@ -66,7 +69,10 @@
                         <div class="panel panel-default">
                             <div class="panel-heading panel-title">
                                 Work items
-                                <span class="pull-right glyphicon glyphicon-plus" aria-hidden="true" ng-click="createTask()"></span>
+                                <div class="pull-right">
+                                    <span class="glyphicon glyphicon-refresh" aria-hidden="true" ng-click="getTasks()"></span>
+                                    <span class="glyphicon glyphicon-plus" aria-hidden="true" ng-click="createTask()"></span>
+                                </div>
                             </div>
                             <div ng-style="{ 'max-height' : 0.8 * listHeight + 'px', 'height' : 0.8 * listHeight + 'px', 'overflow-y' : 'auto' }">
                                 <ul class="list-group">
@@ -136,7 +142,7 @@
                                 <div class="form-group row">
                                     <div class="form-inline col-md-7">
                                         <label class="col-md-6 row">Last change date</label>
-                                        <input type="text" class="form-control" readonly="readonly" ng-model="currentTask.ChangeDatetime">
+                                        <input type="text" class="form-control" readonly="readonly" ng-model="currentTask.ChangeDatetime" uib-datepicker-popup="dd-MM-yyyy HH:mm:ss">
                                     </div>
                                 </div>
 

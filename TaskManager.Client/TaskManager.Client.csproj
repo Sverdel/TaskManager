@@ -68,6 +68,7 @@
   <ItemGroup>
     <Content Include="app\directive.js" />
     <Content Include="app\services\httpService.js" />
+    <Content Include="app\services\hubService.js" />
     <Content Include="app\services\resourceService.js" />
     <Content Include="app\services\taskService.js" />
     <Content Include="app\services\userService.js" />
@@ -76,6 +77,8 @@
     <Content Include="Scripts\angular-mocks.js" />
     <Content Include="Scripts\angular-route.js" />
     <Content Include="Scripts\angular-route.min.js" />
+    <Content Include="Scripts\angular-signalr-hub.js" />
+    <Content Include="Scripts\angular-signalr-hub.min.js" />
     <Content Include="Scripts\angular-ui\ui-bootstrap-tpls.js" />
     <Content Include="Scripts\angular-ui\ui-bootstrap-tpls.min.js" />
     <Content Include="Scripts\angular-ui\ui-bootstrap.js" />
@@ -115,6 +118,8 @@
     <None Include="Scripts\jquery-2.2.3.intellisense.js" />
     <Content Include="Scripts\jquery-2.2.3.js" />
     <Content Include="Scripts\jquery-2.2.3.min.js" />
+    <Content Include="Scripts\jquery.signalR-2.2.0.js" />
+    <Content Include="Scripts\jquery.signalR-2.2.0.min.js" />
     <Content Include="Web.config" />
   </ItemGroup>
   <ItemGroup>
