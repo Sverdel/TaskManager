@@ -10,6 +10,7 @@
                 var baseAddress = "http://localhost:8000/api/";
                 httpService.init(baseAddress);
 
+               
                 $scope.getTasks = function () {
                     if ($scope.user.Id == null) { return; }
 
@@ -28,13 +29,17 @@
                 }
 
                 $scope.getUser = function () {
-                    return userService.login($scope.userName, $scope.password)
+                    $scope.alertMessage = null;
+                    if ($scope.user.Name == null || $scope.user.Password == null) {
+                        return;
+                    }
+                    return userService.login($scope.user.Name, $scope.user.Password)
                         .success(function (data, status, headers, config) {
                             $scope.user = data;
                             $scope.getTasks();
                         })
                         .error(function (data, status, headers, config) {
-                            alert("Incorrect user name or password");
+                            $scope.alertMessage = "Incorrect user name or password";
                         });
 
                 }
@@ -43,6 +48,7 @@
                     $scope.user = null;
                     $scope.currentTask = null;
                     $scope.shadowCopy = null;
+                    $scope.taskList = null;
                 }
 
 
@@ -99,6 +105,8 @@
                     $scope.changed = JSON.stringify($scope.currentTask) != JSON.stringify($scope.shadowCopy);
 
                 }, true);
+
+                
 
                 //fill dictionaties
                 resourceService.getStates()
