@@ -6,24 +6,24 @@
         .service('taskService', ['httpService',
         function (httpService) {
 
-            this.getAllTask = function (userId) {
-                return httpService.send("users/" + userId + "/tasks/all", "GET");
+            this.getAllTasks = function (userId) {
+                return httpService.send("tasks/" + userId, "GET");
             }
 
             this.getTask = function (userId, taskId) {
-                return httpService.send("users/" + userId + "/tasks/" + taskId, "GET");
+                return httpService.send("tasks/" + userId + "/" + taskId, "GET");
             }
 
             this.createTask = function (userId, task) {
-                return httpService.send("users/" + userId + "/tasks", "POST", task );
+                return httpService.send("tasks/" + userId, "POST", task);
             }
 
             this.editTask = function (userId, task) {
-                return httpService.send("users/" + userId + "/tasks/" + task.Id, "PUT", task);
+                return httpService.send("tasks/" + userId + "/" + task.Id, "PUT", task);
             }
 
             this.deleteTask = function (userId, taskId) {
-                return httpService.send("users/" + userId + "/tasks/" + taskId, "DELETE");
+                return httpService.send("tasks/" + userId + "/" + taskId, "DELETE");
             }
 
         }]);

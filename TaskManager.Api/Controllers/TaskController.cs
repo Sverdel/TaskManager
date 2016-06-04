@@ -12,18 +12,18 @@ using TaskManager.Api.Models.Dto;
 
 namespace TaskManager.Api.Controllers
 {
-    [RoutePrefix("api/users/{userId:int}")]
+    [RoutePrefix("api/tasks/{userId:int}")]
     public class TaskController : ApiController
     {
         private TaskDbContext _dbContext = new TaskDbContext();
 
-        [Route("tasks/all")]
+        [Route()]
         public async Task<IHttpActionResult> GetList(int userId)
         {
             return Ok(_dbContext.Tasks.Where(x => x.UserId == userId).ToList().Select(x => new { Id = x.Id, Name = x.Name }));
         }
 
-        [Route("tasks/{id:int}", Name = "GetTaskRoute")]
+        [Route("{id:int}", Name = "GetTaskRoute")]
         public async Task<IHttpActionResult> Get(int userId, int id)
         {
             WorkTask workTask = await _dbContext.Tasks.FindAsync(id);
@@ -35,7 +35,7 @@ namespace TaskManager.Api.Controllers
             return Ok(ToDto(workTask));
         }
 
-        [Route("tasks")]
+        [Route()]
         [HttpPost]
         public async Task<IHttpActionResult> Post(int userId, [FromBody]TaskDto task)
         {
@@ -52,7 +52,7 @@ namespace TaskManager.Api.Controllers
             return CreatedAtRoute("GetTaskRoute", new { userId, task.Id }, workTask);
         }
 
-        [Route("tasks/{id:int}")]
+        [Route("{id:int}")]
         [HttpPut]
         public async Task<IHttpActionResult> Put(int userId, int id, [FromBody]TaskDto task)
         {
@@ -88,7 +88,7 @@ namespace TaskManager.Api.Controllers
             return StatusCode(HttpStatusCode.NoContent);
         }
 
-        [Route("tasks/{id:int}")]
+        [Route("{id:int}")]
         [HttpDelete]
         public async Task<IHttpActionResult> Delete(int userId, int id)
         {

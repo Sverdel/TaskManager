@@ -23,28 +23,28 @@ namespace TaskManager.Api.Controllers
         private Func<User, UserDto> ToDto = user => new UserDto { Id = user.Id, Name = user.Name };
 
 
-        [Route("", Name = "GetUserRoute")]
+        [Route()]
         public async Task<IHttpActionResult> GetUsers()
         {
             return Ok(_dbContext.Users.ToList().Select(x => ToDto(x)));
         }
 
-        //[Route("{name}/{password}")]
-        //public async Task<IHttpActionResult> GetUser(string name, string password)
-        //{
-        //    User user = await _dbContext.Users.FirstOrDefaultAsync(x => x.Name == name);
-        //    if (user == null)
-        //    {
-        //        return NotFound();
-        //    }
+        [Route("{name}/{password}", Name = "GetUserRoute")]
+        public async Task<IHttpActionResult> GetUser(string name, string password)
+        {
+            User user = await _dbContext.Users.FirstOrDefaultAsync(x => x.Name == name);
+            if (user == null)
+            {
+                return NotFound();
+            }
 
-        //    if (user.Password != password)
-        //    {
-        //        return StatusCode(HttpStatusCode.Unauthorized);
-        //    }
+            if (user.Password != password)
+            {
+                return StatusCode(HttpStatusCode.Unauthorized);
+            }
 
-        //    return Ok(ToDto(user));
-        //}
+            return Ok(ToDto(user));
+        }
 
         [Route("{id:int}")]
         [HttpPut]

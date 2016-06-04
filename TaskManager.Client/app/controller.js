@@ -9,7 +9,6 @@
 
                 var baseAddress = "http://localhost:8000/api/";
                 httpService.init(baseAddress);
-
                
                 $scope.getTasks = function () {
                     if ($scope.user.Id == null) { return; }
@@ -121,7 +120,7 @@
 
                 //////test
                 $scope.user = { Id: 1, Name: 'test user', Password: null }
-                var url = "users/" + $scope.user.Id + "/tasks/all";
+                var url = "tasks/" + $scope.user.Id;
                 return $http({url: baseAddress.concat(url), method: "GET"})
                     .success(function (data, status, headers, config) {
                         $scope.taskList = data;
