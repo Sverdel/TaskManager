@@ -12,6 +12,7 @@ namespace TaskManager.Api.Models.DataModel
     public class WorkTask
     {
         [Key]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public long Id { get; set; }
 
         [Required]

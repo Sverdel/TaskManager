@@ -6,7 +6,7 @@ using System.Web;
 
 namespace TaskManager.Api.Models.DataModel
 {
-    public class TaskDBInitializer : DropCreateDatabaseIfModelChanges<TaskDbContext>
+    public class TaskDBInitializer : CreateDatabaseIfNotExists<TaskDbContext>
     {
         protected override void Seed(TaskDbContext context)
         {

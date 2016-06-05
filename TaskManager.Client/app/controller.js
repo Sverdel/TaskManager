@@ -57,7 +57,7 @@
                             $scope.shadowCopy = angular.copy(data);
                         });
                     }
-                    
+
                     var task = $scope.taskList.filter(function (e) { return e.id === data.id })[0];
                     task.name = data.name;
                 });
@@ -150,12 +150,14 @@
                 };
 
                 $scope.createTask = function () {
+                    $scope.alertMessage = null;
                     $scope.currentTask = {
-                        priorityId: 0, stateId: 0, Userid: $scope.user.id
+                        priorityId: 1, stateId: 1, userId: $scope.user.id
                     };
                 };
 
                 $scope.saveTask = function () {
+                    $scope.alertMessage = null;
                     if ($scope.currentTask.createDateTime == null) {
                         taskService.createTask($scope.user, $scope.currentTask)
                             .success(function (data, status, headers, config) {
@@ -163,8 +165,11 @@
                                 $scope.shadowCopy = angular.copy(data);
                                 $scope.changed = false;
                                 $scope.taskList.push({
-                                                                id: data.id, name: data.name
-                                                    });
+                                    id: data.id, name: data.name
+                                });
+                            })
+                            .error(function (data, status, headers, config) {
+                                $scope.alertMessage = "Failed to create task: " + data.message;
                             });
                     }
                     else {
@@ -175,22 +180,30 @@
 
                                 var task = $scope.taskList.filter(function (e) { return e.id === $scope.currentTask.id })[0];
                                 task.name = $scope.currentTask.name;
+                            })
+                            .error(function (data, status, headers, config) {
+                                $scope.alertMessage = "Failed to edit task: " + data.message;
                             });
                     }
                 };
 
                 $scope.removeTask = function () {
+                    $scope.alertMessage = null;
                     openDialog("Are you sure you want to delete this task?", true, function () {
                         taskService.deleteTask($scope.user, $scope.currentTask.id)
                             .success(function (data, status, headers, config) {
                                 $scope.currentTask = null;
                                 $scope.shadowCopy = null;
                                 $scope.taskList = $scope.taskList.filter(function (e) { return e.id !== data.id });
+                            })
+                            .error(function (data, status, headers, config) {
+                                $scope.alertMessage = "Failed to remove task: " + data.message;
                             });
                     });
                 };
 
                 $scope.cancelChanges = function () {
+                    $scope.alertMessage = null;
                     openDialog("You will lose all unsaved changes! Confirm action?", true, function () {
                         $scope.currentTask = angular.copy($scope.shadowCopy);
                     });

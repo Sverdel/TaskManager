@@ -46,8 +46,14 @@ namespace TaskManager.Api.Controllers
                 return BadRequest(ModelState);
             }
 
+            if (_dbContext.Tasks.FirstOrDefault(x => x.UserId == userId && x.Name == task.Name) != null)
+            {
+                return BadRequest("Task with the same name already exists");
+            }
+
             task.CreateDateTime = DateTime.Now;
             task.ChangeDatetime = DateTime.Now;
+
             _dbContext.Tasks.Add(task);
             await _dbContext.SaveChangesAsync();
 
