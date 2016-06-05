@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
@@ -38,16 +39,19 @@ namespace TaskManager.Api.Models.DataModel
         public int UserId { get; set; }
 
         [ForeignKey("UserId")]
+        [JsonIgnore]
         public User User { get; set; }
 
         public byte StateId { get; set; }
 
         [ForeignKey("StateId")]
+        [JsonIgnore]
         public State State { get; set; }
 
         public byte PriorityId { get; set; }
 
         [ForeignKey("PriorityId")]
+        [JsonIgnore]
         public Priority Priority { get; set; }
     }
 }

@@ -171,11 +171,10 @@
     <Compile Include="Models\DataModel\TaskDBInitializer.cs" />
     <Compile Include="Models\DataModel\User.cs" />
     <Compile Include="Models\DataModel\WorkTask.cs" />
-    <Compile Include="Models\Dto\TaskDto.cs" />
-    <Compile Include="Models\Dto\UserDto.cs" />
     <Compile Include="Models\TaskHub.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Startup.cs" />
+    <Compile Include="Utils\SignalRContractResolver.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="packages.config">

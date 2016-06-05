@@ -10,7 +10,6 @@ using System.Threading.Tasks;
 using System.Web.Http;
 using System.Web.Http.Description;
 using TaskManager.Api.Models.DataModel;
-using TaskManager.Api.Models.Dto;
 
 namespace TaskManager.Api.Controllers
 {
@@ -19,14 +18,10 @@ namespace TaskManager.Api.Controllers
     {
         private TaskDbContext _dbContext = new TaskDbContext();
 
-        private Func<UserDto, User> FromDto = dto => new User { Id = dto.Id, Name = dto.Name };
-        private Func<User, UserDto> ToDto = user => new UserDto { Id = user.Id, Name = user.Name };
-
-
         [Route()]
         public async Task<IHttpActionResult> GetUsers()
         {
-            return Ok(_dbContext.Users.ToList().Select(x => ToDto(x)));
+            return Ok(_dbContext.Users.ToList().Select(x => x));
         }
 
         [Route("{name}/{password}", Name = "GetUserRoute")]
@@ -43,19 +38,18 @@ namespace TaskManager.Api.Controllers
                 return StatusCode(HttpStatusCode.Unauthorized);
             }
 
-            return Ok(ToDto(user));
+            return Ok(user);
         }
 
         [Route("{id:int}")]
         [HttpPut]
-        public async Task<IHttpActionResult> PutUser(int id, [FromBody]UserDto userDto)
+        public async Task<IHttpActionResult> PutUser(int id, [FromBody]User user)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
-            var user = FromDto(userDto);
             if (id != user.Id)
             {
                 return BadRequest();
@@ -84,14 +78,13 @@ namespace TaskManager.Api.Controllers
 
         [Route]
         [HttpPost]
-        public async Task<IHttpActionResult> PostUser([FromBody]UserDto userDto)
+        public async Task<IHttpActionResult> PostUser([FromBody]User user)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
-            var user = FromDto(userDto);
             _dbContext.Users.Add(user);
             await _dbContext.SaveChangesAsync();
 
@@ -111,7 +104,7 @@ namespace TaskManager.Api.Controllers
             _dbContext.Users.Remove(user);
             await _dbContext.SaveChangesAsync();
 
-            return Ok(ToDto(user));
+            return Ok(user);
         }
 
         protected override void Dispose(bool disposing)

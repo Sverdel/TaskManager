@@ -12,36 +12,36 @@
                 var taskHub = hubService(hubService.defaultServer, 'taskHub');
 
                 taskHub.on('createTask', function (data) {
-                    $scope.taskList.push({ Id: data.Id, Name: data.Name });
+                    $scope.taskList.push({ id: data.id, name: data.name });
                 });
 
                 taskHub.on('deleteTask', function (data) {
-                    $scope.taskList = $scope.taskList.filter(function (e) { return e.Id !== data.Id });
+                    $scope.taskList = $scope.taskList.filter(function (e) { return e.id !== data.id });
 
-                    if ($scope.currentTask.Id == data.Id) { // alert
+                    if ($scope.currentTask.id == data.id) { // alert
                         $scope.currentTask = null;
                         $scope.shadowCopy = null;
                     }
                 });
                 
                 taskHub.on('editTask', function (data) {
-                    if ($scope.currentTask.Id == data.Id) {// alert
+                    if ($scope.currentTask.id == data.id) {// alert
                         $scope.currentTask = data;
                         $scope.shadowCopy = angular.copy(data);
                     }
                 });
                
                 $scope.getTasks = function () {
-                    if ($scope.user.Id == null) { return; }
+                    if ($scope.user.id == null) { return; }
 
-                    return taskService.getAllTasks($scope.user.Id)
+                    return taskService.getAllTasks($scope.user.id)
                         .success(function (data, status, headers, config) {
                             $scope.taskList = data;
                         });
                 }
                 
                 $scope.getTask = function (id) {
-                    return taskService.getTask($scope.user.Id, id)
+                    return taskService.getTask($scope.user.id, id)
                         .success(function (data, status, headers, config) {
                             $scope.currentTask = data;
                             $scope.shadowCopy = angular.copy(data);
@@ -50,10 +50,10 @@
 
                 $scope.getUser = function () {
                     $scope.alertMessage = null;
-                    if ($scope.user.Name == null || $scope.user.Password == null) {
+                    if ($scope.user.name == null || $scope.user.password == null) {
                         return;
                     }
-                    return userService.login($scope.user.Name, $scope.user.Password)
+                    return userService.login($scope.user.name, $scope.user.password)
                         .success(function (data, status, headers, config) {
                             $scope.user = data;
                             $scope.getTasks();
@@ -77,31 +77,31 @@
 
                 $scope.setState = function (id) {
                     if ($scope.currentTask != null) {
-                        $scope.currentTask.StateId = id;
+                        $scope.currentTask.stateId = id;
                     }
                 };
 
                 $scope.setPriority = function (id) {
                     if ($scope.currentTask != null) {
-                        $scope.currentTask.PriorityId = id;
+                        $scope.currentTask.priorityId = id;
                     }
                 };
 
                 $scope.createTask = function () {
                     $scope.currentTask = {
-                        PriorityId: 0, StateId: 0, UserId: $scope.user.Id
+                        priorityId: 0, stateId: 0, Userid: $scope.user.id
                     };
                 };
 
                 $scope.saveTask = function () {
-                    if ($scope.currentTask.CreateDateTime == null) {
-                        taskService.createTask($scope.user.Id, $scope.currentTask)
+                    if ($scope.currentTask.createDateTime == null) {
+                        taskService.createTask($scope.user.id, $scope.currentTask)
                             .success(function(data, status, headers, config) {
                                 $scope.currentTask = data;
                             });
                     }
                     else {
-                        taskService.editTask($scope.user.Id, $scope.currentTask);
+                        taskService.editTask($scope.user.id, $scope.currentTask);
                     }
 
                     $scope.shadowCopy = angular.copy($scope.currentTask);
@@ -109,7 +109,7 @@
                 };
 
                 $scope.removeTask = function () {
-                    taskService.deleteTask($scope.user.Id, $scope.currentTask.Id);
+                    taskService.deleteTask($scope.user.id, $scope.currentTask.id);
                 };
 
                 $scope.cancelChanges = function () {
@@ -137,8 +137,8 @@
                         });
 
                 ////////test
-                //$scope.user = { Id: 1, Name: 'test user', Password: null }
-                //var url = "/tasks/" + $scope.user.Id;
+                //$scope.user = { id: 1, name: 'test user', password: null }
+                //var url = "/tasks/" + $scope.user.id;
                 //return $http({ url: backendServerUrl.concat(url), method: "GET" })
                 //    .success(function (data, status, headers, config) {
                 //        $scope.taskList = data;
