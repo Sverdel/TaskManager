@@ -90,7 +90,6 @@
                             <div class="panel-heading panel-title">
                                 Work items
                                 <div class="pull-right">
-                                    <span class="glyphicon glyphicon-refresh" aria-hidden="true" ng-click="getTasks()"></span>
                                     <span class="glyphicon glyphicon-plus" aria-hidden="true" ng-click="createTask()"></span>
                                 </div>
                             </div>
@@ -168,7 +167,7 @@
 
                                 <div class="form-group">
                                     <label>Description</label>
-                                    <textarea class="form-control" ng-model="currentTask.Description" rows="5" style="resize:none"></textarea>
+                                    <textarea class="form-control" ng-model="currentTask.description" rows="5" style="resize:none"></textarea>
                                 </div>
 
                                 <div class="form-group pull-right">
@@ -189,8 +188,8 @@
                     {{message}}
                 </div>
                 <div class="modal-footer">
-                    <button class="btn btn-success" type="button" ng-click="ok()">Yes</button>
-                    <button class="btn btn-danger" type="button" ng-click="cancel()">No</button>
+                    <button class="btn btn-default" type="button" ng-click="ok()">Yes</button>
+                    <button class="btn btn-default" type="button" ng-click="cancel()">No</button>
                 </div>
             </script>
 
@@ -202,7 +201,7 @@
                     {{message}}
                 </div>
                 <div class="modal-footer">
-                    <button class="btn btn-primary" type="button" ng-click="ok()">OK</button>
+                    <button class="btn btn-default" type="button" ng-click="ok()">OK</button>
                 </div>
             </script>
         </div>

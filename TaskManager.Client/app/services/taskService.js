@@ -6,24 +6,24 @@
         .service('taskService', ['httpService',
         function (httpService) {
 
-            this.getAllTasks = function (userId) {
-                return httpService.send("/tasks/" + userId, "GET");
+            this.getAllTasks = function (user) {
+                return httpService.send("/tasks/" + user.id + "/" + user.token, "GET");
             }
 
-            this.getTask = function (userId, taskId) {
-                return httpService.send("/tasks/" + userId + "/" + taskId, "GET");
+            this.getTask = function (user, taskId) {
+                return httpService.send("/tasks/" + user.id + "/" + user.token + "/" + taskId, "GET");
             }
 
-            this.createTask = function (userId, task) {
-                return httpService.send("/tasks/" + userId, "POST", task);
+            this.createTask = function (user, task) {
+                return httpService.send("/tasks/" + user.id + "/" + user.token, "POST", task);
             }
 
-            this.editTask = function (userId, task) {
-                return httpService.send("/tasks/" + userId + "/" + task.id, "PUT", task);
+            this.editTask = function (user, task) {
+                return httpService.send("/tasks/" + user.id + "/" + user.token + "/" + task.id, "PUT", task);
             }
 
-            this.deleteTask = function (userId, taskId) {
-                return httpService.send("/tasks/" + userId + "/" + taskId, "DELETE");
+            this.deleteTask = function (user, taskId) {
+                return httpService.send("/tasks/" + user.id + "/" + user.token + "/" + taskId, "DELETE");
             }
 
         }]);

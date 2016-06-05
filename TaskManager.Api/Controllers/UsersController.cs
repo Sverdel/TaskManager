@@ -38,6 +38,8 @@ namespace TaskManager.Api.Controllers
                 return Content(HttpStatusCode.Unauthorized, new { Mmessage = "Incorrect password" });
             }
 
+            user.Token = Guid.NewGuid().ToString();
+
             return Ok(user);
         }
 
