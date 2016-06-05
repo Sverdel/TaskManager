@@ -50,8 +50,16 @@
     </Otherwise>
   </Choose>
   <ItemGroup>
-    <Compile Include="UnitTest1.cs" />
+    <Compile Include="Controllers\ResourceControllerTests.cs" />
+    <Compile Include="Controllers\TaskControllerTests.cs" />
+    <Compile Include="Controllers\UsersControllerTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\TaskManager.Api\TaskManager.Api.csproj">
+      <Project>{8D75078E-A808-4817-B278-6AD3DFB984BA}</Project>
+      <Name>TaskManager.Api</Name>
+    </ProjectReference>
   </ItemGroup>
   <Choose>
     <When Condition="'$(VisualStudioVersion)' == '10.0' And '$(IsCodedUITest)' == 'True'">

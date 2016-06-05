@@ -18,12 +18,6 @@ namespace TaskManager.Api.Controllers
     {
         private TaskDbContext _dbContext = new TaskDbContext();
 
-        [Route()]
-        public async Task<IHttpActionResult> GetUsers()
-        {
-            return Ok(_dbContext.Users.ToList().Select(x => x));
-        }
-
         [Route("{name}/{password}", Name = "GetUserRoute")]
         public async Task<IHttpActionResult> GetUser(string name, string password)
         {
@@ -41,41 +35,6 @@ namespace TaskManager.Api.Controllers
             user.Token = Guid.NewGuid().ToString();
 
             return Ok(user);
-        }
-
-        [Route("{id:int}")]
-        [HttpPut]
-        public async Task<IHttpActionResult> PutUser(int id, [FromBody]User user)
-        {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
-
-            if (id != user.Id)
-            {
-                return BadRequest();
-            }
-
-            _dbContext.Entry(user).State = EntityState.Modified;
-
-            try
-            {
-                await _dbContext.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (_dbContext.Users.Count(e => e.Id == id) == 0)
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
-            }
-
-            return StatusCode(HttpStatusCode.NoContent);
         }
 
         [Route("{name}/{password}")]
@@ -101,22 +60,6 @@ namespace TaskManager.Api.Controllers
 
             var newUser = await _dbContext.Users.FirstOrDefaultAsync(x => x.Name == name);
             return CreatedAtRoute("GetUserRoute", null, newUser);
-        }
-
-        [Route("{id:int}")]
-        [HttpDelete]
-        public async Task<IHttpActionResult> DeleteUser(int id)
-        {
-            User user = await _dbContext.Users.FindAsync(id);
-            if (user == null)
-            {
-                return NotFound();
-            }
-
-            _dbContext.Users.Remove(user);
-            await _dbContext.SaveChangesAsync();
-
-            return Ok(user);
         }
 
         protected override void Dispose(bool disposing)
