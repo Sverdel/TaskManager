@@ -19,7 +19,7 @@
             }
 
             this.editTask = function (userId, task) {
-                return httpService.send("/tasks/" + userId + "/" + task.Id, "PUT", task);
+                return httpService.send("/tasks/" + userId + "/" + task.id, "PUT", task);
             }
 
             this.deleteTask = function (userId, taskId) {

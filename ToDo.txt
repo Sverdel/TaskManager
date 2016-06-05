@@ -1,7 +1,6 @@
 ﻿
-1. sign up form
 2. Add comments
-4. Add confirm dialogs to delete/save/cancel/leave events
+3. Data validation
 6. create partial view
 
 Required:

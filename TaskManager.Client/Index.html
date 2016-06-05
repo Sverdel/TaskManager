@@ -49,8 +49,6 @@
                         <div class="dropdown navbar-form navbar-right" role="form" ng-show="user.id != null">
                             <button class="dropdown-toggle btn btn-default" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">{{user.name}} <span class="caret"></span></button>
                             <ul class="dropdown-menu">
-                                <li><a href="#">Edit profile</a></li>
-                                <li role="separator" class="divider"></li>
                                 <li><a href="#" ng-click="logout()">Logout</a></li>
                             </ul>
                         </div>
@@ -157,14 +155,14 @@
                                 <div class="form-group row">
                                     <div class="form-inline col-md-7">
                                         <label class="col-md-6 row">Create date</label>
-                                        <input type="text" class="form-control" readonly="readonly" ng-model="currentTask.createDateTime | date:'dd.MM.yyyy HH:mm:ss'" >
+                                        <input type="text" class="form-control" readonly="readonly" value="{{ currentTask.createDateTime | date:'dd.MM.yyyy HH:mm:ss'}}" >
                                     </div>
                                 </div>
 
                                 <div class="form-group row">
                                     <div class="form-inline col-md-7">
                                         <label class="col-md-6 row">Last change date</label>
-                                        <input type="text" class="form-control" readonly="readonly" ng-model="currentTask.changeDatetime | date:'dd.MM.yyyy HH:mm:ss'" >
+                                        <input type="text" class="form-control" readonly="readonly" value="{{currentTask.changeDatetime | date:'dd.MM.yyyy HH:mm:ss'}}" >
                                     </div>
                                 </div>
 
@@ -183,18 +181,30 @@
                 </div>
             </div>
 
-            <!--<script type="text/ng-template" id="confirm.html">
+            <script type="text/ng-template" id="confirm.html">
                 <div class="modal-header">
-                    <div class="modal-title">Confirm</div>
+                    <div class="modal-title">Task Manager</div>
                 </div>
                 <div class="modal-body">
                     {{message}}
                 </div>
                 <div class="modal-footer">
-                    <button class="btn btn-default" type="button" ng-click="ok()">Yes</button>
-                    <button class="btn btn-default" type="button" ng-click="cancel()">No</button>
+                    <button class="btn btn-success" type="button" ng-click="ok()">Yes</button>
+                    <button class="btn btn-danger" type="button" ng-click="cancel()">No</button>
                 </div>
-            </script>-->
+            </script>
+
+            <script type="text/ng-template" id="message.html">
+                <div class="modal-header">
+                    <div class="modal-title">Task Manager</div>
+                </div>
+                <div class="modal-body">
+                    {{message}}
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-primary" type="button" ng-click="ok()">OK</button>
+                </div>
+            </script>
         </div>
     </div>
 

@@ -30,12 +30,12 @@ namespace TaskManager.Api.Controllers
             User user = await _dbContext.Users.FirstOrDefaultAsync(x => x.Name == name);
             if (user == null)
             {
-                return NotFound();
+                return Content(HttpStatusCode.NotFound, new { Mmessage = "Invalid user name" });
             }
 
             if (user.Password != password)
             {
-                return StatusCode(HttpStatusCode.Unauthorized);
+                return Content(HttpStatusCode.Unauthorized, new { Mmessage = "Incorrect password" });
             }
 
             return Ok(user);

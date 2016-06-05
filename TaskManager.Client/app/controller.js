@@ -3,11 +3,35 @@
 
     angular
         .module('taskApp')
-        .controller('taskController', ['$scope', '$http', 'httpService', 'userService', 'resourceService', 'taskService', 'hubService', 'backendServerUrl',
-            function ($scope, $http, httpService, userService, resourceService, taskService, hubService, backendServerUrl) {
+        .controller('taskController', ['$scope', '$http', 'httpService', 'userService', 'resourceService', 'taskService', 'hubService', 'backendServerUrl', '$uibModal',
+            function ($scope, $http, httpService, userService, resourceService, taskService, hubService, backendServerUrl, $uibModal) {
                 $scope.listHeight = window.innerHeight;
 
                 httpService.init(backendServerUrl);
+
+                function openDialog(message, isConfirm, yesCallback, noCallback) {
+
+                    var modalInstance = $uibModal.open({
+                        animation: true,
+                        templateUrl: isConfirm ? 'confirm.html' : 'message.html',
+                        controller: 'ModalInstanceCtrl',
+                        size: 'sm',
+                        resolve: {
+                            message: function () { return message; }
+                        }
+                    });
+
+                    modalInstance.result.then(function () {
+                        if (yesCallback) {
+                            yesCallback()
+                        }
+                    },
+                    function () {
+                        if (noCallback) {
+                            noCallback()
+                        }
+                    });
+                };
 
                 var taskHub = hubService(hubService.defaultServer, 'taskHub');
 
@@ -19,16 +43,24 @@
                     $scope.taskList = $scope.taskList.filter(function (e) { return e.id !== data.id });
 
                     if ($scope.currentTask.id == data.id) { // alert
-                        $scope.currentTask = null;
-                        $scope.shadowCopy = null;
+                        openDialog("The task has been removed on remote host", false, function () {
+                            $scope.currentTask = null;
+                            $scope.shadowCopy = null;
+                        });
                     }
                 });
 
                 taskHub.on('editTask', function (data) {
-                    if ($scope.currentTask.id == data.id) {// alert
-                        $scope.currentTask = data;
-                        $scope.shadowCopy = angular.copy(data);
+                    if ($scope.currentTask.id == data.id) {
+                        openDialog("The task has been updated on remote host", false, function () {
+                            $scope.currentTask = data;
+                            $scope.shadowCopy = angular.copy(data);
+                        });
                     }
+
+                    var task = $scope.taskList.filter(function (e) { return e.id === data.id })[0];
+                    task.name = data.name;
+
                 });
 
                 $scope.getTasks = function () {
@@ -40,12 +72,24 @@
                         });
                 }
 
-                $scope.getTask = function (id) {
+                function getTaskInner(id) {
                     return taskService.getTask($scope.user.id, id)
                         .success(function (data, status, headers, config) {
                             $scope.currentTask = data;
                             $scope.shadowCopy = angular.copy(data);
                         });
+                }
+
+                $scope.getTask = function (id) {
+
+                    if ($scope.currentTask != null && $scope.changed == true) {
+                        openDialog("You will lose all unsaved changes! Continue leave task?", true, function () {
+                            getTaskInner(id);
+                        })
+                    }
+                    else {
+                        getTaskInner(id)
+                    }
                 }
 
                 $scope.getUser = function () {
@@ -61,9 +105,8 @@
                             taskHub.invoke("userLogin", $scope.user);
                         })
                         .error(function (data, status, headers, config) {
-                            $scope.alertMessage = "Incorrect user name or password";
+                            $scope.alertMessage = "Login failed: " + data.message;
                         });
-
                 }
 
                 $scope.createUser = function () {
@@ -79,7 +122,7 @@
                             $scope.taskList = [];
                         })
                         .error(function (data, status, headers, config) {
-                            $scope.alertMessage = "Error while register user";
+                            $scope.alertMessage = "Error while register user: " + data.message;
                         });
                 }
 
@@ -88,7 +131,7 @@
                     $scope.user = null;
                     $scope.currentTask = null;
                     $scope.shadowCopy = null;
-                    $scope.taskList = null;
+                    $scope.taskList = [];
                 }
 
 
@@ -115,22 +158,27 @@
                         taskService.createTask($scope.user.id, $scope.currentTask)
                             .success(function (data, status, headers, config) {
                                 $scope.currentTask = data;
+                                $scope.shadowCopy = angular.copy(data);
+                                $scope.changed = false;
                             });
                     }
                     else {
                         taskService.editTask($scope.user.id, $scope.currentTask);
+                        $scope.shadowCopy = angular.copy($scope.currentTask);
+                        $scope.changed = false;
                     }
-
-                    $scope.shadowCopy = angular.copy($scope.currentTask);
-                    $scope.changed = false;
                 };
 
                 $scope.removeTask = function () {
-                    taskService.deleteTask($scope.user.id, $scope.currentTask.id);
+                    openDialog("Are you sure you want to delete this task?", true, function () {
+                        taskService.deleteTask($scope.user.id, $scope.currentTask.id);
+                    });
                 };
 
                 $scope.cancelChanges = function () {
-                    $scope.currentTask = angular.copy($scope.shadowCopy);
+                    openDialog("You will lose all unsaved changes! Confirm action?", true, function () {
+                        $scope.currentTask = angular.copy($scope.shadowCopy);
+                    });
                 };
 
                 $scope.$watch('currentTask', function () {
@@ -140,7 +188,7 @@
 
                 }, true);
 
-
+                
 
                 //fill dictionaties
                 resourceService.getStates()
@@ -148,18 +196,9 @@
                             $scope.stateList = data;
                         });
 
-                $scope.priorityList = resourceService.getPriorities()
+                resourceService.getPriorities()
                         .success(function (data) {
                             $scope.priorityList = data;
                         });
-
-                ////////test
-                //$scope.user = { id: 1, name: 'test user', password: null }
-                //var url = "/tasks/" + $scope.user.id;
-                //return $http({ url: backendServerUrl.concat(url), method: "GET" })
-                //    .success(function (data, status, headers, config) {
-                //        $scope.taskList = data;
-                //    });
-                ////////test
             }]);
 })();
