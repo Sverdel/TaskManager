@@ -23,14 +23,14 @@
                         $scope.shadowCopy = null;
                     }
                 });
-                
+
                 taskHub.on('editTask', function (data) {
                     if ($scope.currentTask.id == data.id) {// alert
                         $scope.currentTask = data;
                         $scope.shadowCopy = angular.copy(data);
                     }
                 });
-               
+
                 $scope.getTasks = function () {
                     if ($scope.user.id == null) { return; }
 
@@ -39,7 +39,7 @@
                             $scope.taskList = data;
                         });
                 }
-                
+
                 $scope.getTask = function (id) {
                     return taskService.getTask($scope.user.id, id)
                         .success(function (data, status, headers, config) {
@@ -50,6 +50,7 @@
 
                 $scope.getUser = function () {
                     $scope.alertMessage = null;
+                    $scope.signUp = false;
                     if ($scope.user.name == null || $scope.user.password == null) {
                         return;
                     }
@@ -58,12 +59,28 @@
                             $scope.user = data;
                             $scope.getTasks();
                             taskHub.invoke("userLogin", $scope.user);
-
                         })
                         .error(function (data, status, headers, config) {
                             $scope.alertMessage = "Incorrect user name or password";
                         });
 
+                }
+
+                $scope.createUser = function () {
+                    $scope.alertMessage = null;
+                    if ($scope.user.name == null || $scope.user.password == null) {
+                        return;
+                    }
+                    return userService.register($scope.user.name, $scope.user.password)
+                        .success(function (data, status, headers, config) {
+                            $scope.user = data;
+                            taskHub.invoke("userLogin", $scope.user);
+                            $scope.signUp = false;
+                            $scope.taskList = [];
+                        })
+                        .error(function (data, status, headers, config) {
+                            $scope.alertMessage = "Error while register user";
+                        });
                 }
 
                 $scope.logout = function () {
@@ -96,7 +113,7 @@
                 $scope.saveTask = function () {
                     if ($scope.currentTask.createDateTime == null) {
                         taskService.createTask($scope.user.id, $scope.currentTask)
-                            .success(function(data, status, headers, config) {
+                            .success(function (data, status, headers, config) {
                                 $scope.currentTask = data;
                             });
                     }
@@ -124,7 +141,7 @@
                 }, true);
 
 
-                
+
                 //fill dictionaties
                 resourceService.getStates()
                         .success(function (data) {

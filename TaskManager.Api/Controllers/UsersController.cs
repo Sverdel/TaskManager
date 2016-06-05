@@ -76,19 +76,29 @@ namespace TaskManager.Api.Controllers
             return StatusCode(HttpStatusCode.NoContent);
         }
 
-        [Route]
+        [Route("{name}/{password}")]
         [HttpPost]
-        public async Task<IHttpActionResult> PostUser([FromBody]User user)
+        public async Task<IHttpActionResult> PostUser(string name, string password)
         {
-            if (!ModelState.IsValid)
+            if (string.IsNullOrEmpty(name) || string.IsNullOrEmpty(password))
             {
                 return BadRequest(ModelState);
             }
 
+            var user = await _dbContext.Users.FirstOrDefaultAsync(x => x.Name == name);
+
+            if (user != null)
+            {
+                return BadRequest("User with the same name already exists");
+            }
+
+            user = new User { Name = name, Password = password };
+
             _dbContext.Users.Add(user);
             await _dbContext.SaveChangesAsync();
 
-            return CreatedAtRoute("GetUserRoute", null, user);
+            var newUser = await _dbContext.Users.FirstOrDefaultAsync(x => x.Name == name);
+            return CreatedAtRoute("GetUserRoute", null, newUser);
         }
 
         [Route("{id:int}")]

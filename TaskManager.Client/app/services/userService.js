@@ -10,8 +10,8 @@
                 return httpService.send("/users/" + userName + "/" + password, "GET");
             }
 
-            this.register = function (user) {
-                return httpService.send("/users", "POST", user );
+            this.register = function (userName, password) {
+                return httpService.send("/users/" + userName + "/" + password, "POST");
             }
 
             this.edit = function (user) {
