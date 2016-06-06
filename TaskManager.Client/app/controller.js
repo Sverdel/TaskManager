@@ -196,15 +196,16 @@
 
                 $scope.signup = function () {
                     $scope.alertMessage = null;
-                    if ($scope.user.name == null || $scope.user.password == null) {
+                    if ($scope.newUser.name == null || $scope.newUser.password == null) {
                         return;
                     }
-                    return userService.register($scope.user.name, $scope.user.password)
+                    return userService.register($scope.newUser.name, $scope.newUser.password)
                         .success(function (data, status, headers, config) {
                             $scope.user = data;
                             taskHub.invoke("userLogin", $scope.user);
                             $scope.signUp = false;
                             $scope.taskList = [];
+                            $scope.newUser = {};
                         })
                         .error(function (data, status, headers, config) {
                             $scope.alertMessage = "Error while register user: " + data.message;

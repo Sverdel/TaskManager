@@ -6,6 +6,7 @@
 
     <link href="Content/bootstrap.min.css" rel="stylesheet" type="text/css">
     <link href="Content/ui-bootstrap-csp.css" rel="stylesheet" type="text/css">
+    <link href="Content/site.css" rel="stylesheet" type="text/css">
 
 
     <script src="Scripts/angular.min.js"></script>
@@ -20,11 +21,13 @@
     <script src="app/main.js"></script>
     <script src="app/controller.js"></script>
     <script src="app/directive.js"></script>
+    <script src="app/fromDictionaryFilter.js"></script>
     <script src="app/services/httpService.js"></script>
     <script src="app/services/userService.js"></script>
     <script src="app/services/resourceService.js"></script>
     <script src="app/services/taskService.js"></script>
     <script src="app/services/hubService.js"></script>
+
 
 </head>
 <body>
@@ -63,23 +66,23 @@
             </div>
 
             <div class="container panel panel-default panel-body col-md-4 col-md-push-4" ng-show="signUp == true">
-                <form>
+                <form name="signupForm" >
                     <div class="form-group">
                         <label>Name</label>
-                        <input type="text" class="form-control" ng-model="user.name">
+                        <input type="text" class="form-control error" ng-model="newUser.name" required>
                     </div>
 
                     <div class="form-group">
                         <label>Password</label>
-                        <input type="password" class="form-control" ng-model="user.password">
+                        <input type="password" class="form-control" ng-model="newUser.password" required>
                     </div>
 
                     <div class="form-group">
                         <label>Confirm password</label>
-                        <input type="password" class="form-control" ng-model="user.confirmPassword">
+                        <input type="password" name="confirmpassword" class="form-control" ng-model="newUser.confirmPassword" required compare-to="newUser.password">
                     </div>
 
-                    <button type="submit" class="btn btn-default" ng-click="signup()" ng-disabled="user.name == null || user.password == null || user.password == null || user.password != user.confirmPassword">Sign Up</button>
+                    <button type="submit" class="btn btn-default" ng-click="signup()" ng-disabled="newUser.name == null || newUser.password == null || newUser.password == null || newUser.password != newUser.confirmPassword">Sign Up</button>
                 </form>
             </div>
 

@@ -67,6 +67,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="app\directive.js" />
+    <Content Include="app\fromDictionaryFilter.js" />
     <Content Include="app\services\httpService.js" />
     <Content Include="app\services\hubService.js" />
     <Content Include="app\services\resourceService.js" />
