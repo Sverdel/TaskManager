@@ -1,9 +1,0 @@
-﻿
-2. Add comments
-3. Data validation
-6. create partial view
-
-Required:
-Tests!
-
- 
