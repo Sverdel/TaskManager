@@ -14,7 +14,7 @@ using TaskManager.Api.Models.DataModel;
 namespace TaskManager.Api.Controllers
 {
     [RoutePrefix("api/users")]
-    public class UsersController : ApiController
+    public class UserController : ApiController
     {
         private TaskDbContext _dbContext = new TaskDbContext();
 
@@ -59,6 +59,7 @@ namespace TaskManager.Api.Controllers
             await _dbContext.SaveChangesAsync();
 
             var newUser = await _dbContext.Users.FirstOrDefaultAsync(x => x.Name == name);
+            newUser.Token = Guid.NewGuid().ToString();
             return CreatedAtRoute("GetUserRoute", null, newUser);
         }
 

@@ -17,13 +17,13 @@ namespace TaskManager.Api.Controllers
         [Route("states")]
         public async Task<IHttpActionResult> GetStates()
         {
-            return Ok(_dbContext.States);
+            return Ok(_dbContext.States.ToList());
         }
 
         [Route("priorities")]
         public async Task<IHttpActionResult> GetPriorities()
         {
-            return Ok(_dbContext.Priorities);
+            return Ok(_dbContext.Priorities.ToList());
         }
 
         protected override void Dispose(bool disposing)

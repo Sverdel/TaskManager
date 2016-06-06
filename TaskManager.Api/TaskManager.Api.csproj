@@ -166,14 +166,15 @@
   <ItemGroup>
     <Compile Include="Controllers\ResourceController.cs" />
     <Compile Include="Controllers\TaskController.cs" />
-    <Compile Include="Controllers\UsersController.cs" />
+    <Compile Include="Controllers\UserController.cs" />
     <Compile Include="Models\DataModel\Priority.cs" />
     <Compile Include="Models\DataModel\State.cs" />
     <Compile Include="Models\DataModel\TaskDbContext.cs" />
     <Compile Include="Models\DataModel\TaskDBInitializer.cs" />
     <Compile Include="Models\DataModel\User.cs" />
     <Compile Include="Models\DataModel\WorkTask.cs" />
-    <Compile Include="Models\TaskHub.cs" />
+    <Compile Include="Models\Hubs\TaskHub.cs" />
+    <Compile Include="Models\TaskDto.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Startup.cs" />
     <Compile Include="Utils\SignalRContractResolver.cs" />

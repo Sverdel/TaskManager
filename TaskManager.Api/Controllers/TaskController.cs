@@ -22,11 +22,12 @@ namespace TaskManager.Api.Controllers
         [Route()]
         public async Task<IHttpActionResult> GetList(int userId, string token)
         {
-            return Ok(_dbContext.Tasks.Where(x => x.UserId == userId).ToList().Select(x => new { Id = x.Id, Name = x.Name }));
+            var test = _dbContext.Tasks.Where(x => x.UserId == userId).ToList().Select(x => new TaskDto { Id = x.Id, Name = x.Name });
+            return Ok(test);
         }
 
         [Route("{id:int}", Name = "GetTaskRoute")]
-        public async Task<IHttpActionResult> Get(int userId, string token, int id)
+        public async Task<IHttpActionResult> GetTask(int userId, string token, int id)
         {
             WorkTask workTask = await _dbContext.Tasks.FindAsync(id);
             if (workTask == null)
@@ -39,7 +40,7 @@ namespace TaskManager.Api.Controllers
 
         [Route()]
         [HttpPost]
-        public async Task<IHttpActionResult> Post(int userId, string token, [FromBody]WorkTask task)
+        public async Task<IHttpActionResult> PostTask(int userId, string token, [FromBody]WorkTask task)
         {
             if (!ModelState.IsValid)
             {
@@ -65,7 +66,7 @@ namespace TaskManager.Api.Controllers
 
         [Route("{id:int}")]
         [HttpPut]
-        public async Task<IHttpActionResult> Put(int userId, string token, int id, [FromBody]WorkTask task)
+        public async Task<IHttpActionResult> PutTask(int userId, string token, long id, [FromBody]WorkTask task)
         {
             if (!ModelState.IsValid)
             {
@@ -103,7 +104,7 @@ namespace TaskManager.Api.Controllers
 
         [Route("{id:int}")]
         [HttpDelete]
-        public async Task<IHttpActionResult> Delete(int userId, string token, int id)
+        public async Task<IHttpActionResult> DeleteTask(int userId, string token, long id)
         {
             WorkTask workTask = await _dbContext.Tasks.FindAsync(id);
             if (workTask == null)
@@ -116,7 +117,7 @@ namespace TaskManager.Api.Controllers
 
             _hub.Clients.Group(userId.ToString(), TaskHub.ConnectionCache[token]).deleteTask(workTask);
 
-            return Ok(new { Id = workTask.Id, Name = workTask.Name });
+            return Ok(new TaskDto { Id = workTask.Id, Name = workTask.Name });
         }
 
         protected override void Dispose(bool disposing)

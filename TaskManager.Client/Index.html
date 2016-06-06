@@ -42,7 +42,7 @@
                             <div class="form-group">
                                 <input type="password" class="form-control" placeholder="Password" ng-model="user.password">
                             </div>
-                            <button type="submit" class="btn btn-default" ng-click="getUser()" ng-disabled="user.name == null || user.password == null">Login</button>
+                            <button type="submit" class="btn btn-default" ng-click="login()" ng-disabled="user.name == null || user.password == null">Login</button>
                             <button class="btn btn-default" ng-click="signUp = true">Sign Up</button>
                         </form>
 
@@ -79,7 +79,7 @@
                         <input type="password" class="form-control" ng-model="user.confirmPassword">
                     </div>
 
-                    <button type="submit" class="btn btn-default" ng-click="createUser()" ng-disabled="user.name == null || user.password == null || user.password == null || user.password != user.confirmPassword">Sign Up</button>
+                    <button type="submit" class="btn btn-default" ng-click="signup()" ng-disabled="user.name == null || user.password == null || user.password == null || user.password != user.confirmPassword">Sign Up</button>
                 </form>
             </div>
 
