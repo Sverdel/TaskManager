@@ -18,7 +18,6 @@ namespace TaskManager.Api.Models.DataModel
 
         public TaskDbContext() : base("TaskDBConnectionString")
         {
-            Database.SetInitializer(new TaskDBInitializer());
         }
     }
 }

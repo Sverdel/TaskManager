@@ -66,6 +66,7 @@
     <Reference Include="System.EnterpriseServices" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="app\controllerModal.js" />
     <Content Include="app\directive.js" />
     <Content Include="app\fromDictionaryFilter.js" />
     <Content Include="app\services\httpService.js" />
