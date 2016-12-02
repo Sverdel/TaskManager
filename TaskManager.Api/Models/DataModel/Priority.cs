@@ -11,7 +11,7 @@ namespace TaskManager.Api.Models.DataModel
     {
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public byte Id { get; set; }
+        public int Id { get; set; }
 
         [Required]
         [StringLength(100)]

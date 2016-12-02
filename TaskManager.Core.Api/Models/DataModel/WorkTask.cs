@@ -1,13 +1,9 @@
 ﻿using Newtonsoft.Json;
 using System;
-using System.Collections.Generic;
-using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Linq;
-using System.Web;
 
-namespace TaskManager.Api.Models.DataModel
+namespace TaskManager.Core.Api.Models.DataModel
 {
     public class WorkTask
     {
@@ -36,7 +32,7 @@ namespace TaskManager.Api.Models.DataModel
 
         public double RemainingTimeCost { get; set; }
 
-        [Index]
+        
         public int UserId { get; set; }
 
         [ForeignKey("UserId")]

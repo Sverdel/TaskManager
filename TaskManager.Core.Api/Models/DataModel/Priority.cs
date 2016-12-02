@@ -1,20 +1,16 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Linq;
-using System.Web;
 
-namespace TaskManager.Api.Models.DataModel
+namespace TaskManager.Core.Api.Models.DataModel
 {
-    public class State
+    public class Priority
     {
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }
 
-        [StringLength(50)]
         [Required]
+        [StringLength(100)]
         public string Name { get; set; }
     }
 }
