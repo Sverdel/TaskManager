@@ -22,7 +22,7 @@ namespace TaskManager.Core.Api.Controllers
             _hub = manager.GetHubContext<TaskHub>();
         }
 
-        private IHubContext _hub; // = GlobalHost.ConnectionManager.GetHubContext<TaskHub>();
+        private IHubContext _hub; 
 
         [HttpGet]
         public async Task<IActionResult> GetList(int userId, string token)

@@ -17,7 +17,6 @@
     },
     "TaskManager.Core.Api": {
       "commandName": "Project",
-      "launchBrowser": true,
       "launchUrl": "http://localhost:8000",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"

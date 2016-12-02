@@ -1,16 +1,10 @@
-﻿using System;
-using System.Threading.Tasks;
-using Microsoft.Owin;
+﻿using Microsoft.Owin;
 using Owin;
-using TaskManager.Api.Models.DataModel;
 using System.Web.Http;
 using Microsoft.AspNet.SignalR;
 using Newtonsoft.Json.Serialization;
-using System.Reflection;
-using Microsoft.AspNet.SignalR.Infrastructure;
 using Newtonsoft.Json;
 using TaskManager.Api.Utils;
-using Newtonsoft.Json.Converters;
 
 [assembly: OwinStartup(typeof(TaskManager.Api.Startup))]
 
