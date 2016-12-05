@@ -3,11 +3,12 @@
 
     angular
         .module('taskApp')
-        .controller('taskController', ['$scope', '$http', 'httpService', 'userService', 'resourceService', 'taskService', 'hubService', 'backendServerUrl', '$uibModal',
-            function ($scope, $http, httpService, userService, resourceService, taskService, hubService, backendServerUrl, $uibModal) {
+        .controller('taskController', ['$scope', '$http', 'httpService', 'userService', 'resourceService', 'taskService', 'hubService', 'backendServerUrl', 'authService', '$uibModal',
+            function ($scope, $http, httpService, userService, resourceService, taskService, hubService, backendServerUrl, authService, $uibModal) {
                 $scope.listHeight = window.innerHeight;
 
                 httpService.init(backendServerUrl);
+                authService.init(backendServerUrl);
 
                 //inner functions
                 function openDialog(message, isConfirm, yesCallback, noCallback) {
@@ -185,7 +186,7 @@
                     }
                     return userService.login($scope.user.name, $scope.user.password)
                         .success(function (data, status, headers, config) {
-                            $scope.user = data;
+                            $scope.user = data.user;
                             $scope.getTaskList();
                             taskHub.invoke("userLogin", $scope.user);
                         })
@@ -213,11 +214,14 @@
                 }
 
                 $scope.logout = function () {
-                    taskHub.invoke("userLogout", $scope.user);
-                    $scope.user = null;
-                    $scope.currentTask = null;
-                    $scope.shadowCopy = null;
-                    $scope.taskList = [];
+                    userService.logout()
+                        .success(function (data, status, headers, config) {
+                            taskHub.invoke("userLogout", $scope.user);
+                            $scope.user = null;
+                            $scope.currentTask = null;
+                            $scope.shadowCopy = null;
+                            $scope.taskList = [];
+                        });
                 }
 
                 //fill dictionaties

@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using System.Linq;
 using System.Threading.Tasks;
 using TaskManager.Core.Api.Models.DataModel;
@@ -15,12 +16,14 @@ namespace TaskManager.Core.Api.Controllers
             _dbContext = context;
         }
 
+        [Authorize]
         [HttpGet("states")]
         public async Task<IActionResult> GetStates()
         {
             return Ok(_dbContext.States.ToList());
         }
 
+        [Authorize]
         [HttpGet("priorities")]
         public async Task<IActionResult> GetPriorities()
         {

@@ -33,7 +33,7 @@ namespace TaskManager.Core.Api.Models.DataModel
         public double RemainingTimeCost { get; set; }
 
         
-        public int UserId { get; set; }
+        public string UserId { get; set; }
 
         [ForeignKey("UserId")]
         [JsonIgnore]

@@ -11,7 +11,7 @@ using TaskManager.Core.Api.Models.DataModel;
 
 namespace TaskManager.Core.Api.Controllers
 {
-    [Route("api/tasks/{userId:int}/{token}")]
+    [Route("api/tasks/{userId}/{token}")]
     public class TaskController : Controller
     {
         private TaskDbContext _dbContext;
@@ -22,15 +22,17 @@ namespace TaskManager.Core.Api.Controllers
             _hub = manager.GetHubContext<TaskHub>();
         }
 
-        private IHubContext _hub; 
+        private IHubContext _hub;
 
+        [Authorize]
         [HttpGet]
-        public async Task<IActionResult> GetList(int userId, string token)
+        public async Task<IActionResult> GetList(string userId, string token)
         {
             var test = _dbContext.WorkTasks.Where(x => x.UserId == userId).ToList().Select(x => new TaskDto { Id = x.Id, Name = x.Name });
             return Ok(test);
         }
 
+        [Authorize]
         [HttpGet("{id:int}", Name = "GetTaskRoute")]
         public async Task<IActionResult> GetTask(int userId, string token, long id)
         {
@@ -43,8 +45,9 @@ namespace TaskManager.Core.Api.Controllers
             return Ok(workTask);
         }
 
+        [Authorize]
         [HttpPost]
-        public async Task<IActionResult> PostTask(int userId, string token, [FromBody]WorkTask task)
+        public async Task<IActionResult> PostTask(string userId, string token, [FromBody]WorkTask task)
         {
             if (!ModelState.IsValid)
             {
@@ -68,8 +71,9 @@ namespace TaskManager.Core.Api.Controllers
             return CreatedAtRoute("GetTaskRoute", new { userId, token, task.Id }, newTask);
         }
 
+        [Authorize]
         [HttpPut("{id:int}")]
-        public async Task<IActionResult> PutTask(int userId, string token, long id, [FromBody]WorkTask task)
+        public async Task<IActionResult> PutTask(string userId, string token, long id, [FromBody]WorkTask task)
         {
             if (!ModelState.IsValid)
             {
@@ -105,8 +109,9 @@ namespace TaskManager.Core.Api.Controllers
             return StatusCode((int)HttpStatusCode.NoContent);
         }
 
+        [Authorize]
         [HttpDelete("{id:int}")]
-        public async Task<IActionResult> DeleteTask(int userId, string token, long id)
+        public async Task<IActionResult> DeleteTask(string userId, string token, long id)
         {
             WorkTask workTask = await _dbContext.WorkTasks.FindAsync(id);
             if (workTask == null)
