@@ -15,12 +15,14 @@ import {PageNotFoundComponent} from "./component/page-not-found.component";
 import {HomeComponent} from "./component/home.component";
 
 import {AppRouting} from "./app.routing";
+
+import {AuthService} from "./service/auth.service";
+
 //import {ItemDetailEditComponent} from "./item-detail-edit.component";
 //import {ItemDetailViewComponent} from "./item-detail-view.component";
 //import {ItemListComponent} from "./item-list.component";
 //import {LoginComponent} from "./login.component";
 //import {ItemService} from "./item.service";
-//import {AuthService} from "./auth.service";
 //import {AuthHttp} from "./auth.http";
 //import {UserEditComponent} from "./user-edit.component";
 
@@ -50,7 +52,7 @@ import {AppRouting} from "./app.routing";
     // providers
     providers: [
         //ItemService,
-        //AuthService,
+        AuthService,
         //AuthHttp
     ],
     bootstrap: [

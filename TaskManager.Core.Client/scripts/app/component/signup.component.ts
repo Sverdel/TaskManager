@@ -1,6 +1,7 @@
 ﻿import {Component, NgZone} from "@angular/core";
 import {Router} from "@angular/router";
 import {User} from "./../model/user";
+import {AuthService} from "./../service/auth.service";
 
 //import {AuthService} from "./auth.service";
 @Component({
@@ -10,6 +11,6 @@ import {User} from "./../model/user";
 export class SignUpComponent {
     NewUser: User = new User();
 
-    constructor() {}
+    constructor(public authService: AuthService) {}
     signup() {}
 }

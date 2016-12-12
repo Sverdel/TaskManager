@@ -40,7 +40,7 @@ export class AuthService {
     }
 
     logout(): any {
-        return this.http.post("api/Accounts/Logout", null)
+        return this.http.post("api/users/logout", null)
                         .map(response => {
                             this.setAuth(null);
                             return true;
@@ -62,8 +62,7 @@ export class AuthService {
         }
         return body;
     }
-    // Persist auth into localStorage or removes it if a NULL argument is
-    given
+    // Persist auth into localStorage or removes it if a NULL argument is  given
     setAuth(auth: any): boolean {
         if (auth) {
             localStorage.setItem(this.authKey, JSON.stringify(auth));
@@ -87,6 +86,7 @@ export class AuthService {
     isLoggedIn(): boolean {
         return localStorage.getItem(this.authKey) != null;
     }
+
     get() {
         return this.http.get("api/Accounts")
                    .map(response => response.json());

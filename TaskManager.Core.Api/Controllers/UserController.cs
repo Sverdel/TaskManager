@@ -16,14 +16,15 @@ namespace TaskManager.Core.Api.Controllers
         private TaskDbContext _dbContext;
         private UserManager<User> _userManager;
         private RoleManager<IdentityRole> _roleManager;
+        private SignInManager<User> _signinManager;
         private string _role = "User";
 
-        public UserController(TaskDbContext context, UserManager<User> userManager, RoleManager<IdentityRole> roleManager)
+        public UserController(TaskDbContext context, UserManager<User> userManager, RoleManager<IdentityRole> roleManager, SignInManager<User> signinManager)
         {
             _dbContext = context;
             _userManager = userManager;
             _roleManager = roleManager;
-
+            _signinManager = signinManager;
             //if (!_roleManager.RoleExistsAsync(_role).Result)
             //{
             //    _roleManager.CreateAsync(new IdentityRole(_role)).Wait();
@@ -101,18 +102,18 @@ namespace TaskManager.Core.Api.Controllers
                 {
                     throw new Exception(result.Errors.ToString());
                 }
-                
+
                 // Assign the user to the 'Registered' role.
                 result = await _userManager.AddToRoleAsync(user, _role.ToUpper());
                 if (!result.Succeeded)
                 {
-                     throw new Exception(result.Errors.ToString());
+                    throw new Exception(result.Errors.ToString());
                 }
 
                 // Remove Lockout and E-Mail confirmation
                 user.EmailConfirmed = true;
                 user.LockoutEnabled = false;
-                
+
                 //_dbContext.Users.Add(user);
 
                 _dbContext.SaveChanges();
@@ -130,6 +131,17 @@ namespace TaskManager.Core.Api.Controllers
                 // return the error.
                 return StatusCode((int)HttpStatusCode.BadRequest, new { error = e.Message });
             }
+        }
+
+        [HttpPost("logout")]
+        public async Task<IActionResult> Logout()
+        {
+            if (HttpContext.User.Identity.IsAuthenticated)
+            {
+                await _signinManager.SignOutAsync();
+            }
+
+            return Ok();
         }
 
         protected override void Dispose(bool disposing)
