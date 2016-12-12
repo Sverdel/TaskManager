@@ -1,0 +1,71 @@
+﻿<div *ngIf="CurrentTask != null">
+    <div class="panel panel-default">
+        <div class="panel-body">
+            <div class="form-group">
+                <label>Name</label>
+                <input type="text" class="form-control" [(ngModel)]="CurrentTask.Name">
+            </div>
+
+            <div class="form-group row">
+                <label class="col-md-1">State</label>
+                <div class="btn-group col-md-11">
+                    <a class="btn btn-default dropdown-toggle" data-toggle="dropdown" href="#">{{ CurrentTask.StateId  }} <span class="caret"></span></a>
+                    <ul class="dropdown-menu">
+                        <li *ngFor="let state of States"><a href="#" (click)="setState(state.Id)">{{ state.Name }}</a></li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="form-group row">
+                <label class="col-md-1">Priority</label>
+                <div class="btn-group col-md-11">
+                    <a class="btn btn-default dropdown-toggle" data-toggle="dropdown" href="#" [(ngModel)]="CurrentTask.PriorityId">{{ CurrentTask.PriorityId  }} <span class="caret"></span></a>
+                    <ul class="dropdown-menu">
+                        <li *ngFor="let priority of Priorities"><a href="#" (click)="setPriority(priority.Id)">{{ priority.Name }}</a></li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="form-group row">
+                <div class="col-md-3">
+                    <label>Initial cost</label>
+                    <input type="number" class="form-control" [(ngModel)]="CurrentTask.PlanedTimeCost" min="0">
+                </div>
+
+                <div class="col-md-3">
+                    <label>Actual cost</label>
+                    <input type="number" class="form-control" [(ngModel)]="CurrentTask.ActualTimeCost" min="0">
+                </div>
+
+                <div class="col-md-3">
+                    <label>Remaining cost</label>
+                    <input type="number" class="form-control" [(ngModel)]="CurrentTask.RemainingTimeCost" min="0">
+                </div>
+            </div>
+
+            <div class="form-group row">
+                <div class="form-inline col-md-7">
+                    <label class="col-md-6 row">Create date</label>
+                    <input type="text" class="form-control" readonly="readonly" value="{{ CurrentTask.CreateDateTime | date:'dd.MM.yyyy HH:mm:ss'}}">
+                </div>
+            </div>
+
+            <div class="form-group row">
+                <div class="form-inline col-md-7">
+                    <label class="col-md-6 row">Last change date</label>
+                    <input type="text" class="form-control" readonly="readonly" value="{{CurrentTask.ChangeDatetime | date:'dd.MM.yyyy HH:mm:ss'}}">
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label>Description</label>
+                <textarea class="form-control" [(ngModel)]="CurrentTask.Description" rows="5" style="resize:none"></textarea>
+            </div>
+
+            <div class="form-group pull-right">
+                <button type="submit" class="btn btn-default" (click)="saveTask()" [disabled]="!Changed">Save</button>
+                <button type="submit" class="btn btn-default" (click)="cancelChanges()" [disabled]="!Changed">Cancel</button>
+            </div>
+        </div>
+    </div>
+</div>
