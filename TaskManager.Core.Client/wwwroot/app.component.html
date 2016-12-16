@@ -1,15 +1,15 @@
 ﻿<div>
     <nav class="navbar navbar-default">
         <div class="container-fluid container">
-            <div class="navbar-header navbar-brand">{{title}}</div>
+            <div class="navbar-header navbar-brand" >{{title}}</div>
 
             <div class="collapse navbar-collapse">
-                <div class="navbar-form navbar-right" *ngIf="user == null" >
+                <div class="navbar-form navbar-right" *ngIf="!authService.isLoggedIn()" >
                     <a class="btn btn-primary" [routerLink]="['signin']">Sign in</a>
                     <a class="btn btn-default" [routerLink]="['signup']">Sign up</a>
                 </div>
-                <div class="dropdown navbar-form navbar-right" role="form" *ngIf="user != null">
-                    <button class="dropdown-toggle btn btn-default" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">{{user.Name}} <span class="caret"></span></button>
+                <div class="dropdown navbar-form navbar-right" role="form" *ngIf="authService.isLoggedIn()">
+                    <button class="dropdown-toggle btn btn-default" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">{{ this.authService?.user?.Name }} <span class="caret"></span></button>
                     <ul class="dropdown-menu">
                         <li><a href="#" (click)="logout()">Logout</a></li>
                     </ul>

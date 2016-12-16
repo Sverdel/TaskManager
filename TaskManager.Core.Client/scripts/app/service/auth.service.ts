@@ -1,17 +1,19 @@
-﻿import {Injectable, EventEmitter} from "@angular/core";
-import {Http, Headers, Response, RequestOptions} from "@angular/http";
-import {Observable} from "rxjs/Observable";
+﻿import { Injectable, EventEmitter } from "@angular/core";
+import { Http, Headers, Response, RequestOptions } from "@angular/http";
+import { Observable } from "rxjs/Observable";
 //import {AuthHttp} from "./auth.http";
-import {User} from "./model/user";
+import { User } from "./../model/user";
 
 @Injectable()
 export class AuthService {
     authKey = "auth";
+    public user: User = new User();
+
     constructor(private http: Http) {
     }
 
     login(username: string, password: string): any {
-        var url = "api/connect/token"; // JwtProvider's LoginPath
+        var url = "http://localhost:8000/api/connect/token"; // JwtProvider's LoginPath
         var data = {
             username: username,
             password: password,
@@ -32,22 +34,23 @@ export class AuthService {
             }))
             .map(response => {
                 var auth = response.json();
-                console.log("The following auth JSON object has been received:");
-                console.log(auth);
-                this.setAuth(auth);
-                return auth;
+                this.setAuth(auth.auth);
+                this.user = auth.user;
+                return true;
             });
     }
 
     logout(): any {
-        return this.http.post("api/users/logout", null)
-                        .map(response => {
-                            this.setAuth(null);
-                            return true;
-                        })
-                        .catch(err => {
-                            return Observable.throw(err);
-                        });
+        return this.http.post("http://localhost:8000/api/users/logout", null)
+            .map(response => {
+                this.setAuth(null);
+                this.user = null;
+
+                return true;
+            })
+            .catch(err => {
+                return Observable.throw(err);
+            });
     }
 
     // Converts a Json object to urlencoded format
@@ -87,24 +90,32 @@ export class AuthService {
         return localStorage.getItem(this.authKey) != null;
     }
 
-    get() {
-        return this.http.get("api/Accounts")
-                   .map(response => response.json());
+    getUserName(): string {
+        if (this.user != null) {
+            return this.user.Name;
+        }
+
+        return null;
     }
+
+    //get() {
+    //    return this.http.get("api/Accounts")
+    //               .map(response => response.json());
+    //}
 
     add(user: User) {
-        return this.http.post( "api/Accounts",  JSON.stringify(user),
-             new RequestOptions({
-                     headers: new Headers({ "Content-Type": "application/json" })
+        return this.http.post("http://localhost:8000/api/users", JSON.stringify(user),
+            new RequestOptions({
+                headers: new Headers({ "Content-Type": "application/json" })
             }))
-        .map(response => response.json());
+            .map(response => response.json());
     }
 
-    update(user: User) {
-        return this.http.put( "api/Accounts", JSON.stringify(user),
-                new RequestOptions({
-                    headers: new Headers({ "Content-Type": "application/json" })
-            }))
-        .map(response => response.json());
-    }
+    //update(user: User) {
+    //    return this.http.put( "api/Accounts", JSON.stringify(user),
+    //            new RequestOptions({
+    //                headers: new Headers({ "Content-Type": "application/json" })
+    //        }))
+    //    .map(response => response.json());
+    //}
 }

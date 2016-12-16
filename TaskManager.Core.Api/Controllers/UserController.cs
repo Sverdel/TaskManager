@@ -7,6 +7,7 @@ using System;
 using System.Net;
 using System.Threading.Tasks;
 using TaskManager.Core.Api.Models.DataModel;
+using TaskManager.Core.Api.ViewModel;
 
 namespace TaskManager.Core.Api.Controllers
 {
@@ -79,14 +80,14 @@ namespace TaskManager.Core.Api.Controllers
         /// POST: api/accounts
         /// </summary>
         /// <returns>Creates a new User and return it accordingly.</returns>
-        [HttpPost("{name}/{password}")]
-        public async Task<IActionResult> Add(string name, string password)
+        [HttpPost()]
+        public async Task<IActionResult> Add([FromBody]UserViewModel userModel)
         {
 
             try
             {
                 // check if the Username/Email already exists
-                User user = await _userManager.FindByNameAsync(name);
+                User user = await _userManager.FindByNameAsync(userModel.Name);
                 if (user != null)
                 {
                     throw new Exception("UserName already  exists.");
@@ -94,10 +95,10 @@ namespace TaskManager.Core.Api.Controllers
 
                 user = new User()
                 {
-                    UserName = name,
+                    UserName = userModel.Name,
                 };
                 // Add the user to the Db with a random password
-                var result = await _userManager.CreateAsync(user, password);
+                var result = await _userManager.CreateAsync(user, userModel.Password);
                 if (!result.Succeeded)
                 {
                     throw new Exception(result.Errors.ToString());
@@ -114,17 +115,11 @@ namespace TaskManager.Core.Api.Controllers
                 user.EmailConfirmed = true;
                 user.LockoutEnabled = false;
 
-                //_dbContext.Users.Add(user);
-
                 _dbContext.SaveChanges();
+                userModel.Id = user.Id;
+                userModel.Token = Guid.NewGuid().ToString();
 
-                return Ok(new
-                {
-                    id = user.Id,
-                    name = user.UserName,
-                    password = password,
-                    token = Guid.NewGuid().ToString()
-                });
+                return Ok(userModel);
             }
             catch (Exception e)
             {

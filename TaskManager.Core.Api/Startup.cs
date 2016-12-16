@@ -43,8 +43,8 @@ namespace TaskManager.Core.Api
 
             // Add framework services.
             services
-                .AddMvc()
-                .AddJsonOptions(opts => opts.SerializerSettings.ContractResolver = new CamelCasePropertyNamesContractResolver());
+                .AddMvc();
+                //.AddJsonOptions(opts => opts.SerializerSettings.ContractResolver = new CamelCasePropertyNamesContractResolver());
                 //.AddJsonOptions(opts => opts.SerializerSettings.ContractResolver = new SignalRContractResolver());
 
             services.AddSignalR(options => { options.Hubs.EnableDetailedErrors = true; });

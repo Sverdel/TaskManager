@@ -9,6 +9,7 @@ using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
 using TaskManager.Core.Api.Models.DataModel;
+using TaskManager.Core.Api.ViewModel;
 
 namespace TaskManager.Core.Api.Infrastructure
 {
@@ -105,12 +106,11 @@ namespace TaskManager.Core.Api.Infrastructure
                     // build the json response
                     var response = new
                     {
-                        user = new
+                        user = new UserViewModel
                         {
-                            id = user.Id,
-                            name = user.UserName,
-                            password = password,
-                            token = Guid.NewGuid().ToString()
+                            Id = user.Id,
+                            Name = user.UserName,
+                            Token = Guid.NewGuid().ToString()
                         },
                         auth = new
                         {
