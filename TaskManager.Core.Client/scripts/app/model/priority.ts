@@ -1,9 +1,9 @@
 ﻿export class Priority {
-    public Id: number;
-    public Name: string;
+    public id: number;
+    public name: string;
 
     constructor(id: number, name: string) {
-        this.Id = id;
-        this.Name = name;
+        this.id = id;
+        this.name = name;
     }
 }

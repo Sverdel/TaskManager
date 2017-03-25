@@ -1,17 +1,19 @@
 ﻿export class Task {
-    public Id: number;
-    public Name: string;
-    public StateId: number;
-    public PriorityId: number;
-    public PlanedTimeCost: number;
-    public ActualTimeCost: number;
-    public RemainingTimeCost: number;
-    public CreateDateTime: string;
-    public ChangeDatetime: string;
-    public Description: string;
+    public id: number;
+    public name: string;
+    public stateId: number;
+    public priorityId: number;
+    public planedTimeCost: number;
+    public actualTimeCost: number;
+    public remainingTimeCost: number;
+    public createDateTime: string;
+    public changeDatetime: string;
+    public description: string;
 
-    constructor(id: number, name: string) {
-        this.Id = id;
-        this.Name = name;
+    constructor(id?: number, name?: string) {
+        this.id = id;
+        this.name = name;
+        this.stateId = 1;
+        this.priorityId = 1;
     }
 }

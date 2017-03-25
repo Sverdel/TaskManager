@@ -10,24 +10,24 @@ namespace TaskManager.Api.Controllers.Tests
     public class ResourceControllerTests
     {
         [TestMethod()]
-        public async Task GetStatesTest()
+        public void GetStatesTest()
         {
             ResourceController controller = new ResourceController();
-            var result = await controller.GetStates();
+            System.Web.Http.IHttpActionResult result = controller.GetStates();
 
-            var states = (result as OkNegotiatedContentResult<List<State>>).Content;
+            List<State> states = (result as OkNegotiatedContentResult<List<State>>).Content;
 
             Assert.IsNotNull(states);
             Assert.AreEqual(3, states.Count);
         }
 
         [TestMethod()]
-        public async Task GetPrioritiesTest()
+        public void GetPrioritiesTest()
         {
             ResourceController controller = new ResourceController();
-            var result = await controller.GetPriorities();
+            System.Web.Http.IHttpActionResult result = controller.GetPriorities();
 
-            var priorities = (result as OkNegotiatedContentResult<List<Priority>>).Content;
+            List<Priority> priorities = (result as OkNegotiatedContentResult<List<Priority>>).Content;
 
             Assert.IsNotNull(priorities);
             Assert.AreEqual(3, priorities.Count);

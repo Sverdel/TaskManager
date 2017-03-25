@@ -13,11 +13,16 @@ import { SignUpComponent } from "./component/signup.component";
 import { TaskListComponent } from "./component/tasklist.component";
 import { TaskComponent } from "./component/task.component";
 import { PageNotFoundComponent } from "./component/page-not-found.component";
-import { HomeComponent } from "./component/home.component";
 
 import { AppRouting } from "./app.routing";
 
 import { AuthService } from "./service/auth.service";
+import { TaskService } from "./service/task.service";
+import { ResourceService } from "./service/resource.service";
+import { AuthHttp } from "./service/auth.http";
+
+import { FromDictionaryPipe } from "./pipe/fromDictionary.pipe";
+
 
 @NgModule({
     // directives, components, and pipes
@@ -28,7 +33,7 @@ import { AuthService } from "./service/auth.service";
         TaskListComponent,
         TaskComponent,
         PageNotFoundComponent,
-        HomeComponent
+        FromDictionaryPipe
     ],
     // modules
     imports: [
@@ -42,7 +47,10 @@ import { AuthService } from "./service/auth.service";
     ],
     // providers
     providers: [
+        AuthHttp,
         AuthService,
+        TaskService,
+        ResourceService,
     ],
     bootstrap: [
         AppComponent

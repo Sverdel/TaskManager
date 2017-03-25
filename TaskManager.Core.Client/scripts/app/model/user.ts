@@ -1,12 +1,14 @@
 ﻿export class User {
-    public Id: number;
-    public Name: string;
-    public Password: string;
-    public ConfirmPassword: string;
-    public Token: string;
-    
-    constructor(id?: number, name?: string) {
-        this.Id = id;
-        this.Name = name;
+    public id: string;
+    public name: string;
+    public password: string;
+    public confirmPassword: string;
+    public token: string;
+    public accessToken: string;
+    public tokenExpireDate: Date;
+
+    constructor(id?: string, name?: string) {
+        this.id = id;
+        this.name = name;
     }
 }

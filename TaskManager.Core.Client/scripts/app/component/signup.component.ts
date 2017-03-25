@@ -8,17 +8,17 @@ import { AuthService } from "./../service/auth.service";
     templateUrl: './signup.component.html'
 })
 export class SignUpComponent {
-    NewUser: User = new User();
+    newUser: User = new User();
 
     constructor(public authService: AuthService, public router: Router) { }
     signup() {
-        if (this.NewUser == null) {
+        if (this.newUser == null) {
             return;
         }
 
-        this.authService.add(this.NewUser)
+        this.authService.add(this.newUser)
             .subscribe((data) => {
-                this.authService.login(this.NewUser.Name, this.NewUser.Password)
+                this.authService.login(this.newUser.name, this.newUser.password)
                     .subscribe((data) => { this.router.navigate([""]); },
                     (err) => { console.log(err); }
                     );

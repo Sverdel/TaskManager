@@ -18,14 +18,14 @@ namespace TaskManager.Core.Api.Controllers
 
         [Authorize]
         [HttpGet("states")]
-        public async Task<IActionResult> GetStates()
+        public IActionResult GetStates()
         {
             return Ok(_dbContext.States.ToList());
         }
 
         [Authorize]
         [HttpGet("priorities")]
-        public async Task<IActionResult> GetPriorities()
+        public IActionResult GetPriorities()
         {
             return Ok(_dbContext.Priorities.ToList());
         }

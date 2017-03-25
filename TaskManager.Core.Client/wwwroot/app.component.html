@@ -9,7 +9,7 @@
                     <a class="btn btn-default" [routerLink]="['signup']">Sign up</a>
                 </div>
                 <div class="dropdown navbar-form navbar-right" role="form" *ngIf="authService.isLoggedIn()">
-                    <button class="dropdown-toggle btn btn-default" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">{{ this.authService?.user?.Name }} <span class="caret"></span></button>
+                    <button class="dropdown-toggle btn btn-default" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">{{ this.authService?.user?.name }} <span class="caret"></span></button>
                     <ul class="dropdown-menu">
                         <li><a href="#" (click)="logout()">Logout</a></li>
                     </ul>

@@ -1,4 +1,4 @@
-﻿namespace TaskManager.Core.Api.Models
+﻿namespace TaskManager.Core.Api.ViewModel
 {
     public class TaskDto
     {

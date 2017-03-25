@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.IdentityModel.Tokens;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Serialization;
 using System;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
@@ -102,26 +103,20 @@ namespace TaskManager.Core.Api.Infrastructure
                         expires: now.Add(_tokenExpiration),
                         signingCredentials: _signingCredentials);
                     var encodedToken = new JwtSecurityTokenHandler().WriteToken(token);
-                    
+
                     // build the json response
-                    var response = new
+                    var response = new UserViewModel
                     {
-                        user = new UserViewModel
-                        {
-                            Id = user.Id,
-                            Name = user.UserName,
-                            Token = Guid.NewGuid().ToString()
-                        },
-                        auth = new
-                        {
-                            access_token = encodedToken,
-                            expiration = (int)_tokenExpiration.TotalSeconds
-                        }
+                        Id = user.Id,
+                        Name = user.UserName,
+                        Token = Guid.NewGuid().ToString(),
+                        AccessToken = encodedToken,
+                        TokenExpireDate = DateTime.Now.Add(_tokenExpiration)
                     };
 
                     // return token
                     httpContext.Response.ContentType = "application/json";
-                    await httpContext.Response.WriteAsync(JsonConvert.SerializeObject(response));
+                    await httpContext.Response.WriteAsync(JsonConvert.SerializeObject(response, new JsonSerializerSettings { ContractResolver = new CamelCasePropertyNamesContractResolver() }));
 
                     return;
                 }

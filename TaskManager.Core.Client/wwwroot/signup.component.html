@@ -1,18 +1,18 @@
 ﻿<form  class="container panel panel-default panel-body col-md-4 col-md-push-4" name="signupForm">
     <div class="form-group">
         <label>Name</label>
-        <input type="text" class="form-control error" [(ngModel)]="NewUser.Name" name="name" required>
+        <input type="text" class="form-control error" [(ngModel)]="newUser.name" name="name" required>
     </div>
 
     <div class="form-group">
         <label>Password</label>
-        <input type="password" class="form-control" [(ngModel)]="NewUser.Password" name="password" required>
+        <input type="password" class="form-control" [(ngModel)]="newUser.password" name="password" required>
     </div>
 
     <div class="form-group">
         <label>Confirm password</label>
-        <input type="password" name="confirmpassword" class="form-control" [(ngModel)]="NewUser.ConfirmPassword" required >
+        <input type="password" name="confirmpassword" class="form-control" [(ngModel)]="newUser.confirmPassword" required >
     </div>
 
-    <button type="submit" class="btn btn-default" (click)="signup()" [disabled]="NewUser.Name == null || NewUser.Password == null || NewUser.ConfirmPassword == null || NewUser.Password != NewUser.ConfirmPassword">Sign Up</button>
+    <button type="submit" class="btn btn-default" (click)="signup()" [disabled]="newUser.name == null || newUser.password == null || newUser.confirmPassword == null || newUser.password != newUser.confirmPassword">Sign Up</button>
 </form>

@@ -3,11 +3,13 @@ using Microsoft.AspNetCore.SignalR;
 using Microsoft.AspNetCore.SignalR.Infrastructure;
 using Microsoft.EntityFrameworkCore;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
 using TaskManager.Core.Api.Models;
 using TaskManager.Core.Api.Models.DataModel;
+using TaskManager.Core.Api.ViewModel;
 
 namespace TaskManager.Core.Api.Controllers
 {
@@ -19,16 +21,16 @@ namespace TaskManager.Core.Api.Controllers
         public TaskController(TaskDbContext context, IConnectionManager manager)
         {
             _dbContext = context;
-            _hub = manager.GetHubContext<TaskHub>();
+            //_hub = manager.GetHubContext<TaskHub>();
         }
 
-        private IHubContext _hub;
+        //private IHubContext _hub;
 
         [Authorize]
         [HttpGet]
-        public async Task<IActionResult> GetList(string userId, string token)
+        public IActionResult GetList(string userId, string token)
         {
-            var test = _dbContext.WorkTasks.Where(x => x.UserId == userId).ToList().Select(x => new TaskDto { Id = x.Id, Name = x.Name });
+            IEnumerable<TaskDto> test = _dbContext.WorkTasks.Where(x => x.UserId == userId).ToList().Select(x => new TaskDto { Id = x.Id, Name = x.Name });
             return Ok(test);
         }
 
@@ -59,6 +61,7 @@ namespace TaskManager.Core.Api.Controllers
                 return BadRequest("Task with the same name already exists");
             }
 
+            task.UserId = userId; 
             task.CreateDateTime = DateTime.Now;
             task.ChangeDatetime = DateTime.Now;
 
@@ -66,24 +69,24 @@ namespace TaskManager.Core.Api.Controllers
             await _dbContext.SaveChangesAsync();
 
             var newTask = await _dbContext.WorkTasks.FindAsync(task.Id);
-            _hub.Clients.Group(userId.ToString(), TaskHub.ConnectionCache[token]).createTask(newTask);
+            //_hub.Clients.Group(userId.ToString(), TaskHub.ConnectionCache[token]).createTask(newTask);
 
             return CreatedAtRoute("GetTaskRoute", new { userId, token, task.Id }, newTask);
         }
 
         [Authorize]
-        [HttpPut("{id:int}")]
-        public async Task<IActionResult> PutTask(string userId, string token, long id, [FromBody]WorkTask task)
+        [HttpPut()]
+        public async Task<IActionResult> PutTask(string userId, string token, [FromBody]WorkTask task)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
-            if (id != task.Id)
-            {
-                return BadRequest();
-            }
+            //if (id != task.Id)
+            //{
+            //    return BadRequest();
+            //}
 
             task.ChangeDatetime = DateTime.Now;
             _dbContext.Entry(task).State = EntityState.Modified;
@@ -91,11 +94,11 @@ namespace TaskManager.Core.Api.Controllers
             try
             {
                 await _dbContext.SaveChangesAsync();
-                _hub.Clients.Group(userId.ToString(), TaskHub.ConnectionCache[token]).editTask(task);
+                //_hub.Clients.Group(userId.ToString(), TaskHub.ConnectionCache[token]).editTask(task);
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (_dbContext.WorkTasks.Count(e => e.Id == id) == 0)
+                if (_dbContext.WorkTasks.Count(e => e.Id == task.Id) == 0)
                 {
                     return NotFound();
                 }
@@ -122,7 +125,7 @@ namespace TaskManager.Core.Api.Controllers
             _dbContext.WorkTasks.Remove(workTask);
             await _dbContext.SaveChangesAsync();
 
-            _hub.Clients.Group(userId.ToString(), TaskHub.ConnectionCache[token]).deleteTask(workTask);
+            //_hub.Clients.Group(userId.ToString(), TaskHub.ConnectionCache[token]).deleteTask(workTask);
 
             return Ok(new TaskDto { Id = workTask.Id, Name = workTask.Name });
         }

@@ -8,15 +8,15 @@ import { AuthService } from "./../service/auth.service";
     templateUrl: './signin.component.html'
 })
 export class SignInComponent {
-    User: User = new User();
+    user: User = new User();
     constructor(public authService: AuthService, public router: Router) { }
 
     signin() {
-        if (this.User == null) {
+        if (this.user == null) {
             return;
         }
 
-        this.authService.login(this.User.Name, this.User.Password)
+        this.authService.login(this.user.name, this.user.password)
             .subscribe((data) => {
                 this.router.navigate([""]);
             },

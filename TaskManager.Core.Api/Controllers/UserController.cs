@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System;
+using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
 using TaskManager.Core.Api.Models.DataModel;
@@ -32,48 +33,23 @@ namespace TaskManager.Core.Api.Controllers
             //}
         }
 
-        [HttpGet("{name}/{password}", Name = "GetUserRoute")]
-        public async Task<IActionResult> GetUser(string name, string password)
-        {
-            User user = await _dbContext.Users.FirstOrDefaultAsync(x => x.UserName == name);
-            if (user == null)
-            {
-                return NotFound(new { message = "Invalid user name" });
-            }
-
-            if (user.PasswordHash != password)
-            {
-                return StatusCode((int)HttpStatusCode.Unauthorized, new { message = "Incorrect password" });
-            }
-
-            user.Token = Guid.NewGuid().ToString();
-
-            return Ok(user);
-        }
-
-        //[HttpPost("{name}/{password}")]
-        //public async Task<IActionResult> PostUser(string name, string password)
+        //[HttpGet("{name}/{password}", Name = "GetUserRoute")]
+        //public async Task<IActionResult> GetUser(string name, string password)
         //{
-        //    if (string.IsNullOrEmpty(name) || string.IsNullOrEmpty(password))
+        //    User user = await _dbContext.Users.FirstOrDefaultAsync(x => x.UserName == name);
+        //    if (user == null)
         //    {
-        //        return BadRequest(ModelState);
+        //        return NotFound(new { message = "Invalid user name" });
         //    }
 
-        //    var user = await _dbContext.Users.FirstOrDefaultAsync(x => x.UserName == name);
-
-        //    if (user != null)
+        //    if (user.PasswordHash != password)
         //    {
-        //        return BadRequest("User with the same name already exists");
+        //        return StatusCode((int)HttpStatusCode.Unauthorized, new { message = "Incorrect password" });
         //    }
 
-        //    user = new User { UserName = name, PasswordHash = password };
+        //    user.Token = Guid.NewGuid().ToString();
 
-        //    _dbContext.Users.Add(user);
-        //    await _dbContext.SaveChangesAsync();
-
-        //    var newUser = await _dbContext.Users.FirstOrDefaultAsync(x => x.UserName == name);
-        //    newUser.Token = Guid.NewGuid().ToString();
-        //    return CreatedAtRoute("GetUserRoute", null, newUser);
+        //    return Ok(user);
         //}
 
         /// <summary>

@@ -14,5 +14,9 @@ namespace TaskManager.Core.Api.ViewModel
         public string Password { get; set; }
 
         public string Token { get; set; }
+
+        public string AccessToken { get; set; }
+
+        public DateTime TokenExpireDate { get; set; }
     }
 }

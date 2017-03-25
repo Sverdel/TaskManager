@@ -1,8 +1,7 @@
-﻿import {Component, NgZone} from "@angular/core";
-import {Router} from "@angular/router";
-import {AuthService} from "./../service/auth.service";
-
-//import {AlertModule} from 'ng2-bootstrap/ng2-bootstrap';
+﻿import { Component, NgZone } from "@angular/core";
+import { Router } from "@angular/router";
+import { AuthService } from "./../service/auth.service";
+import { ResourceService } from "./../service/resource.service";
 
 @Component({
     selector: "taskmanager",
@@ -12,7 +11,9 @@ export class AppComponent {
     title = "Task Manager";
     alertMessage: string = null;
 
-    constructor(public router: Router, public authService: AuthService) { }
+    constructor(public router: Router,
+        public authService: AuthService) {
+    }
 
     isActive(data: any[]): boolean {
         return this.router.isActive(this.router.createUrlTree(data), true);

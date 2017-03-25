@@ -10,6 +10,7 @@ export class AuthService {
     public user: User = new User();
 
     constructor(private http: Http) {
+        this.user = this.getUser();
     }
 
     login(username: string, password: string): any {
@@ -24,7 +25,7 @@ export class AuthService {
             scope: "offline_access profile email"
         };
 
-        return this.http.post(
+       return this.http.post(
             url,
             this.toUrlEncodedString(data),
             new RequestOptions({
@@ -33,9 +34,7 @@ export class AuthService {
                 })
             }))
             .map(response => {
-                var auth = response.json();
-                this.setAuth(auth.auth);
-                this.user = auth.user;
+                this.setUser(response.json());
                 return true;
             });
     }
@@ -43,9 +42,7 @@ export class AuthService {
     logout(): any {
         return this.http.post("http://localhost:8000/api/users/logout", null)
             .map(response => {
-                this.setAuth(null);
-                this.user = null;
-
+                this.setUser(null);
                 return true;
             })
             .catch(err => {
@@ -66,17 +63,19 @@ export class AuthService {
         return body;
     }
     // Persist auth into localStorage or removes it if a NULL argument is  given
-    setAuth(auth: any): boolean {
-        if (auth) {
-            localStorage.setItem(this.authKey, JSON.stringify(auth));
+    setUser(user: User): boolean {
+        if (user) {
+            localStorage.setItem(this.authKey, JSON.stringify(user));
         }
         else {
             localStorage.removeItem(this.authKey);
         }
+        this.user = user;
+
         return true;
     }
     // Retrieves the auth JSON object (or NULL if none)
-    getAuth(): any {
+    getUser(): any {
         var i = localStorage.getItem(this.authKey);
         if (i) {
             return JSON.parse(i);
@@ -87,15 +86,18 @@ export class AuthService {
     }
     // Returns TRUE if the user is logged in, FALSE otherwise.
     isLoggedIn(): boolean {
-        return localStorage.getItem(this.authKey) != null;
-    }
+        if (localStorage.getItem(this.authKey) == null)
+            return false;
 
-    getUserName(): string {
-        if (this.user != null) {
-            return this.user.Name;
+        var auth = JSON.parse(localStorage.getItem(this.authKey));
+        var authDate = new Date(auth.tokenExpireDate);
+        var current = new Date();
+        if (authDate < current) {
+            localStorage.removeItem(this.authKey);
+            return false;
         }
 
-        return null;
+        return true;
     }
 
     //get() {

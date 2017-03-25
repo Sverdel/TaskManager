@@ -21,12 +21,12 @@ namespace TaskManager.Core.Api.Utils
 
         public JsonContract ResolveContract(Type type)
         {
-            //if (type.GetTypeInfo().Assembly.Equals(_assembly))
+            if (type.GetTypeInfo().Assembly.Equals(_assembly))
             {
                 return _defaultContractSerializer.ResolveContract(type);
             }
 
-            //return _camelCaseContractResolver.ResolveContract(type);
+            return _camelCaseContractResolver.ResolveContract(type);
         }
 
     }
