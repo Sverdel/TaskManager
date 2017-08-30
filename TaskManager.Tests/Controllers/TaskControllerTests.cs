@@ -13,17 +13,17 @@ namespace TaskManager.Api.Controllers.Tests
     public class TaskControllerTests
     {
         [TestMethod()]
-        public void GetListTest()
+        public async Task GetListTest()
         {
             TaskController controller = new TaskController();
-            var result = controller.GetList(1, string.Empty);
+            var result = await controller.GetList(1, string.Empty);
 
             var tasks = (result as OkNegotiatedContentResult<IEnumerable<TaskDto>>).Content;
 
             Assert.IsNotNull(tasks);
             Assert.AreEqual(10, tasks.Count());
 
-            result = controller.GetList(2, string.Empty);
+            result = await controller.GetList(2, string.Empty);
 
             tasks = (result as OkNegotiatedContentResult<IEnumerable<TaskDto>>).Content;
 

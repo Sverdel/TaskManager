@@ -10,10 +10,10 @@ namespace TaskManager.Api.Controllers.Tests
     public class ResourceControllerTests
     {
         [TestMethod()]
-        public void GetStatesTest()
+        public async Task GetStatesTest()
         {
             ResourceController controller = new ResourceController();
-            System.Web.Http.IHttpActionResult result = controller.GetStates();
+            System.Web.Http.IHttpActionResult result = await controller.GetStates();
 
             List<State> states = (result as OkNegotiatedContentResult<List<State>>).Content;
 
@@ -22,10 +22,10 @@ namespace TaskManager.Api.Controllers.Tests
         }
 
         [TestMethod()]
-        public void GetPrioritiesTest()
+        public async Task GetPrioritiesTest()
         {
             ResourceController controller = new ResourceController();
-            System.Web.Http.IHttpActionResult result = controller.GetPriorities();
+            System.Web.Http.IHttpActionResult result = await controller.GetPriorities();
 
             List<Priority> priorities = (result as OkNegotiatedContentResult<List<Priority>>).Content;
 
