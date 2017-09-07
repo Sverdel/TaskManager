@@ -7,7 +7,7 @@ using TaskManager.Core.Api.Models.DataModel;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 
-namespace TaskManager.Core.Api.v2._0.Controllers
+namespace TaskManager.Core.Api.Controllers
 {
     [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     [Produces("application/json")]

@@ -10,6 +10,7 @@ using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using TaskManager.Core.Api.Filters;
 using Microsoft.AspNetCore.Identity;
+using TaskManager.Core.Api.Repository;
 
 namespace TaskManager.Core.Api.v2._0
 {
@@ -25,6 +26,7 @@ namespace TaskManager.Core.Api.v2._0
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddTransient<ITaskRepository, TaskRepository>();
             services.AddDbContext<TaskDbContext>(options => options.UseSqlServer(Configuration["Data:DefaultConnection:ConnectionString"]));
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
                    .AddJwtBearer(options =>

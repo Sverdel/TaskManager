@@ -20,15 +20,27 @@ namespace TaskManager.Core.Api.Controllers
     {
         private IConfiguration _config;
         private UserManager<User> _userManager;
+        private TaskDbContext _dbContext;
+        private RoleManager<IdentityRole> _roleManager;
+        private SignInManager<User> _signinManager;
+        private string _role = "User";
 
-        public AccountController(UserManager<User> userManager, IConfiguration config)
+        public AccountController(TaskDbContext context, UserManager<User> userManager, RoleManager<IdentityRole> roleManager, SignInManager<User> signinManager, IConfiguration config)
         {
             _config = config;
             _userManager = userManager;
+            _dbContext = context;
+            _roleManager = roleManager;
+            _signinManager = signinManager;
         }
 
-        [HttpPost("token")]
-        public async Task<IActionResult> Token([FromBody]CredentialsDto model)
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="model"></param>
+        /// <returns></returns>
+        [HttpPost("signin")]
+        public async Task<IActionResult> SignIn([FromBody]CredentialsDto model)
         {
             if (!ModelState.IsValid)
             {
@@ -56,6 +68,70 @@ namespace TaskManager.Core.Api.Controllers
                 Console.WriteLine(ex);
                 throw;
             }
+        }
+
+        /// <summary>
+        /// Creates a new User and return it accordingly.
+        /// </summary>
+        /// <returns></returns>
+        [HttpPost("signup")]
+        public async Task<IActionResult> SignUp([FromBody]CredentialsDto userModel)
+        {
+            try
+            {
+                // check if the Username/Email already exists
+                User user = await _userManager.FindByNameAsync(userModel.Name);
+                if (user != null)
+                {
+                    return BadRequest("User name is already exists.");
+                }
+
+                user = new User()
+                {
+                    UserName = userModel.Name,
+                };
+                // Add the user to the Db with a random password
+                var result = await _userManager.CreateAsync(user, userModel.Password);
+                if (!result.Succeeded)
+                {
+                    return BadRequest(result.Errors);
+                }
+
+                // Assign the user to the 'Registered' role.
+                result = await _userManager.AddToRoleAsync(user, _role.ToUpper());
+                if (!result.Succeeded)
+                {
+                    return BadRequest(result.Errors);
+                }
+
+                // Remove Lockout and E-Mail confirmation
+                user.EmailConfirmed = true;
+                user.LockoutEnabled = false;
+
+                _dbContext.SaveChanges();
+
+                return await SignIn(userModel);
+            }
+            catch (Exception e)
+            {
+                // return the error.
+                return BadRequest(e.Message);
+            }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        [HttpPost("signout")]
+        public async Task<IActionResult> SignOut()
+        {
+            if (HttpContext.User.Identity.IsAuthenticated)
+            {
+                await _signinManager.SignOutAsync();
+            }
+
+            return Ok();
         }
 
         private async Task<JwtSecurityToken> GetJwtSecurityToken(User user)

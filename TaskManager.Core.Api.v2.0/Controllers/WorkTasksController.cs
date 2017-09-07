@@ -6,25 +6,26 @@ using Microsoft.EntityFrameworkCore;
 using TaskManager.Core.Api.Models.DataModel;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using TaskManager.Core.Api.Repository;
 
-namespace TaskManager.Core.Api.v2._0.Controllers
+namespace TaskManager.Core.Api.Controllers
 {
     [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     [Produces("application/json")]
     [Route("api/tasks")]
     public class WorkTasksController : Controller
     {
-        private readonly TaskDbContext _context;
+        private readonly ITaskRepository _repository;
 
-        public WorkTasksController(TaskDbContext context)
+        public WorkTasksController(ITaskRepository repository)
         {
-            _context = context;
+            _repository = repository;
         }
 
         [HttpGet]
-        public IEnumerable<WorkTask> GetWorkTasks()
+        public async Task<IEnumerable<WorkTask>> GetWorkTasks()
         {
-            return _context.WorkTasks;
+            return await _repository.GetTasks();
         }
 
         [HttpGet("{id}")]
@@ -35,7 +36,7 @@ namespace TaskManager.Core.Api.v2._0.Controllers
                 return BadRequest(ModelState);
             }
 
-            var workTask = await _context.WorkTasks.SingleOrDefaultAsync(m => m.Id == id);
+            var workTask = await _repository.GetTask(id);
 
             if (workTask == null)
             {
@@ -58,11 +59,9 @@ namespace TaskManager.Core.Api.v2._0.Controllers
                 return BadRequest();
             }
 
-            _context.Entry(workTask).State = EntityState.Modified;
-
             try
             {
-                await _context.SaveChangesAsync();
+                await _repository.UpdateTask(workTask);
             }
             catch (DbUpdateConcurrencyException)
             {
@@ -87,8 +86,7 @@ namespace TaskManager.Core.Api.v2._0.Controllers
                 return BadRequest(ModelState);
             }
 
-            _context.WorkTasks.Add(workTask);
-            await _context.SaveChangesAsync();
+            await _repository.CreateTask(workTask);
 
             return CreatedAtAction("GetWorkTask", new { id = workTask.Id }, workTask);
         }
@@ -101,21 +99,20 @@ namespace TaskManager.Core.Api.v2._0.Controllers
                 return BadRequest(ModelState);
             }
 
-            var workTask = await _context.WorkTasks.SingleOrDefaultAsync(m => m.Id == id);
+            var workTask = await _repository.GetTask(id);
             if (workTask == null)
             {
                 return NotFound();
             }
 
-            _context.WorkTasks.Remove(workTask);
-            await _context.SaveChangesAsync();
+            await _repository.DeleteTask(id);
 
             return Ok(workTask);
         }
 
         private bool WorkTaskExists(long id)
         {
-            return _context.WorkTasks.Any(e => e.Id == id);
+            return _repository.GetTask(id) != null;
         }
     }
 }
