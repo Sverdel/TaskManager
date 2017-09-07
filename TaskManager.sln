@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
-VisualStudioVersion = 15.0.26228.9
+VisualStudioVersion = 15.0.26730.12
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TaskManager.Api", "TaskManager.Api\TaskManager.Api.csproj", "{8D75078E-A808-4817-B278-6AD3DFB984BA}"
 EndProject
@@ -18,6 +18,8 @@ EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TaskManager.Core.Api", "TaskManager.Core.Api\TaskManager.Core.Api.csproj", "{D584BF61-2A94-4B44-A649-3EE200FA69E2}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TaskManager.Core.Client", "TaskManager.Core.Client\TaskManager.Core.Client.csproj", "{AD53D8C1-663E-434D-9A53-728E43E0AC14}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TaskManager.Core.Api.v2.0", "TaskManager.Core.Api.v2.0\TaskManager.Core.Api.v2.0.csproj", "{5A77BDBF-B84D-4002-9B36-693181FEBE3D}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -55,8 +57,15 @@ Global
 		{AD53D8C1-663E-434D-9A53-728E43E0AC14}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{AD53D8C1-663E-434D-9A53-728E43E0AC14}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{AD53D8C1-663E-434D-9A53-728E43E0AC14}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5A77BDBF-B84D-4002-9B36-693181FEBE3D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5A77BDBF-B84D-4002-9B36-693181FEBE3D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5A77BDBF-B84D-4002-9B36-693181FEBE3D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5A77BDBF-B84D-4002-9B36-693181FEBE3D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {742E2470-B64A-47EA-B9B6-71912AC6A5E1}
 	EndGlobalSection
 EndGlobal
