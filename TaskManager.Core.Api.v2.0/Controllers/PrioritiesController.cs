@@ -6,6 +6,7 @@ using Microsoft.EntityFrameworkCore;
 using TaskManager.Core.Api.Models.DataModel;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using TaskManager.Core.Api.Repository;
 
 namespace TaskManager.Core.Api.Controllers
 {
@@ -14,17 +15,17 @@ namespace TaskManager.Core.Api.Controllers
     [Route("api/priorities")]
     public class PrioritiesController : Controller
     {
-        private readonly TaskDbContext _context;
+        private readonly IRepository<Priority, int> _repository;
 
-        public PrioritiesController(TaskDbContext context)
+        public PrioritiesController(IRepository<Priority, int> repository)
         {
-            _context = context;
+            _repository = repository;
         }
 
         [HttpGet]
-        public IEnumerable<Priority> GetPriorities()
+        public async Task<IEnumerable<Priority>> GetPriorities()
         {
-            return _context.Priorities;
+            return await _repository.Get();
         }
 
         [HttpGet("{id}")]
@@ -35,7 +36,7 @@ namespace TaskManager.Core.Api.Controllers
                 return BadRequest(ModelState);
             }
 
-            var priority = await _context.Priorities.SingleOrDefaultAsync(m => m.Id == id);
+            var priority = await _repository.Get(id);
 
             if (priority == null)
             {
@@ -58,15 +59,13 @@ namespace TaskManager.Core.Api.Controllers
                 return BadRequest();
             }
 
-            _context.Entry(priority).State = EntityState.Modified;
-
             try
             {
-                await _context.SaveChangesAsync();
+                await _repository.Create(priority);
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (!PriorityExists(id))
+                if (! await PriorityExists(id))
                 {
                     return NotFound();
                 }
@@ -87,8 +86,7 @@ namespace TaskManager.Core.Api.Controllers
                 return BadRequest(ModelState);
             }
 
-            _context.Priorities.Add(priority);
-            await _context.SaveChangesAsync();
+            await _repository.Update(priority);
 
             return CreatedAtAction("GetPriority", new { id = priority.Id }, priority);
         }
@@ -101,21 +99,20 @@ namespace TaskManager.Core.Api.Controllers
                 return BadRequest(ModelState);
             }
 
-            var priority = await _context.Priorities.SingleOrDefaultAsync(m => m.Id == id);
+            var priority = await _repository.Get(id);
             if (priority == null)
             {
                 return NotFound();
             }
 
-            _context.Priorities.Remove(priority);
-            await _context.SaveChangesAsync();
+            await _repository.Delete(id);
 
             return Ok(priority);
         }
 
-        private bool PriorityExists(int id)
+        private async Task<bool> PriorityExists(int id)
         {
-            return _context.Priorities.Any(e => e.Id == id);
+            return (await _repository.Get(id)) != null;
         }
     }
 }

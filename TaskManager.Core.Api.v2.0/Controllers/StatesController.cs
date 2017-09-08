@@ -6,6 +6,7 @@ using Microsoft.EntityFrameworkCore;
 using TaskManager.Core.Api.Models.DataModel;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using TaskManager.Core.Api.Repository;
 
 namespace TaskManager.Core.Api.Controllers
 {
@@ -14,17 +15,17 @@ namespace TaskManager.Core.Api.Controllers
     [Route("api/states")]
     public class StatesController : Controller
     {
-        private readonly TaskDbContext _context;
+        private readonly IRepository<State, int> _repository;
 
-        public StatesController(TaskDbContext context)
+        public StatesController(IRepository<State, int> repository)
         {
-            _context = context;
+            _repository = repository;
         }
 
         [HttpGet]
-        public IEnumerable<State> GetStates()
+        public async Task<IEnumerable<State>> GetStates()
         {
-            return _context.States;
+            return await _repository.Get();
         }
 
         [HttpGet("{id}")]
@@ -35,7 +36,7 @@ namespace TaskManager.Core.Api.Controllers
                 return BadRequest(ModelState);
             }
 
-            var state = await _context.States.SingleOrDefaultAsync(m => m.Id == id);
+            var state = await _repository.Get(id);
 
             if (state == null)
             {
@@ -58,15 +59,13 @@ namespace TaskManager.Core.Api.Controllers
                 return BadRequest();
             }
 
-            _context.Entry(state).State = EntityState.Modified;
-
             try
             {
-                await _context.SaveChangesAsync();
+                await _repository.Update(state);
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (!StateExists(id))
+                if (! await StateExists(id))
                 {
                     return NotFound();
                 }
@@ -87,9 +86,7 @@ namespace TaskManager.Core.Api.Controllers
                 return BadRequest(ModelState);
             }
 
-            _context.States.Add(state);
-            await _context.SaveChangesAsync();
-
+            await _repository.Create(state);
             return CreatedAtAction("GetState", new { id = state.Id }, state);
         }
 
@@ -101,21 +98,19 @@ namespace TaskManager.Core.Api.Controllers
                 return BadRequest(ModelState);
             }
 
-            var state = await _context.States.SingleOrDefaultAsync(m => m.Id == id);
+            var state = await _repository.Get(id);
             if (state == null)
             {
                 return NotFound();
             }
 
-            _context.States.Remove(state);
-            await _context.SaveChangesAsync();
-
+            await _repository.Delete(id);
             return Ok(state);
         }
 
-        private bool StateExists(int id)
+        private async Task<bool> StateExists(int id)
         {
-            return _context.States.Any(e => e.Id == id);
+            return (await _repository.Get(id)) != null;
         }
     }
 }

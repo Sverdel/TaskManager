@@ -26,7 +26,9 @@ namespace TaskManager.Core.Api.v2._0
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddTransient<ITaskRepository, TaskRepository>();
+            services.AddTransient<IRepository<WorkTask, long>, TaskRepository>();
+            services.AddTransient<IRepository<State, int>, StateRepository>();
+            services.AddTransient<IRepository<Priority, int>, PriorityRepository>();
             services.AddDbContext<TaskDbContext>(options => options.UseSqlServer(Configuration["Data:DefaultConnection:ConnectionString"]));
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
                    .AddJwtBearer(options =>

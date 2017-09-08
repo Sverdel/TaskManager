@@ -10,7 +10,7 @@ using Dapper;
 
 namespace TaskManager.Core.Api.Repository
 {
-    public class TaskRepository : ITaskRepository
+    public class TaskRepository : IRepository<WorkTask, long>
     {
         private string _connectionString;
         public TaskRepository(IConfiguration config)
@@ -18,7 +18,7 @@ namespace TaskManager.Core.Api.Repository
             _connectionString = config["Data:DefaultConnection:ConnectionString"];
         }
 
-        public async Task<IEnumerable<WorkTask>> GetTasks()
+        public async Task<IEnumerable<WorkTask>> Get()
         {
             using (IDbConnection db = new SqlConnection(_connectionString))
             {
@@ -26,7 +26,7 @@ namespace TaskManager.Core.Api.Repository
             }
         }
 
-        public async Task<WorkTask> GetTask(long id)
+        public async Task<WorkTask> Get(long id)
         {
             using (IDbConnection db = new SqlConnection(_connectionString))
             {
@@ -34,7 +34,7 @@ namespace TaskManager.Core.Api.Repository
             }
         }
 
-        public async Task CreateTask(WorkTask task)
+        public async Task Create(WorkTask task)
         {
             using (IDbConnection db = new SqlConnection(_connectionString))
             {
@@ -45,7 +45,7 @@ VALUES (@ActualTimeCost, @ChangeDatetime, @CreateDateTime, @Description, @Name, 
             }
         }
 
-        public async Task UpdateTask(WorkTask task)
+        public async Task Update(WorkTask task)
         {
             using (IDbConnection db = new SqlConnection(_connectionString))
             {
@@ -58,7 +58,7 @@ WHERE Id = @Id";
             }
         }
 
-        public async Task DeleteTask(long id)
+        public async Task Delete(long id)
         {
             using (IDbConnection db = new SqlConnection(_connectionString))
             {
