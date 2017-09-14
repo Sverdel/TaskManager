@@ -1,15 +1,15 @@
-﻿using Microsoft.AspNetCore.Builder;
+﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using TaskManager.Core.Api.Models.DataModel;
-using Microsoft.EntityFrameworkCore;
-using Swashbuckle.AspNetCore.Swagger;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
+using Swashbuckle.AspNetCore.Swagger;
 using System.Text;
 using TaskManager.Core.Api.Filters;
-using Microsoft.AspNetCore.Identity;
+using TaskManager.Core.Api.Models.DataModel;
 using TaskManager.Core.Api.Repository;
 
 namespace TaskManager.Core.Api.v2._0
@@ -53,6 +53,12 @@ namespace TaskManager.Core.Api.v2._0
                            // валидация ключа безопасности
                            ValidateIssuerSigningKey = true,
                        };
+                   //})
+                   //.AddFacebook(facebookOptions =>
+                   //{
+                   //    facebookOptions.AppId = Configuration["Authentication:Facebook:AppId"];
+                   //    facebookOptions.AppSecret = Configuration["Authentication:Facebook:AppSecret"];
+                   //    facebookOptions.SaveTokens = true;
                    });
 
             services.AddMvc();
