@@ -1,0 +1,37 @@
+<div>
+    <nav class="navbar navbar-default">
+        <div class="container-fluid container">
+            <a [routerLink]="['']"><div class="navbar-header navbar-brand">{{title}}</div></a>
+
+            <div class="collapse navbar-collapse">
+                <div class="navbar-form navbar-right" *ngIf="!authService.isLoggedIn()">
+                    <a class="btn btn-primary" [routerLink]="['signin']">Sign in</a>
+                    <a class="btn btn-default" [routerLink]="['signup']">Sign up</a>
+                </div>
+                <div class="dropdown navbar-form navbar-right" role="form" *ngIf="authService.isLoggedIn()">
+                    <button class="dropdown-toggle btn btn-default" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">{{ this.authService.userName }} <span class="caret"></span></button>
+                    <ul class="dropdown-menu">
+                        <li><a href="#" (click)="logout()">Logout</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!--<div *ngIf="alertMessage == null">
+        <alert  [type]="danger" dismissible="true" (close)="alertMessage == null">
+            {{ alertMessage }}
+        </alert>
+    </div>-->
+    <!--<div class="container">
+        <div class="alert alert-danger alert-dismissible" role="alert" uib-collapse="alertMessage == null">
+            <button type="button" class="close" aria-label="Close" (click)="alertMessage = null"><span aria-hidden="true">&times;</span></button>
+            <strong>Warning!</strong> {{ alertMessage }}
+        </div>
+    </div>-->
+
+    <div class="main-container">
+        <router-outlet></router-outlet>
+    </div>
+
+</div>
