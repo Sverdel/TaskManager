@@ -2,12 +2,10 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
-using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
-using System.Net.Http;
 using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
@@ -59,10 +57,12 @@ namespace TaskManager.Core.Api.Controllers
 
                 var token = await GetJwtSecurityToken(user);
 
-                return Ok(new
+                return Ok(new UserDto
                 {
-                    token = new JwtSecurityTokenHandler().WriteToken(token),
-                    expiration = token.ValidTo
+                    Id = user.Id,
+                    Name = user.UserName,
+                    Token = new JwtSecurityTokenHandler().WriteToken(token),
+                    TokenExpireDate = token.ValidTo
                 });
             }
             catch (Exception ex)
@@ -77,7 +77,7 @@ namespace TaskManager.Core.Api.Controllers
         /// </summary>
         /// <returns></returns>
         [HttpPost("signup")]
-        public async Task<IActionResult> SignUp([FromBody]CredentialsDto userModel)
+        public async Task<IActionResult> SignUp([FromBody]UserDto userModel)
         {
             try
             {
@@ -90,7 +90,7 @@ namespace TaskManager.Core.Api.Controllers
 
                 user = new User()
                 {
-                    UserName = userModel.Name,
+                    UserName = userModel.Name
                 };
                 // Add the user to the Db with a random password
                 var result = await _userManager.CreateAsync(user, userModel.Password);
@@ -112,7 +112,7 @@ namespace TaskManager.Core.Api.Controllers
 
                 _dbContext.SaveChanges();
 
-                return await SignIn(userModel);
+                return Ok(userModel);
             }
             catch (Exception e)
             {

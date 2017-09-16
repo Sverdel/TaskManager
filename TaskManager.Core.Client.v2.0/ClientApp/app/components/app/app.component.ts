@@ -10,7 +10,19 @@ import { AuthService } from "./../../services/auth.service";
 export class AppComponent {
     title = "Task Manager";
 
-    constructor(public router: Router, private authService: AuthService) {
+    constructor(private router: Router, private authService: AuthService) {
     }
 
+    isAuthorized(): boolean {
+        return this.authService.isAuthorized();
+    }
+
+    signout(): boolean {
+        this.authService.signout().subscribe((result: any) => {
+            if (result) {
+                this.router.navigate([""]);
+            }
+        });
+        return false;
+    }
 }

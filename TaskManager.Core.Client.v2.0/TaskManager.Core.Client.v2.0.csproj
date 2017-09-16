@@ -25,11 +25,13 @@
 
   <ItemGroup>
     <None Remove="ClientApp\app\environments\environment.ts" />
+    <None Remove="ClientApp\app\models\user.ts" />
     <None Remove="ClientApp\app\services\auth.service.ts" />
   </ItemGroup>
 
   <ItemGroup>
     <TypeScriptCompile Include="ClientApp\app\environments\environment.ts" />
+    <TypeScriptCompile Include="ClientApp\app\models\user.ts" />
     <TypeScriptCompile Include="ClientApp\app\services\auth.http.ts" />
     <TypeScriptCompile Include="ClientApp\app\services\auth.service.ts" />
   </ItemGroup>

@@ -4,14 +4,14 @@
             <a [routerLink]="['']"><div class="navbar-header navbar-brand">{{title}}</div></a>
 
             <div class="collapse navbar-collapse">
-                <div class="navbar-form navbar-right" *ngIf="!authService.isLoggedIn()">
+                <div class="navbar-form navbar-right" *ngIf="!isAuthorized()">
                     <a class="btn btn-primary" [routerLink]="['signin']">Sign in</a>
                     <a class="btn btn-default" [routerLink]="['signup']">Sign up</a>
                 </div>
-                <div class="dropdown navbar-form navbar-right" role="form" *ngIf="authService.isLoggedIn()">
-                    <button class="dropdown-toggle btn btn-default" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">{{ this.authService.userName }} <span class="caret"></span></button>
+                <div class="dropdown navbar-form navbar-right" role="form" *ngIf="isAuthorized()">
+                    <button class="dropdown-toggle btn btn-default" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">{{ this.authService.user.name }} <span class="caret"></span></button>
                     <ul class="dropdown-menu">
-                        <li><a href="#" (click)="logout()">Logout</a></li>
+                        <li><a href="#" (click)="signout()">SignOut</a></li>
                     </ul>
                 </div>
             </div>

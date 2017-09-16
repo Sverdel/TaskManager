@@ -3,6 +3,7 @@ import { Http, Headers } from '@angular/http';
 import { Environment } from "./../environments/environment";
 import { PLATFORM_ID, Inject } from '@angular/core';
 import { isPlatformBrowser, isPlatformServer } from '@angular/common';
+import { User } from "../models/user";
 
 
 @Injectable()
@@ -32,8 +33,13 @@ export class AuthHttp {
         return this.http.delete(this.env.apiUrl + url, opts);
     }
 
-    configureAuth(opts: any) {
-        if (isPlatformServer(this.platformId)) {
+    isServer(): boolean
+    {
+        return isPlatformServer(this.platformId);
+    }
+
+    private configureAuth(opts: any) {
+        if (this.isServer()) {
             return;
         }
 
@@ -47,27 +53,5 @@ export class AuthHttp {
                 opts.headers.set("Authorization", `Bearer ${auth.accessToken}`);
             }
         }
-    }
-
-    isLoggedIn(): boolean {
-        if (isPlatformServer(this.platformId)) {
-            return false;
-        }
-
-        if (localStorage.getItem(this.authKey) == null)
-            return false;
-
-        var item = localStorage.getItem(this.authKey);
-        if (item) {
-            var auth = JSON.parse(item);
-            var authDate = new Date(auth.tokenExpireDate);
-            var current = new Date();
-            if (authDate < current) {
-                localStorage.removeItem(this.authKey);
-                return false;
-            }
-        }
-
-        return true;
     }
 }
