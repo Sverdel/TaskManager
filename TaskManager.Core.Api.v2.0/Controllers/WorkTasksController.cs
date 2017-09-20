@@ -6,6 +6,7 @@ using TaskManager.Core.Api.Models.DataModel;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using TaskManager.Core.Api.Repository;
+using System;
 
 namespace TaskManager.Core.Api.Controllers
 {
@@ -25,6 +26,17 @@ namespace TaskManager.Core.Api.Controllers
         public async Task<IEnumerable<WorkTask>> GetWorkTasks()
         {
             return await _repository.Get();
+        }
+
+        [HttpGet("list/{userId}")]
+        public async Task<IActionResult> GetWorkTasks([FromRoute]string userId)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            return Ok(await _repository.Get(userId));
         }
 
         [HttpGet("{id}")]
@@ -85,9 +97,11 @@ namespace TaskManager.Core.Api.Controllers
                 return BadRequest(ModelState);
             }
 
-            await _repository.Create(workTask);
+            workTask.CreateDateTime = DateTime.Now;
+            workTask.ChangeDatetime = DateTime.Now;
+            var newTask = await _repository.Create(workTask);
 
-            return CreatedAtAction("GetWorkTask", new { id = workTask.Id }, workTask);
+            return CreatedAtAction("GetWorkTask", new { id = newTask.Id }, newTask);
         }
 
         [HttpDelete("{id}")]

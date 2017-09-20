@@ -60,7 +60,7 @@ namespace TaskManager.Core.Api.Controllers
 
             try
             {
-                await _repository.Create(priority);
+                await _repository.Update(priority);
             }
             catch (DbUpdateConcurrencyException)
             {
@@ -85,9 +85,9 @@ namespace TaskManager.Core.Api.Controllers
                 return BadRequest(ModelState);
             }
 
-            await _repository.Update(priority);
+            var newPriority = await _repository.Create(priority);
 
-            return CreatedAtAction("GetPriority", new { id = priority.Id }, priority);
+            return CreatedAtAction("GetPriority", new { id = newPriority.Id }, newPriority);
         }
 
         [HttpDelete("{id}")]

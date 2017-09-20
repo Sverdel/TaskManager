@@ -61,7 +61,7 @@ namespace TaskManager.Core.Api.Controllers
                 {
                     Id = user.Id,
                     Name = user.UserName,
-                    Token = new JwtSecurityTokenHandler().WriteToken(token),
+                    AccessToken = new JwtSecurityTokenHandler().WriteToken(token),
                     TokenExpireDate = token.ValidTo
                 });
             }

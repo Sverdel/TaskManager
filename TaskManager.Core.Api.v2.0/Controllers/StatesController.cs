@@ -85,8 +85,8 @@ namespace TaskManager.Core.Api.Controllers
                 return BadRequest(ModelState);
             }
 
-            await _repository.Create(state);
-            return CreatedAtAction("GetState", new { id = state.Id }, state);
+            var newState = await _repository.Create(state);
+            return CreatedAtAction("GetState", new { id = newState.Id }, newState);
         }
 
         [HttpDelete("{id}")]

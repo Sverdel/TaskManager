@@ -24,6 +24,14 @@ namespace TaskManager.Core.Api.Repository
             }
         }
 
+        public async Task<IEnumerable<WorkTask>> Get(string userId)
+        {
+            using (IDbConnection db = new SqlConnection(_connectionString))
+            {
+                return await db.QueryAsync<WorkTask>("SELECT * FROM dbo.WorkTasks where userId = @userId", new { userId });
+            }
+        }
+
         public async Task<WorkTask> Get(long id)
         {
             using (IDbConnection db = new SqlConnection(_connectionString))
@@ -32,14 +40,15 @@ namespace TaskManager.Core.Api.Repository
             }
         }
 
-        public async Task Create(WorkTask task)
+        public async Task<WorkTask> Create(WorkTask task)
         {
             using (IDbConnection db = new SqlConnection(_connectionString))
             {
                 var query = @"Insert into dbo.WorkTasks 
 (ActualTimeCost, ChangeDatetime, CreateDateTime, Description, Name, PlanedTimeCost,  PriorityId,  RemainingTimeCost, StateId, UserId, Version)
+output inserted.*
 VALUES (@ActualTimeCost, @ChangeDatetime, @CreateDateTime, @Description, @Name, @PlanedTimeCost,  @PriorityId,  @RemainingTimeCost, @StateId, @UserId, @Version)";
-                await db.ExecuteAsync(query, task);
+                return await db.QueryFirstOrDefaultAsync<WorkTask>(query, task);
             }
         }
 
@@ -47,7 +56,7 @@ VALUES (@ActualTimeCost, @ChangeDatetime, @CreateDateTime, @Description, @Name, 
         {
             using (IDbConnection db = new SqlConnection(_connectionString))
             {
-                var sqlQuery = @"UPDATE dbo.WorkTasks SET Name = @Name, Age = @Age
+                var sqlQuery = @"UPDATE dbo.WorkTasks 
 SET ActualTimeCost = @ActualTimeCost, ChangeDatetime = @ChangeDatetime, CreateDateTime = @CreateDateTime, Description = @Description, 
 Name = @Name, PlanedTimeCost = @PlanedTimeCost, PriorityId = @PriorityId, RemainingTimeCost = @RemainingTimeCost, StateId = @StateId, 
 UserId = @UserId, Version = @Version

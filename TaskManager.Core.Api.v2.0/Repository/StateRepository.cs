@@ -32,12 +32,12 @@ namespace TaskManager.Core.Api.Repository
             }
         }
 
-        public async Task Create(State task)
+        public async Task<State> Create(State task)
         {
             using (IDbConnection db = new SqlConnection(_connectionString))
             {
-                var query = "Insert into dbo.States (Name) VALUES (@Name)";
-                await db.ExecuteAsync(query, task);
+                var query = "Insert into dbo.States (Name) output inserted.* VALUES (@Name)";
+                return await db.QueryFirstOrDefaultAsync<State>(query, task);
             }
         }
 
@@ -59,5 +59,9 @@ namespace TaskManager.Core.Api.Repository
             }
         }
 
+        public Task<IEnumerable<State>> Get(string userId)
+        {
+            return Get();
+        }
     }
 }

@@ -32,12 +32,12 @@ namespace TaskManager.Core.Api.Repository
             }
         }
 
-        public async Task Create(Priority task)
+        public async Task<Priority> Create(Priority task)
         {
             using (IDbConnection db = new SqlConnection(_connectionString))
             {
-                var query = "Insert into dbo.Priorities (Name) VALUES (@Name)";
-                await db.ExecuteAsync(query, task);
+                var query = "Insert into dbo.Priorities (Name) output inserted.* VALUES(@Name)";
+                return await db.QueryFirstOrDefaultAsync<Priority>(query, task);
             }
         }
 
@@ -59,5 +59,9 @@ namespace TaskManager.Core.Api.Repository
             }
         }
 
+        public Task<IEnumerable<Priority>> Get(string userId)
+        {
+            return Get();
+        }
     }
 }

@@ -1,0 +1,25 @@
+﻿<div class="container" *ngIf="authService.isAuthorized()">
+    <div class="row">
+        <div class="col-md-3">
+            <div class="panel panel-default">
+                <div class="panel-heading panel-title">
+                    Work items
+                    <div class="pull-right">
+                        <span class="glyphicon glyphicon-plus" aria-hidden="true" (click)="createTask()"></span>
+                    </div>
+                </div>
+                <div [ngStyle]="{ 'max-height' : 0.8 * listHeight + 'px', 'height' : 0.8 * listHeight + 'px', 'overflow-y' : 'auto' }">
+                    <ul class="list-group">
+                        <li *ngFor="let task of taskList " class="list-group-item" [ngClass]="{active: currentTaskId == task.id}" (click)="getTask(task.id)">
+                            <div class="list-group-item-heading">
+                                {{ task.name }}
+                                <span class="pull-right glyphicon glyphicon-trash" aria-hidden="true" (click)="removeTask()" *ngIf="currentTaskId == task.id"></span>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <task class="col-md-9" *ngIf="currentTaskId != null" [currentTaskId]="currentTaskId" [taskList]="taskList"></task>
+    </div>
+</div>

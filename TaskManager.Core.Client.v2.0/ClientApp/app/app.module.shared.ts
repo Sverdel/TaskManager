@@ -8,10 +8,18 @@ import { AppComponent } from './components/app/app.component';
 import { SigninComponent } from './components/signin/signin.component';
 import { SignupComponent } from './components/signup/signup.component';
 import { PageNotFoundComponent } from './components/page-not-found/page-not-found.component';
+import { TasklistComponent } from './components/tasklist/tasklist.component';
+import { TaskComponent } from './components/task/task.component';
+
 
 import { Environment } from './environments/environment';
 import { AuthService } from './services/auth.service';
 import { AuthHttp } from './services/auth.http';
+import { ResourceService } from './services/resource.service';
+import { TaskService } from './services/task.service';
+
+import { FromDictionaryPipe } from './pipes/fromDictionary.pipe';
+
 
 
 @NgModule({
@@ -19,21 +27,28 @@ import { AuthHttp } from './services/auth.http';
         AppComponent,
         SigninComponent,
         SignupComponent,
-        PageNotFoundComponent
+        PageNotFoundComponent,
+        TasklistComponent,
+        TaskComponent,
+
+        FromDictionaryPipe
     ],
     providers: [
         Environment,
         AuthService,
-        AuthHttp
+        AuthHttp,
+        ResourceService,
+        TaskService
     ],
     imports: [
         CommonModule,
         HttpModule,
         FormsModule,
         RouterModule.forRoot([
-            { path: '', component: PageNotFoundComponent },
+            { path: '', component: TasklistComponent },
             { path: "signup", component: SignupComponent },
             { path: "signin", component: SigninComponent },
+            { path: "**", component: PageNotFoundComponent }
 
         //    { path: '', redirectTo: 'home', pathMatch: 'full' },
         //    { path: 'home', component: HomeComponent },
