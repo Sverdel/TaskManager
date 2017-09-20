@@ -7,6 +7,8 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using TaskManager.Core.Api.Repository;
 using System;
+using TaskManager.Core.Api.Models.Dto;
+using AutoMapper;
 
 namespace TaskManager.Core.Api.Controllers
 {
@@ -23,9 +25,9 @@ namespace TaskManager.Core.Api.Controllers
         }
 
         [HttpGet]
-        public async Task<IEnumerable<WorkTask>> GetWorkTasks()
+        public async Task<IEnumerable<TaskDto>> GetWorkTasks()
         {
-            return await _repository.Get().ConfigureAwait(false);
+            return Mapper.Map<IEnumerable<WorkTask>, IEnumerable<TaskDto>>(await _repository.Get().ConfigureAwait(false));
         }
 
         [HttpGet("list/{userId}")]
@@ -54,11 +56,11 @@ namespace TaskManager.Core.Api.Controllers
                 return NotFound();
             }
 
-            return Ok(workTask);
+            return Ok(Mapper.Map<WorkTask, TaskDto>(workTask));
         }
 
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutWorkTask([FromRoute] long id, [FromBody] WorkTask workTask)
+        public async Task<IActionResult> PutWorkTask([FromRoute] long id, [FromBody] TaskDto workTask)
         {
             if (!ModelState.IsValid)
             {
@@ -72,7 +74,7 @@ namespace TaskManager.Core.Api.Controllers
 
             try
             {
-                await _repository.Update(workTask).ConfigureAwait(false);
+                await _repository.Update(Mapper.Map<TaskDto, WorkTask>(workTask)).ConfigureAwait(false);
             }
             catch (DbUpdateConcurrencyException)
             {
@@ -90,18 +92,17 @@ namespace TaskManager.Core.Api.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> PostWorkTask([FromBody] WorkTask workTask)
+        public async Task<IActionResult> PostWorkTask([FromBody] TaskDto workTask)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
-            workTask.CreateDateTime = DateTime.Now;
-            workTask.ChangeDatetime = DateTime.Now;
-            WorkTask newTask = await _repository.Create(workTask).ConfigureAwait(false);
+            WorkTask task = await _repository.Create(Mapper.Map<TaskDto, WorkTask>(workTask)).ConfigureAwait(false);
 
-            return CreatedAtAction("GetWorkTask", new { id = newTask.Id }, newTask);
+            var dto = Mapper.Map<WorkTask, TaskDto>(task);
+            return CreatedAtAction("GetWorkTask", new { id = dto.Id }, dto);
         }
 
         [HttpDelete("{id}")]
@@ -120,7 +121,7 @@ namespace TaskManager.Core.Api.Controllers
 
             await _repository.Delete(id).ConfigureAwait(false);
 
-            return Ok(workTask);
+            return Ok(Mapper.Map<WorkTask, TaskDto>(workTask));
         }
 
         private async Task<bool> WorkTaskExists(long id)

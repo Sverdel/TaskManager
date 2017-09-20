@@ -47,7 +47,7 @@ namespace TaskManager.Core.Api.Repository
                 const string query = @"Insert into dbo.WorkTasks 
 (ActualTimeCost, ChangeDatetime, CreateDateTime, Description, Name, PlanedTimeCost,  PriorityId,  RemainingTimeCost, StateId, UserId, Version)
 output inserted.*
-VALUES (@ActualTimeCost, @ChangeDatetime, @CreateDateTime, @Description, @Name, @PlanedTimeCost,  @PriorityId,  @RemainingTimeCost, @StateId, @UserId, @Version)";
+VALUES (@ActualTimeCost, current_timestamp, current_timestamp, @Description, @Name, @PlanedTimeCost,  @PriorityId,  @RemainingTimeCost, @StateId, @UserId, @Version)";
                 return await db.QueryFirstOrDefaultAsync<WorkTask>(query, task).ConfigureAwait(false);
             }
         }
@@ -57,7 +57,7 @@ VALUES (@ActualTimeCost, @ChangeDatetime, @CreateDateTime, @Description, @Name, 
             using (IDbConnection db = new SqlConnection(_connectionString))
             {
                 const string sqlQuery = @"UPDATE dbo.WorkTasks 
-SET ActualTimeCost = @ActualTimeCost, ChangeDatetime = @ChangeDatetime, CreateDateTime = @CreateDateTime, Description = @Description, 
+SET ActualTimeCost = @ActualTimeCost, ChangeDatetime = current_timestamp, CreateDateTime = @CreateDateTime, Description = @Description, 
 Name = @Name, PlanedTimeCost = @PlanedTimeCost, PriorityId = @PriorityId, RemainingTimeCost = @RemainingTimeCost, StateId = @StateId, 
 UserId = @UserId, Version = @Version
 WHERE Id = @Id";
