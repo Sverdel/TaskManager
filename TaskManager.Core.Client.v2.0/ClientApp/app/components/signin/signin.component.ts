@@ -21,11 +21,11 @@ export class SigninComponent implements OnInit
     ngOnInit(): void { }
 
     signin() {
-        if (this.user == null || this.user.name == null || this.user.password == null) {
+        if (this.user == null || this.user.userName == null || this.user.password == null) {
             return;
         }
 
-        this.authService.signin(this.user.name, this.user.password)
+        this.authService.signin(this.user.userName, this.user.password)
             .subscribe((data: any) => {
                 this.router.navigate([""]);
             },

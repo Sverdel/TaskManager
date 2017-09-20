@@ -24,7 +24,7 @@ namespace TaskManager.Core.Api.Controllers
         [HttpGet]
         public async Task<IEnumerable<Priority>> GetPriorities()
         {
-            return await _repository.Get();
+            return await _repository.Get().ConfigureAwait(false);
         }
 
         [HttpGet("{id}")]
@@ -35,7 +35,7 @@ namespace TaskManager.Core.Api.Controllers
                 return BadRequest(ModelState);
             }
 
-            var priority = await _repository.Get(id);
+            Priority priority = await _repository.Get(id).ConfigureAwait(false);
 
             if (priority == null)
             {
@@ -60,11 +60,11 @@ namespace TaskManager.Core.Api.Controllers
 
             try
             {
-                await _repository.Update(priority);
+                await _repository.Update(priority).ConfigureAwait(false);
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (! await PriorityExists(id))
+                if (! await PriorityExists(id).ConfigureAwait(false))
                 {
                     return NotFound();
                 }
@@ -85,7 +85,7 @@ namespace TaskManager.Core.Api.Controllers
                 return BadRequest(ModelState);
             }
 
-            var newPriority = await _repository.Create(priority);
+            Priority newPriority = await _repository.Create(priority).ConfigureAwait(false);
 
             return CreatedAtAction("GetPriority", new { id = newPriority.Id }, newPriority);
         }
@@ -98,20 +98,20 @@ namespace TaskManager.Core.Api.Controllers
                 return BadRequest(ModelState);
             }
 
-            var priority = await _repository.Get(id);
+            Priority priority = await _repository.Get(id).ConfigureAwait(false);
             if (priority == null)
             {
                 return NotFound();
             }
 
-            await _repository.Delete(id);
+            await _repository.Delete(id).ConfigureAwait(false);
 
             return Ok(priority);
         }
 
         private async Task<bool> PriorityExists(int id)
         {
-            return (await _repository.Get(id)) != null;
+            return (await _repository.Get(id).ConfigureAwait(false)) != null;
         }
     }
 }

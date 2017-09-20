@@ -10,7 +10,7 @@ namespace TaskManager.Core.Api.Repository
 {
     public class TaskRepository : IRepository<WorkTask, long>
     {
-        private string _connectionString;
+        private readonly string _connectionString;
         public TaskRepository(IConfiguration config)
         {
             _connectionString = config["Data:DefaultConnection:ConnectionString"];
@@ -20,7 +20,7 @@ namespace TaskManager.Core.Api.Repository
         {
             using (IDbConnection db = new SqlConnection(_connectionString))
             {
-                return await db.QueryAsync<WorkTask>("SELECT * FROM dbo.WorkTasks");
+                return await db.QueryAsync<WorkTask>("SELECT * FROM dbo.WorkTasks").ConfigureAwait(false);
             }
         }
 
@@ -28,7 +28,7 @@ namespace TaskManager.Core.Api.Repository
         {
             using (IDbConnection db = new SqlConnection(_connectionString))
             {
-                return await db.QueryAsync<WorkTask>("SELECT * FROM dbo.WorkTasks where userId = @userId", new { userId });
+                return await db.QueryAsync<WorkTask>("SELECT * FROM dbo.WorkTasks where userId = @userId", new { userId }).ConfigureAwait(false);
             }
         }
 
@@ -36,7 +36,7 @@ namespace TaskManager.Core.Api.Repository
         {
             using (IDbConnection db = new SqlConnection(_connectionString))
             {
-                return await db.QueryFirstOrDefaultAsync<WorkTask>("SELECT * FROM dbo.WorkTasks where Id = @id", new { id });
+                return await db.QueryFirstOrDefaultAsync<WorkTask>("SELECT * FROM dbo.WorkTasks where Id = @id", new { id }).ConfigureAwait(false);
             }
         }
 
@@ -44,11 +44,11 @@ namespace TaskManager.Core.Api.Repository
         {
             using (IDbConnection db = new SqlConnection(_connectionString))
             {
-                var query = @"Insert into dbo.WorkTasks 
+                const string query = @"Insert into dbo.WorkTasks 
 (ActualTimeCost, ChangeDatetime, CreateDateTime, Description, Name, PlanedTimeCost,  PriorityId,  RemainingTimeCost, StateId, UserId, Version)
 output inserted.*
 VALUES (@ActualTimeCost, @ChangeDatetime, @CreateDateTime, @Description, @Name, @PlanedTimeCost,  @PriorityId,  @RemainingTimeCost, @StateId, @UserId, @Version)";
-                return await db.QueryFirstOrDefaultAsync<WorkTask>(query, task);
+                return await db.QueryFirstOrDefaultAsync<WorkTask>(query, task).ConfigureAwait(false);
             }
         }
 
@@ -56,12 +56,12 @@ VALUES (@ActualTimeCost, @ChangeDatetime, @CreateDateTime, @Description, @Name, 
         {
             using (IDbConnection db = new SqlConnection(_connectionString))
             {
-                var sqlQuery = @"UPDATE dbo.WorkTasks 
+                const string sqlQuery = @"UPDATE dbo.WorkTasks 
 SET ActualTimeCost = @ActualTimeCost, ChangeDatetime = @ChangeDatetime, CreateDateTime = @CreateDateTime, Description = @Description, 
 Name = @Name, PlanedTimeCost = @PlanedTimeCost, PriorityId = @PriorityId, RemainingTimeCost = @RemainingTimeCost, StateId = @StateId, 
 UserId = @UserId, Version = @Version
 WHERE Id = @Id";
-                await db.ExecuteAsync(sqlQuery, task);
+                await db.ExecuteAsync(sqlQuery, task).ConfigureAwait(false);
             }
         }
 
@@ -69,8 +69,8 @@ WHERE Id = @Id";
         {
             using (IDbConnection db = new SqlConnection(_connectionString))
             {
-                var sqlQuery = "DELETE FROM dbo.WorkTasks WHERE Id = @id";
-                await db.ExecuteAsync(sqlQuery, new { id });
+                const string sqlQuery = "DELETE FROM dbo.WorkTasks WHERE Id = @id";
+                await db.ExecuteAsync(sqlQuery, new { id }).ConfigureAwait(false);
             }
         }
     }

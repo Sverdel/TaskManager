@@ -10,7 +10,7 @@ namespace TaskManager.Core.Api.Repository
 {
     public class StateRepository : IRepository<State, int>
     {
-        private string _connectionString;
+        private readonly string _connectionString;
         public StateRepository(IConfiguration config)
         {
             _connectionString = config["Data:DefaultConnection:ConnectionString"];
@@ -20,7 +20,7 @@ namespace TaskManager.Core.Api.Repository
         {
             using (IDbConnection db = new SqlConnection(_connectionString))
             {
-                return await db.QueryAsync<State>("SELECT * FROM dbo.States");
+                return await db.QueryAsync<State>("SELECT * FROM dbo.States").ConfigureAwait(false);
             }
         }
 
@@ -28,7 +28,7 @@ namespace TaskManager.Core.Api.Repository
         {
             using (IDbConnection db = new SqlConnection(_connectionString))
             {
-                return await db.QueryFirstOrDefaultAsync<State>("SELECT * FROM dbo.States where Id = @id", new { id });
+                return await db.QueryFirstOrDefaultAsync<State>("SELECT * FROM dbo.States where Id = @id", new { id }).ConfigureAwait(false);
             }
         }
 
@@ -36,8 +36,8 @@ namespace TaskManager.Core.Api.Repository
         {
             using (IDbConnection db = new SqlConnection(_connectionString))
             {
-                var query = "Insert into dbo.States (Name) output inserted.* VALUES (@Name)";
-                return await db.QueryFirstOrDefaultAsync<State>(query, task);
+                const string query = "Insert into dbo.States (Name) output inserted.* VALUES (@Name)";
+                return await db.QueryFirstOrDefaultAsync<State>(query, task).ConfigureAwait(false);
             }
         }
 
@@ -45,8 +45,8 @@ namespace TaskManager.Core.Api.Repository
         {
             using (IDbConnection db = new SqlConnection(_connectionString))
             {
-                var sqlQuery = "UPDATE dbo.States SET Name = @Name WHERE Id = @Id";
-                await db.ExecuteAsync(sqlQuery, task);
+                const string sqlQuery = "UPDATE dbo.States SET Name = @Name WHERE Id = @Id";
+                await db.ExecuteAsync(sqlQuery, task).ConfigureAwait(false);
             }
         }
 
@@ -54,8 +54,8 @@ namespace TaskManager.Core.Api.Repository
         {
             using (IDbConnection db = new SqlConnection(_connectionString))
             {
-                var sqlQuery = "DELETE FROM dbo.States WHERE Id = @id";
-                await db.ExecuteAsync(sqlQuery, new { id });
+                const string sqlQuery = "DELETE FROM dbo.States WHERE Id = @id";
+                await db.ExecuteAsync(sqlQuery, new { id }).ConfigureAwait(false);
             }
         }
 

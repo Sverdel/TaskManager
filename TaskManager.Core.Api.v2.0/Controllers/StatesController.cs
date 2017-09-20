@@ -24,7 +24,7 @@ namespace TaskManager.Core.Api.Controllers
         [HttpGet]
         public async Task<IEnumerable<State>> GetStates()
         {
-            return await _repository.Get();
+            return await _repository.Get().ConfigureAwait(false);
         }
 
         [HttpGet("{id}")]
@@ -35,7 +35,7 @@ namespace TaskManager.Core.Api.Controllers
                 return BadRequest(ModelState);
             }
 
-            var state = await _repository.Get(id);
+            State state = await _repository.Get(id).ConfigureAwait(false);
 
             if (state == null)
             {
@@ -60,11 +60,11 @@ namespace TaskManager.Core.Api.Controllers
 
             try
             {
-                await _repository.Update(state);
+                await _repository.Update(state).ConfigureAwait(false);
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (! await StateExists(id))
+                if (! await StateExists(id).ConfigureAwait(false))
                 {
                     return NotFound();
                 }
@@ -85,7 +85,7 @@ namespace TaskManager.Core.Api.Controllers
                 return BadRequest(ModelState);
             }
 
-            var newState = await _repository.Create(state);
+            State newState = await _repository.Create(state).ConfigureAwait(false);
             return CreatedAtAction("GetState", new { id = newState.Id }, newState);
         }
 
@@ -97,19 +97,19 @@ namespace TaskManager.Core.Api.Controllers
                 return BadRequest(ModelState);
             }
 
-            var state = await _repository.Get(id);
+            State state = await _repository.Get(id).ConfigureAwait(false);
             if (state == null)
             {
                 return NotFound();
             }
 
-            await _repository.Delete(id);
+            await _repository.Delete(id).ConfigureAwait(false);
             return Ok(state);
         }
 
         private async Task<bool> StateExists(int id)
         {
-            return (await _repository.Get(id)) != null;
+            return (await _repository.Get(id).ConfigureAwait(false)) != null;
         }
     }
 }

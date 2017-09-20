@@ -25,7 +25,7 @@ namespace TaskManager.Core.Api.Controllers
         [HttpGet]
         public async Task<IEnumerable<WorkTask>> GetWorkTasks()
         {
-            return await _repository.Get();
+            return await _repository.Get().ConfigureAwait(false);
         }
 
         [HttpGet("list/{userId}")]
@@ -36,7 +36,7 @@ namespace TaskManager.Core.Api.Controllers
                 return BadRequest(ModelState);
             }
 
-            return Ok(await _repository.Get(userId));
+            return Ok(await _repository.Get(userId).ConfigureAwait(false));
         }
 
         [HttpGet("{id}")]
@@ -47,7 +47,7 @@ namespace TaskManager.Core.Api.Controllers
                 return BadRequest(ModelState);
             }
 
-            var workTask = await _repository.Get(id);
+            WorkTask workTask = await _repository.Get(id).ConfigureAwait(false);
 
             if (workTask == null)
             {
@@ -72,11 +72,11 @@ namespace TaskManager.Core.Api.Controllers
 
             try
             {
-                await _repository.Update(workTask);
+                await _repository.Update(workTask).ConfigureAwait(false);
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (!await WorkTaskExists(id))
+                if (!await WorkTaskExists(id).ConfigureAwait(false))
                 {
                     return NotFound();
                 }
@@ -99,7 +99,7 @@ namespace TaskManager.Core.Api.Controllers
 
             workTask.CreateDateTime = DateTime.Now;
             workTask.ChangeDatetime = DateTime.Now;
-            var newTask = await _repository.Create(workTask);
+            WorkTask newTask = await _repository.Create(workTask).ConfigureAwait(false);
 
             return CreatedAtAction("GetWorkTask", new { id = newTask.Id }, newTask);
         }
@@ -112,20 +112,20 @@ namespace TaskManager.Core.Api.Controllers
                 return BadRequest(ModelState);
             }
 
-            var workTask = await _repository.Get(id);
+            WorkTask workTask = await _repository.Get(id).ConfigureAwait(false);
             if (workTask == null)
             {
                 return NotFound();
             }
 
-            await _repository.Delete(id);
+            await _repository.Delete(id).ConfigureAwait(false);
 
             return Ok(workTask);
         }
 
         private async Task<bool> WorkTaskExists(long id)
         {
-            return (await _repository.Get(id)) != null;
+            return (await _repository.Get(id).ConfigureAwait(false)) != null;
         }
     }
 }

@@ -23,11 +23,11 @@ export class SignupComponent implements OnInit
 
         this.authService.signup(this.newUser)
             .subscribe((data: any) => {
-                if (this.newUser == null || this.newUser.name == null || this.newUser.password == null) {
+                if (this.newUser == null || this.newUser.userName == null || this.newUser.password == null) {
                     return;
                 }
 
-                this.authService.signin(this.newUser.name, this.newUser.password)
+                this.authService.signin(this.newUser.userName, this.newUser.password)
                     .subscribe((data: any) => {
                         this.router.navigate([""]);
                     },

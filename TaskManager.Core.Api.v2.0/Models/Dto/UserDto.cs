@@ -6,7 +6,7 @@ namespace TaskManager.Core.Api.Models.Dto
     {
         public string Id { get; set; }
 
-        public string Name { get; set; }
+        public virtual string UserName { get; set; }
 
         public string Password { get; set; }
 
@@ -19,5 +19,7 @@ namespace TaskManager.Core.Api.Models.Dto
         public string AccessToken { get; set; }
 
         public DateTime TokenExpireDate { get; set; }
+
+        public string PhoneNumber { get; set; }
     }
 }

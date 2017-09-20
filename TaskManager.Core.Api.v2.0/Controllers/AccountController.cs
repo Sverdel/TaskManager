@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using AutoMapper;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
@@ -18,12 +19,12 @@ namespace TaskManager.Core.Api.Controllers
     [Route("api/account")]
     public class AccountController : Controller
     {
-        private IConfiguration _config;
-        private UserManager<User> _userManager;
-        private TaskDbContext _dbContext;
-        private RoleManager<IdentityRole> _roleManager;
-        private SignInManager<User> _signinManager;
-        private string _role = "User";
+        private readonly IConfiguration _config;
+        private readonly UserManager<User> _userManager;
+        private readonly TaskDbContext _dbContext;
+        private readonly RoleManager<IdentityRole> _roleManager;
+        private readonly SignInManager<User> _signinManager;
+        private readonly string _role = "User";
 
         public AccountController(TaskDbContext context, UserManager<User> userManager, RoleManager<IdentityRole> roleManager, SignInManager<User> signinManager, IConfiguration config)
         {
@@ -48,22 +49,20 @@ namespace TaskManager.Core.Api.Controllers
             }
             try
             {
-                var user = await _userManager.FindByNameAsync(model.Name);
+                User user = await _userManager.FindByNameAsync(model.Name).ConfigureAwait(false);
 
-                if (user == null || !await _userManager.CheckPasswordAsync(user, model.Password))
+                if (user == null || !await _userManager.CheckPasswordAsync(user, model.Password).ConfigureAwait(false))
                 {
                     return BadRequest();
                 }
 
-                var token = await GetJwtSecurityToken(user);
+                JwtSecurityToken token = await GetJwtSecurityToken(user).ConfigureAwait(false);
 
-                return Ok(new UserDto
-                {
-                    Id = user.Id,
-                    Name = user.UserName,
-                    AccessToken = new JwtSecurityTokenHandler().WriteToken(token),
-                    TokenExpireDate = token.ValidTo
-                });
+                var userDto = Mapper.Map<User, UserDto>(user);
+                userDto.AccessToken = new JwtSecurityTokenHandler().WriteToken(token);
+                userDto.TokenExpireDate = token.ValidTo;
+
+                return Ok(userDto);
             }
             catch (Exception ex)
             {
@@ -75,6 +74,7 @@ namespace TaskManager.Core.Api.Controllers
         /// <summary>
         /// Creates a new User and return it accordingly.
         /// </summary>
+        /// <param name="userModel"></param>
         /// <returns></returns>
         [HttpPost("signup")]
         public async Task<IActionResult> SignUp([FromBody]UserDto userModel)
@@ -82,25 +82,22 @@ namespace TaskManager.Core.Api.Controllers
             try
             {
                 // check if the Username/Email already exists
-                User user = await _userManager.FindByNameAsync(userModel.Name);
+                User user = await _userManager.FindByNameAsync(userModel.UserName).ConfigureAwait(false);
                 if (user != null)
                 {
                     return BadRequest("User name is already exists.");
                 }
 
-                user = new User()
-                {
-                    UserName = userModel.Name
-                };
+                user = Mapper.Map<UserDto, User>(userModel);
                 // Add the user to the Db with a random password
-                var result = await _userManager.CreateAsync(user, userModel.Password);
+                IdentityResult result = await _userManager.CreateAsync(user, userModel.Password).ConfigureAwait(false);
                 if (!result.Succeeded)
                 {
                     return BadRequest(result.Errors);
                 }
 
                 // Assign the user to the 'Registered' role.
-                result = await _userManager.AddToRoleAsync(user, _role.ToUpper());
+                result = await _userManager.AddToRoleAsync(user, _role.ToUpper()).ConfigureAwait(false);
                 if (!result.Succeeded)
                 {
                     return BadRequest(result.Errors);
@@ -112,7 +109,7 @@ namespace TaskManager.Core.Api.Controllers
 
                 _dbContext.SaveChanges();
 
-                return Ok(userModel);
+                return Ok(Mapper.Map<User, UserDto>(user));
             }
             catch (Exception e)
             {
@@ -130,7 +127,7 @@ namespace TaskManager.Core.Api.Controllers
         {
             if (HttpContext.User.Identity.IsAuthenticated)
             {
-                await _signinManager.SignOutAsync();
+                await _signinManager.SignOutAsync().ConfigureAwait(false);
             }
 
             return Ok();
@@ -201,7 +198,7 @@ namespace TaskManager.Core.Api.Controllers
 
         private async Task<JwtSecurityToken> GetJwtSecurityToken(User user)
         {
-            var userClaims = await _userManager.GetClaimsAsync(user);
+            IList<Claim> userClaims = await _userManager.GetClaimsAsync(user).ConfigureAwait(false);
 
             DateTime now = DateTime.UtcNow;
 

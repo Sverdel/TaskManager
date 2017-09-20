@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
+﻿using AutoMapper;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
@@ -62,11 +63,12 @@ namespace TaskManager.Core.Api.v2._0
                    });
 
             services.AddMvc();
+            services.AddAutoMapper();
             // Register the Swagger generator, defining one or more Swagger documents
             services.AddSwaggerGen(c => c.SwaggerDoc("v1", new Info { Title = "My API", Version = "v1" }));
             services.ConfigureSwaggerGen(options =>
             {
-                options.OperationFilter<AuthorizationHeaderParameterOperationFilter>();
+                options.OperationFilter<AuthorizationOperationFilter>();
             });
 
             // Add Identity Services & Stores
