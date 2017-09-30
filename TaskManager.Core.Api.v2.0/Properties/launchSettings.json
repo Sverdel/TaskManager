@@ -18,7 +18,6 @@
     },
     "TaskManager.Core.Api.v2._0": {
       "commandName": "Project",
-      "launchBrowser": true,
       "launchUrl": "swagger",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"

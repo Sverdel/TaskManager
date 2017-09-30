@@ -7,9 +7,11 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
+using Newtonsoft.Json.Serialization;
 using Swashbuckle.AspNetCore.Swagger;
 using System.Text;
 using TaskManager.Core.Api.Filters;
+using TaskManager.Core.Api.Hubs;
 using TaskManager.Core.Api.Models.DataModel;
 using TaskManager.Core.Api.Repository;
 
@@ -54,16 +56,24 @@ namespace TaskManager.Core.Api.v2._0
                            // валидация ключа безопасности
                            ValidateIssuerSigningKey = true,
                        };
-                   //})
-                   //.AddFacebook(facebookOptions =>
-                   //{
-                   //    facebookOptions.AppId = Configuration["Authentication:Facebook:AppId"];
-                   //    facebookOptions.AppSecret = Configuration["Authentication:Facebook:AppSecret"];
-                   //    facebookOptions.SaveTokens = true;
+                       //})
+                       //.AddFacebook(facebookOptions =>
+                       //{
+                       //    facebookOptions.AppId = Configuration["Authentication:Facebook:AppId"];
+                       //    facebookOptions.AppSecret = Configuration["Authentication:Facebook:AppSecret"];
+                       //    facebookOptions.SaveTokens = true;
                    });
 
             services.AddMvc();
             services.AddAutoMapper();
+            services.AddSignalR(config =>
+            {
+                config.JsonSerializerSettings = new Newtonsoft.Json.JsonSerializerSettings
+                {
+                    ContractResolver = new CamelCasePropertyNamesContractResolver()
+                };
+            });
+
             // Register the Swagger generator, defining one or more Swagger documents
             services.AddSwaggerGen(c => c.SwaggerDoc("v1", new Info { Title = "My API", Version = "v1" }));
             services.ConfigureSwaggerGen(options =>
@@ -101,6 +111,8 @@ namespace TaskManager.Core.Api.v2._0
             app.UseAuthentication();
 
             app.UseMvc();
+
+            app.UseSignalR(r => r.MapHub<TaskHub>("task"));
 
             // Enable middleware to serve generated Swagger as a JSON endpoint.
             app.UseSwagger();

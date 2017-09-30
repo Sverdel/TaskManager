@@ -17,10 +17,9 @@ import { AuthService } from './services/auth.service';
 import { AuthHttp } from './services/auth.http';
 import { ResourceService } from './services/resource.service';
 import { TaskService } from './services/task.service';
+import { SignalRService } from './services/signalr.service';
 
 import { FromDictionaryPipe } from './pipes/fromDictionary.pipe';
-
-
 
 @NgModule({
     declarations: [
@@ -38,7 +37,8 @@ import { FromDictionaryPipe } from './pipes/fromDictionary.pipe';
         AuthService,
         AuthHttp,
         ResourceService,
-        TaskService
+        TaskService,
+        SignalRService
     ],
     imports: [
         CommonModule,
@@ -49,12 +49,6 @@ import { FromDictionaryPipe } from './pipes/fromDictionary.pipe';
             { path: "signup", component: SignupComponent },
             { path: "signin", component: SigninComponent },
             { path: "**", component: PageNotFoundComponent }
-
-        //    { path: '', redirectTo: 'home', pathMatch: 'full' },
-        //    { path: 'home', component: HomeComponent },
-        //    { path: 'counter', component: CounterComponent },
-        //    { path: 'fetch-data', component: FetchDataComponent },
-        //    { path: '**', redirectTo: 'home' }
         ])
     ]
 })

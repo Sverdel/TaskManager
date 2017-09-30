@@ -17,13 +17,17 @@ namespace TaskManager.Api
             app.UseCors(Microsoft.Owin.Cors.CorsOptions.AllowAll);
 
             // set serializer to signalr
-            var settings = new JsonSerializerSettings();
-            settings.ContractResolver = new SignalRContractResolver();
+            var settings = new JsonSerializerSettings
+            {
+                ContractResolver = new SignalRContractResolver()
+            };
             var serializer = JsonSerializer.Create(settings);
             GlobalHost.DependencyResolver.Register(typeof(JsonSerializer), () => serializer);
 
-            var hubConfiguration = new HubConfiguration();
-            hubConfiguration.EnableDetailedErrors = true;
+            var hubConfiguration = new HubConfiguration
+            {
+                EnableDetailedErrors = true
+            };
             app.MapSignalR("/api/signalr", hubConfiguration);
 
             // Configure Web API for self-host. 

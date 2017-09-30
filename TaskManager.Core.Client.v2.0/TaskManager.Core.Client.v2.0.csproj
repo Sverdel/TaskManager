@@ -30,6 +30,7 @@
     <None Remove="ClientApp\app\models\task.ts" />
     <None Remove="ClientApp\app\models\user.ts" />
     <None Remove="ClientApp\app\pipes\fromDictionary.pipe.ts" />
+    <None Remove="ClientApp\app\pipes\signalr.service.ts" />
     <None Remove="ClientApp\app\services\auth.service.ts" />
     <None Remove="ClientApp\app\services\resource.service.ts" />
   </ItemGroup>
@@ -41,6 +42,7 @@
     <TypeScriptCompile Include="ClientApp\app\models\task.ts" />
     <TypeScriptCompile Include="ClientApp\app\models\user.ts" />
     <TypeScriptCompile Include="ClientApp\app\pipes\fromDictionary.pipe.ts" />
+    <TypeScriptCompile Include="ClientApp\app\services\signalr.service.ts" />
     <TypeScriptCompile Include="ClientApp\app\services\auth.http.ts" />
     <TypeScriptCompile Include="ClientApp\app\services\auth.service.ts" />
     <TypeScriptCompile Include="ClientApp\app\services\resource.service.ts" />

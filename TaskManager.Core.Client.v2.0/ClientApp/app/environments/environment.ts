@@ -2,5 +2,6 @@
 
 @Injectable()
 export class Environment {
-    apiUrl: string = "http://localhost:54255/api/";
+    baseUrl: string = "http://localhost:54255/";
+    apiUrl: string = this.baseUrl + "api/";
 };

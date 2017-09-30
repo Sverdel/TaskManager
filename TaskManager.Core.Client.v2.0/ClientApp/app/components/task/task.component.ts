@@ -6,7 +6,7 @@ import { Priority } from "./../../models/priority";
 import { TaskService } from "./../../services/task.service";
 import { AuthService } from "./../../services/auth.service";
 import { ResourceService } from "./../../services/resource.service";
-
+import { SignalRService } from "../../services/signalr.service";
 
 @Component({
     selector: 'task',
@@ -75,6 +75,10 @@ export class TaskComponent implements OnInit {
                     if (this.currentTask) {
                         this.currentTaskId = this.currentTask.id;
                         this.localTaskId = this.currentTask.id;
+                        if (this.taskList.some((x: Task) => x.id == this.currentTaskId)) {
+                            return;
+                        }
+
                         this.taskList.push(this.currentTask);
                     }
                 });

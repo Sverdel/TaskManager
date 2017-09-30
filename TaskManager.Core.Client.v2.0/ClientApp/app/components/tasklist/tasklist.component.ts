@@ -1,6 +1,7 @@
 ﻿import { Component, OnInit } from '@angular/core';
 import { TaskService } from "../../services/task.service";
 import { AuthService } from "../../services/auth.service";
+import { SignalRService } from "../../services/signalr.service";
 import { ResourceService } from "../../services/resource.service";
 import {Task} from "./../../models/task";
 
@@ -18,7 +19,8 @@ export class TasklistComponent implements OnInit
     /** tasklist ctor */
     constructor(public taskService: TaskService,
         public authService: AuthService,
-        public resourceService: ResourceService) { }
+        public resourceService: ResourceService,
+        private signalRService: SignalRService) { }
 
     /** Called by Angular after tasklist component initialized */
     ngOnInit(): void {
@@ -28,6 +30,8 @@ export class TasklistComponent implements OnInit
                     this.taskList = response.json();
                 });
         }
+
+        this.subscribeToEvents();
     }
 
     removeTask() {
@@ -52,4 +56,39 @@ export class TasklistComponent implements OnInit
     createTask() {
         this.currentTaskId = -1;
     }
+
+    private subscribeToEvents(): void {
+        this.signalRService.taskAdded.subscribe((task: Task) => {
+            if (task && !this.taskList.some((e: Task) => e.id == task.id)) {
+                this.taskList.push(task)
+            }
+        });
+    }
+
+    /*taskHub.on('createTask', function (data) {
+                    $scope.taskList.push({ id: data.id, name: data.name });
+                });
+
+                taskHub.on('deleteTask', function (data) {
+                    $scope.taskList = $scope.taskList.filter(function (e) { return e.id !== data.id });
+
+                    if ($scope.currentTask.id == data.id) { // alert
+                        openDialog("The task has been removed on remote host", false, function () {
+                            $scope.currentTask = null;
+                            $scope.shadowCopy = null;
+                        });
+                    }
+                });
+
+                taskHub.on('editTask', function (data) {
+                    if ($scope.currentTask.id == data.id) {
+                        openDialog("The task has been updated on remote host", false, function () {
+                            $scope.currentTask = data;
+                            $scope.shadowCopy = angular.copy(data);
+                        });
+                    }
+
+                    var task = $scope.taskList.filter(function (e) { return e.id == data.id })[0];
+                    task.name = data.name;
+                });*/
 }

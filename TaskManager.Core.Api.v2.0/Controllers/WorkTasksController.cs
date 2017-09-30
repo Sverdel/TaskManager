@@ -1,14 +1,15 @@
-﻿using System.Collections.Generic;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using TaskManager.Core.Api.Models.DataModel;
-using Microsoft.AspNetCore.Authorization;
+﻿using AutoMapper;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
-using TaskManager.Core.Api.Repository;
-using System;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.SignalR;
+using Microsoft.EntityFrameworkCore;
+using System.Collections.Generic;
+using System.Threading.Tasks;
+using TaskManager.Core.Api.Hubs;
+using TaskManager.Core.Api.Models.DataModel;
 using TaskManager.Core.Api.Models.Dto;
-using AutoMapper;
+using TaskManager.Core.Api.Repository;
 
 namespace TaskManager.Core.Api.Controllers
 {
@@ -18,10 +19,12 @@ namespace TaskManager.Core.Api.Controllers
     public class WorkTasksController : Controller
     {
         private readonly IRepository<WorkTask, long> _repository;
+        private readonly IHubContext<TaskHub> _taskHub;
 
-        public WorkTasksController(IRepository<WorkTask, long> repository)
+        public WorkTasksController(IRepository<WorkTask, long> repository, IHubContext<TaskHub> taskHub)
         {
             _repository = repository;
+            _taskHub = taskHub;
         }
 
         [HttpGet]
@@ -102,6 +105,7 @@ namespace TaskManager.Core.Api.Controllers
             WorkTask task = await _repository.Create(Mapper.Map<TaskDto, WorkTask>(workTask)).ConfigureAwait(false);
 
             var dto = Mapper.Map<WorkTask, TaskDto>(task);
+            await _taskHub.Clients.All.InvokeAsync("createTask", dto);
             return CreatedAtAction("GetWorkTask", new { id = dto.Id }, dto);
         }
 
