@@ -41,12 +41,12 @@ namespace TaskManager.Core.Api.Repository
             }
         }
 
-        public async Task Update(State task)
+        public async Task<State> Update(State task)
         {
             using (IDbConnection db = new SqlConnection(_connectionString))
             {
-                const string sqlQuery = "UPDATE dbo.States SET Name = @Name WHERE Id = @Id";
-                await db.ExecuteAsync(sqlQuery, task).ConfigureAwait(false);
+                const string query = "UPDATE dbo.States SET Name = @Name output inserted.* WHERE Id = @Id";
+                return await db.QueryFirstOrDefaultAsync<State>(query, task).ConfigureAwait(false);
             }
         }
 

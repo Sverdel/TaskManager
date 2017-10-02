@@ -63,6 +63,22 @@ export class TasklistComponent implements OnInit
                 this.taskList.push(task)
             }
         });
+
+        this.signalRService.taskChanged.subscribe((task: Task) => {
+            if (task && this.currentTaskId == task.id) {
+                var i = this.taskList.findIndex(x => x.id == task.id);
+                this.taskList[i] = task;
+            }
+        });
+
+        this.signalRService.taskDeleted.subscribe((task: Task) => {
+            if (task) {
+                this.taskList = this.taskList.filter(x => x.id != task.id);
+                if (this.currentTaskId == task.id) {
+                    this.currentTaskId = undefined;
+                }
+            }
+        });
     }
 
     /*taskHub.on('createTask', function (data) {

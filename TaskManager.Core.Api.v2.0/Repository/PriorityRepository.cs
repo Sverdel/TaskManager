@@ -41,12 +41,12 @@ namespace TaskManager.Core.Api.Repository
             }
         }
 
-        public async Task Update(Priority task)
+        public async Task<Priority> Update(Priority task)
         {
             using (IDbConnection db = new SqlConnection(_connectionString))
             {
-                const string sqlQuery = "UPDATE dbo.Priorities SET Name = @Name WHERE Id = @Id";
-                await db.ExecuteAsync(sqlQuery, task).ConfigureAwait(false);
+                const string query = "UPDATE dbo.Priorities SET Name = @Name output inserted.*  WHERE Id = @Id";
+                return await db.QueryFirstOrDefaultAsync<Priority>(query, task).ConfigureAwait(false);
             }
         }
 

@@ -52,16 +52,17 @@ VALUES (@ActualTimeCost, current_timestamp, current_timestamp, @Description, @Na
             }
         }
 
-        public async Task Update(WorkTask task)
+        public async Task<WorkTask> Update(WorkTask task)
         {
             using (IDbConnection db = new SqlConnection(_connectionString))
             {
-                const string sqlQuery = @"UPDATE dbo.WorkTasks 
+                const string query = @"UPDATE dbo.WorkTasks 
 SET ActualTimeCost = @ActualTimeCost, ChangeDatetime = current_timestamp, CreateDateTime = @CreateDateTime, Description = @Description, 
 Name = @Name, PlanedTimeCost = @PlanedTimeCost, PriorityId = @PriorityId, RemainingTimeCost = @RemainingTimeCost, StateId = @StateId, 
 UserId = @UserId, Version = @Version
+output inserted.* 
 WHERE Id = @Id";
-                await db.ExecuteAsync(sqlQuery, task).ConfigureAwait(false);
+                return await db.QueryFirstOrDefaultAsync<WorkTask>(query, task).ConfigureAwait(false);
             }
         }
 

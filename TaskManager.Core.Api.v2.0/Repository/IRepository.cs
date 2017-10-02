@@ -10,6 +10,6 @@ namespace TaskManager.Core.Api.Repository
         Task<IEnumerable<T>> Get();
         Task<IEnumerable<T>> Get(string userId);
         Task<T> Get(TKey id);
-        Task Update(T task);
+        Task<T> Update(T task);
     }
 }

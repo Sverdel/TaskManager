@@ -27,16 +27,29 @@ export class TaskComponent implements OnInit {
     constructor(
         private taskService: TaskService,
         private authService: AuthService,
-        private resourceService: ResourceService) {
+        private resourceService: ResourceService,
+        private signalRService: SignalRService) {
 
     }
 
     /** Called by Angular after task component initialized */
-    ngOnInit(): void { }
+    ngOnInit(): void {
+        this.signalRService.taskChanged.subscribe((task: Task) => {
+            if (task && this.currentTaskId == task.id) {
+                this.currentTask = task;
+            }
+        });
+    }
 
     ngDoCheck() {
         if (!this.resourceService.isInitialized()) {
             this.resourceService.init();
+        }
+
+        if (this.currentTaskId == undefined) {
+            this.currentTask = undefined;
+            this.shadowCopy = undefined;
+            return;
         }
 
         if (this.currentTaskId != this.localTaskId) {
