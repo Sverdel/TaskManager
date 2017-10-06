@@ -93,6 +93,8 @@ namespace TaskManager.Core.Api.v2._0
             })
             .AddEntityFrameworkStores<TaskDbContext>()
             .AddDefaultTokenProviders();
+
+            services.AddMemoryCache();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

@@ -1,6 +1,5 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Security.Claims;
 
 namespace TaskManager.Core.Api.Models.DataModel
 {

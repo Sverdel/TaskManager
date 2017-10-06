@@ -10,7 +10,7 @@ import { SignupComponent } from './components/signup/signup.component';
 import { PageNotFoundComponent } from './components/page-not-found/page-not-found.component';
 import { TasklistComponent } from './components/tasklist/tasklist.component';
 import { TaskComponent } from './components/task/task.component';
-
+import { RateComponent } from './components/rate/rate.component';
 
 import { Environment } from './environments/environment';
 import { AuthService } from './services/auth.service';
@@ -18,6 +18,7 @@ import { AuthHttp } from './services/auth.http';
 import { ResourceService } from './services/resource.service';
 import { TaskService } from './services/task.service';
 import { SignalRService } from './services/signalr.service';
+import { RateService } from './services/rate.service';
 
 import { FromDictionaryPipe } from './pipes/fromDictionary.pipe';
 
@@ -29,6 +30,7 @@ import { FromDictionaryPipe } from './pipes/fromDictionary.pipe';
         PageNotFoundComponent,
         TasklistComponent,
         TaskComponent,
+        RateComponent,
 
         FromDictionaryPipe
     ],
@@ -38,7 +40,8 @@ import { FromDictionaryPipe } from './pipes/fromDictionary.pipe';
         AuthHttp,
         ResourceService,
         TaskService,
-        SignalRService
+        SignalRService,
+        RateService
     ],
     imports: [
         CommonModule,

@@ -46,6 +46,7 @@
     <TypeScriptCompile Include="ClientApp\app\services\auth.http.ts" />
     <TypeScriptCompile Include="ClientApp\app\services\auth.service.ts" />
     <TypeScriptCompile Include="ClientApp\app\services\resource.service.ts" />
+    <TypeScriptCompile Include="ClientApp\app\services\rate.service.ts" />
     <TypeScriptCompile Include="ClientApp\app\services\task.service.ts" />
   </ItemGroup>
 
