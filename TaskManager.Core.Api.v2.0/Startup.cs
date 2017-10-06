@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -64,7 +65,9 @@ namespace TaskManager.Core.Api.v2._0
                        //    facebookOptions.SaveTokens = true;
                    });
 
-            services.AddMvc();
+            services.AddMvc()
+                .AddFluentValidation(cfg => cfg.RegisterValidatorsFromAssemblyContaining<Startup>());
+
             services.AddAutoMapper();
             services.AddSignalR(config =>
             {
