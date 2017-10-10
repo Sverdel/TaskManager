@@ -8,7 +8,7 @@ namespace TaskManager.Api.Controllers
     [RoutePrefix("api/resources")]
     public class ResourceController : ApiController
     {
-        private TaskDbContext _dbContext = new TaskDbContext();
+        private readonly TaskDbContext _dbContext = new TaskDbContext();
 
         [Route("states")]
         public async Task<IHttpActionResult> GetStates()

@@ -29,7 +29,6 @@ namespace TaskManager.Api.Controllers.Tests
 
             Assert.IsNotNull(tasks);
             Assert.AreEqual(0, tasks.Count());
-
         }
 
         [TestMethod()]

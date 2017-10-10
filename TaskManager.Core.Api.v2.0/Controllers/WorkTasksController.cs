@@ -77,8 +77,8 @@ namespace TaskManager.Core.Api.Controllers
 
             try
             {
-                var task = await _repository.Update(Mapper.Map<TaskDto, WorkTask>(workTask)).ConfigureAwait(false);
-                await _taskHub.Clients.All.InvokeAsync("editTask", Mapper.Map<WorkTask, TaskDto>(task));
+                WorkTask task = await _repository.Update(Mapper.Map<TaskDto, WorkTask>(workTask)).ConfigureAwait(false);
+                await _taskHub.Clients.All.InvokeAsync("editTask", Mapper.Map<WorkTask, TaskDto>(task)).ConfigureAwait(false);
             }
             catch (DbUpdateConcurrencyException)
             {
@@ -105,8 +105,8 @@ namespace TaskManager.Core.Api.Controllers
 
             WorkTask task = await _repository.Create(Mapper.Map<TaskDto, WorkTask>(workTask)).ConfigureAwait(false);
 
-            var dto = Mapper.Map<WorkTask, TaskDto>(task);
-            await _taskHub.Clients.All.InvokeAsync("createTask", dto);
+            TaskDto dto = Mapper.Map<WorkTask, TaskDto>(task);
+            await _taskHub.Clients.All.InvokeAsync("createTask", dto).ConfigureAwait(false);
             return CreatedAtAction("GetWorkTask", new { id = dto.Id }, dto);
         }
 
@@ -126,8 +126,8 @@ namespace TaskManager.Core.Api.Controllers
 
             await _repository.Delete(id).ConfigureAwait(false);
 
-            var dto = Mapper.Map<WorkTask, TaskDto>(workTask);
-            await _taskHub.Clients.All.InvokeAsync("deleteTask", dto);
+            TaskDto dto = Mapper.Map<WorkTask, TaskDto>(workTask);
+            await _taskHub.Clients.All.InvokeAsync("deleteTask", dto).ConfigureAwait(false);
             return Ok(dto);
         }
 

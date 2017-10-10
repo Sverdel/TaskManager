@@ -33,7 +33,9 @@ namespace TaskManager.Core.Api.v2._0
             services.AddTransient<IRepository<WorkTask, long>, TaskRepository>();
             services.AddTransient<IRepository<State, int>, StateRepository>();
             services.AddTransient<IRepository<Priority, int>, PriorityRepository>();
+
             services.AddDbContext<TaskDbContext>(options => options.UseSqlServer(Configuration["Data:DefaultConnection:ConnectionString"]));
+
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
                    .AddJwtBearer(options =>
                    {
@@ -79,10 +81,7 @@ namespace TaskManager.Core.Api.v2._0
 
             // Register the Swagger generator, defining one or more Swagger documents
             services.AddSwaggerGen(c => c.SwaggerDoc("v1", new Info { Title = "My API", Version = "v1" }));
-            services.ConfigureSwaggerGen(options =>
-            {
-                options.OperationFilter<AuthorizationOperationFilter>();
-            });
+            services.ConfigureSwaggerGen(options => options.OperationFilter<AuthorizationOperationFilter>());
 
             // Add Identity Services & Stores
             services.AddIdentity<User, IdentityRole>(config =>

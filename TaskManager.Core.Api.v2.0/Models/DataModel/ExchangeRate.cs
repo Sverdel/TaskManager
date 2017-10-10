@@ -1,22 +1,8 @@
-﻿using Newtonsoft.Json;
-using System;
+﻿using System;
 using System.Collections.Generic;
 
 namespace TaskManager.Core.Api.Models.DataModel
 {
-    //public class ExchangeRate
-    //{
-    //    [JsonProperty("base")]
-    //    public string Base { get; set; }
-
-    //    [JsonProperty("date")]
-    //    public DateTime Date { get; set; }
-
-    //    [JsonProperty("rates")]
-    //    public Dictionary<string, float> Rates { get; set; }
-    //}
-
-
     public class ExchangeRate
     {
         public DateTime Date { get; set; }
@@ -36,6 +22,4 @@ namespace TaskManager.Core.Api.Models.DataModel
         public float Value { get; set; }
         public float Previous { get; set; }
     }
-
-
 }

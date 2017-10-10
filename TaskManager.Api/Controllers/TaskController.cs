@@ -14,8 +14,8 @@ namespace TaskManager.Api.Controllers
     [RoutePrefix("api/tasks/{userId:int}/{token}")]
     public class TaskController : ApiController
     {
-        private TaskDbContext _dbContext = new TaskDbContext();
-        private IHubContext _hub = GlobalHost.ConnectionManager.GetHubContext<TaskHub>();
+        private readonly TaskDbContext _dbContext = new TaskDbContext();
+        private readonly IHubContext _hub = GlobalHost.ConnectionManager.GetHubContext<TaskHub>();
 
         [Route()]
         public async Task<IHttpActionResult> GetList(int userId, string token)
@@ -95,7 +95,6 @@ namespace TaskManager.Api.Controllers
                     throw;
                 }
             }
-
 
             return StatusCode(HttpStatusCode.NoContent);
         }

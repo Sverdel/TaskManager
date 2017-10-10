@@ -45,9 +45,7 @@ namespace TaskManager.Api
             config.EnsureInitialized();
 
             app.UseWebApi(config);
-
         }
     }
-
     
 }

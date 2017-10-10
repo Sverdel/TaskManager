@@ -58,7 +58,7 @@ namespace TaskManager.Core.Api.Controllers
 
                 JwtSecurityToken token = await GetJwtSecurityToken(user).ConfigureAwait(false);
 
-                var userDto = Mapper.Map<User, UserDto>(user);
+                UserDto userDto = Mapper.Map<User, UserDto>(user);
                 userDto.AccessToken = new JwtSecurityTokenHandler().WriteToken(token);
                 userDto.TokenExpireDate = token.ValidTo;
 

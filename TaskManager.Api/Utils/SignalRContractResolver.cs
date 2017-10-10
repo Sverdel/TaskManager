@@ -7,7 +7,6 @@ namespace TaskManager.Api.Utils
 {
     public class SignalRContractResolver : IContractResolver
     {
-
         private readonly Assembly assembly;
         private readonly IContractResolver camelCaseContractResolver;
         private readonly IContractResolver defaultContractSerializer;
@@ -24,11 +23,9 @@ namespace TaskManager.Api.Utils
             if (type.Assembly.Equals(assembly))
             {
                 return defaultContractSerializer.ResolveContract(type);
-
             }
 
             return camelCaseContractResolver.ResolveContract(type);
         }
-
     }
 }

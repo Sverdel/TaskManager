@@ -10,7 +10,7 @@ namespace TaskManager.Api.Controllers
     [RoutePrefix("api/users")]
     public class UserController : ApiController
     {
-        private TaskDbContext _dbContext = new TaskDbContext();
+        private readonly TaskDbContext _dbContext = new TaskDbContext();
 
         [Route("{name}/{password}", Name = "GetUserRoute")]
         public async Task<IHttpActionResult> GetUser(string name, string password)
