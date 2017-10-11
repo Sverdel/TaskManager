@@ -1,19 +1,18 @@
-﻿using Microsoft.Extensions.Configuration;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
 using System.Threading.Tasks;
-using TaskManager.Core.Api.Models.DataModel;
 using Dapper;
+using TaskManager.TaskCore.Model;
 
-namespace TaskManager.Core.Api.Repository
+namespace TaskManager.TaskCore.Repository
 {
     public class StateRepository : IRepository<State, int>
     {
         private readonly string _connectionString;
-        public StateRepository(IConfiguration config)
+        public StateRepository(string connectioString)
         {
-            _connectionString = config["Data:DefaultConnection:ConnectionString"];
+            _connectionString = connectioString;
         }
 
         public async Task<IEnumerable<State>> Get()

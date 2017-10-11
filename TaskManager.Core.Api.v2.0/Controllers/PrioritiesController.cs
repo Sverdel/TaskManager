@@ -2,10 +2,10 @@
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using TaskManager.Core.Api.Models.DataModel;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
-using TaskManager.Core.Api.Repository;
+using TaskManager.TaskCore.Repository;
+using TaskManager.TaskCore.Model;
 
 namespace TaskManager.Core.Api.Controllers
 {

@@ -13,11 +13,8 @@
   <ItemGroup>
     <PackageReference Include="AutoMapper" Version="6.1.1" />
     <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="3.0.1" />
-    <PackageReference Include="Dapper" Version="1.50.2" />
     <PackageReference Include="FluentValidation" Version="7.2.0" />
     <PackageReference Include="FluentValidation.AspNetCore" Version="7.2.0" />
-    <PackageReference Include="MediatR" Version="3.0.1" />
-    <PackageReference Include="MediatR.Extensions.Microsoft.DependencyInjection" Version="3.0.0" />
     <PackageReference Include="Microsoft.AspNetCore.All" Version="2.0.0" />
     <PackageReference Include="Microsoft.AspNetCore.SignalR" Version="1.0.0-alpha1-final" />
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="2.0.0" />
@@ -31,6 +28,7 @@
   <ItemGroup>
     <ProjectReference Include="..\TaskManager.AutoComplete\TaskManager.AutoComplete.csproj" />
     <ProjectReference Include="..\TaskManager.ExchangeRate\TaskManager.ExchangeRate.csproj" />
+    <ProjectReference Include="..\TaskManager.TackCore\TaskManager.TaskCore.csproj" />
   </ItemGroup>
 
 </Project>

@@ -7,9 +7,9 @@ using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using TaskManager.Core.Api.Hubs;
-using TaskManager.Core.Api.Models.DataModel;
 using TaskManager.Core.Api.Models.Dto;
-using TaskManager.Core.Api.Repository;
+using TaskManager.TaskCore.Model;
+using TaskManager.TaskCore.Repository;
 
 namespace TaskManager.Core.Api.Controllers
 {

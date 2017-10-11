@@ -14,7 +14,8 @@ using System.Text;
 using TaskManager.Core.Api.Filters;
 using TaskManager.Core.Api.Hubs;
 using TaskManager.Core.Api.Models.DataModel;
-using TaskManager.Core.Api.Repository;
+using TaskManager.TaskCore.Model;
+using TaskManager.TaskCore.Repository;
 
 namespace TaskManager.Core.Api
 {
@@ -30,11 +31,12 @@ namespace TaskManager.Core.Api
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddTransient<IRepository<WorkTask, long>, TaskRepository>();
-            services.AddTransient<IRepository<State, int>, StateRepository>();
-            services.AddTransient<IRepository<Priority, int>, PriorityRepository>();
+            string connectionString = Configuration["Data:DefaultConnection:ConnectionString"];
+            services.AddTransient<IRepository<WorkTask, long>, TaskRepository>(serv => new TaskRepository(connectionString));
+            services.AddTransient<IRepository<State, int>, StateRepository>(serv => new StateRepository(connectionString));
+            services.AddTransient<IRepository<Priority, int>, PriorityRepository>(serv => new PriorityRepository(connectionString));
 
-            services.AddDbContext<TaskDbContext>(options => options.UseSqlServer(Configuration["Data:DefaultConnection:ConnectionString"]));
+            services.AddDbContext<TaskDbContext>(options => options.UseSqlServer(connectionString));
 
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
                    .AddJwtBearer(options =>

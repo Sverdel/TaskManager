@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace TaskManager.Core.Api.Repository
+namespace TaskManager.TaskCore.Repository
 {
     public interface IRepository<T, TKey>
     {

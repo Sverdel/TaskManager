@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using TaskManager.Core.Api.Models.DataModel;
 using TaskManager.Core.Api.Models.Dto;
+using TaskManager.TaskCore.Model;
 
 namespace TaskManager.Core.Api.Models
 {
