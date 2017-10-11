@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.CompilerServices;
+using System.Threading.Tasks;
 
 [assembly: InternalsVisibleTo("AutoComplete.Tests")]
 namespace TaskManager.AutoComplete
@@ -86,6 +87,11 @@ namespace TaskManager.AutoComplete
             }
 
             return current.Words;
+        }
+
+        public async Task<IEnumerable<string>> GetAsync(string substring)
+        {
+            return await Task.Run(() => Get(substring));
         }
     }
 }

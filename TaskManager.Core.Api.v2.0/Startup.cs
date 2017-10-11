@@ -16,7 +16,7 @@ using TaskManager.Core.Api.Hubs;
 using TaskManager.Core.Api.Models.DataModel;
 using TaskManager.Core.Api.Repository;
 
-namespace TaskManager.Core.Api.v2._0
+namespace TaskManager.Core.Api
 {
     public class Startup
     {

@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
 
-namespace TaskManager.Core.Api.v2._0
+namespace TaskManager.Core.Api
 {
     public static class Program
     {

@@ -60,7 +60,21 @@ namespace TaskManager.AutoComplete.Tests
         [ExpectedException(typeof(ArgumentException))]
         public async Task TrieLoaderTest_NullStream()
         {
-            await TrieLoader.LoadAsync(null).ConfigureAwait(false);
+            await TrieLoader.LoadAsync((StreamReader)null).ConfigureAwait(false);
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(ArgumentException))]
+        public async Task TrieLoaderTest_NullString()
+        {
+            await TrieLoader.LoadAsync((string)null).ConfigureAwait(false);
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(ArgumentException))]
+        public async Task TrieLoaderTest_FakePath()
+        {
+            await TrieLoader.LoadAsync("E:\\fake\\path\\file.in").ConfigureAwait(false);
         }
 
         [TestMethod]

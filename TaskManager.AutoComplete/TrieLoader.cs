@@ -7,6 +7,33 @@ namespace TaskManager.AutoComplete
     public static class TrieLoader
     {
         /// <summary>
+        /// Загрузка словаря файла
+        /// </summary>
+        /// <param name="path"></param>
+        /// <returns></returns>
+        public static async Task<Trie> LoadAsync(string path)
+        {
+            if (string.IsNullOrEmpty(path))
+            {
+                throw new ArgumentNullException("Specified path is null or empty");
+            }
+
+            var fullPath = Path.GetFullPath(path);
+            if (!File.Exists(fullPath))
+            {
+                throw new ArgumentException("Incorrect file path");
+            }
+
+            using (FileStream stream = File.OpenRead(fullPath))
+            {
+                using (StreamReader reader = new StreamReader(stream))
+                {
+                    return await LoadAsync(reader).ConfigureAwait(false);
+                }
+            }
+        }
+
+        /// <summary>
         /// Загрузка словаря из потока
         /// </summary>
         /// <param name="stream"></param>

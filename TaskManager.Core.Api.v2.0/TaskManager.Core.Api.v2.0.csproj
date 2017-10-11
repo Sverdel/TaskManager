@@ -3,6 +3,7 @@
   <PropertyGroup>
     <TargetFramework>netcoreapp2.0</TargetFramework>
     <RootNamespace>TaskManager.Core.Api</RootNamespace>
+    <AssemblyName>TaskManager.Core.Api</AssemblyName>
   </PropertyGroup>
 
   <ItemGroup>
@@ -25,6 +26,11 @@
 
   <ItemGroup>
     <DotNetCliToolReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Tools" Version="2.0.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\TaskManager.AutoComplete\TaskManager.AutoComplete.csproj" />
+    <ProjectReference Include="..\TaskManager.ExchangeRate\TaskManager.ExchangeRate.csproj" />
   </ItemGroup>
 
 </Project>
