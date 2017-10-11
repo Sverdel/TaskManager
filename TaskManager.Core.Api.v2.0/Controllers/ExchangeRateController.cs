@@ -15,7 +15,7 @@ namespace TaskManager.Core.Api.Controllers
     [Route("api/rate")]
     public class ExchangeRateController : Controller
     {
-        private Lazy<ExchangeRateClient> _rater;
+        private readonly Lazy<ExchangeRateClient> _rater;
 
         public ExchangeRateController()
         {
@@ -23,11 +23,11 @@ namespace TaskManager.Core.Api.Controllers
         }
 
         [HttpGet("{currency}")]
-        public async Task<IActionResult> GetUsdRate([FromRoute]string currency)
+        public async Task<IActionResult> GetRate([FromRoute]string currency)
         {
             try
             {
-                return Ok(await _rater.Value.GetRateAsync(currency));
+                return Ok(await _rater.Value.GetRateAsync(currency).ConfigureAwait(false));
             }
             catch (Exception ex)
             {

@@ -12,7 +12,7 @@ namespace TaskManager.ExchangeRate
     public class ExchangeRateClient
     {
         private const string _baseUrl = "https://www.cbr-xml-daily.ru/";
-        private IMemoryCache _cache = new MemoryCache(new MemoryCacheOptions());
+        private readonly IMemoryCache _cache = new MemoryCache(new MemoryCacheOptions());
         private TimeSpan _expiration = TimeSpan.FromHours(1);
         private readonly List<string> _currencies = new List<string> { "AUD", "AZN", "GBP", "AMD", "BYN", "BGN", "BRL", "HUF", "HKD", "DKK", "USD", "EUR", "INR", "KZT", "CAD", "KGS", "CNY", "MDL", "NOK", "PLN", "RON", "XDR", "SGD", "TJS", "TRY", "TMT", "UZS", "UAH", "CZK", "SEK", "CHF", "ZAR", "KRW", "JPY" };
 

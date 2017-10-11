@@ -16,16 +16,16 @@ namespace TaskManager.Api.Controllers.Tests
         public async Task GetListTest()
         {
             TaskController controller = new TaskController();
-            var result = await controller.GetList(1, string.Empty);
+            System.Web.Http.IHttpActionResult result = await controller.GetList(1, string.Empty).ConfigureAwait(false);
 
-            var tasks = (result as OkNegotiatedContentResult<IEnumerable<TaskDto>>).Content;
+            IEnumerable<TaskDto> tasks = (result as OkNegotiatedContentResult<IEnumerable<TaskDto>>)?.Content;
 
             Assert.IsNotNull(tasks);
             Assert.AreEqual(10, tasks.Count());
 
-            result = await controller.GetList(2, string.Empty);
+            result = await controller.GetList(2, string.Empty).ConfigureAwait(false);
 
-            tasks = (result as OkNegotiatedContentResult<IEnumerable<TaskDto>>).Content;
+            tasks = (result as OkNegotiatedContentResult<IEnumerable<TaskDto>>)?.Content;
 
             Assert.IsNotNull(tasks);
             Assert.AreEqual(0, tasks.Count());
@@ -35,9 +35,9 @@ namespace TaskManager.Api.Controllers.Tests
         public async Task GetTest()
         {
             TaskController controller = new TaskController();
-            var result = await controller.GetTask(1, string.Empty, 1);
+            System.Web.Http.IHttpActionResult result = await controller.GetTask(1, string.Empty, 1).ConfigureAwait(false);
 
-            var task = (result as OkNegotiatedContentResult<WorkTask>).Content;
+            WorkTask task = (result as OkNegotiatedContentResult<WorkTask>)?.Content;
 
             Assert.IsNotNull(task);
         }
@@ -45,15 +45,15 @@ namespace TaskManager.Api.Controllers.Tests
         [TestMethod()]
         public async Task PostTest()
         {
-            string name = "test";
+            const string name = "test";
             try
             {
                 TaskHub.ConnectionCache.TryAdd(string.Empty, string.Empty);
                 WorkTask task = new WorkTask { Name = name, PriorityId = 1, StateId = 1, UserId = 1 };
                 TaskController controller = new TaskController();
-                var result = await controller.PostTask(1, string.Empty, task);
+                System.Web.Http.IHttpActionResult result = await controller.PostTask(1, string.Empty, task).ConfigureAwait(false);
 
-                var resultTask = (result as CreatedAtRouteNegotiatedContentResult<WorkTask>).Content;
+                WorkTask resultTask = (result as CreatedAtRouteNegotiatedContentResult<WorkTask>)?.Content;
 
                 Assert.IsNotNull(resultTask);
                 Assert.AreEqual(name, resultTask.Name, "name");
@@ -63,7 +63,7 @@ namespace TaskManager.Api.Controllers.Tests
             finally
             {
                 TaskDbContext context = new TaskDbContext();
-                var task = context.Tasks.FirstOrDefault(x => x.Name == name);
+                WorkTask task = context.Tasks.FirstOrDefault(x => x.Name == name);
                 if (task != null)
                 {
                     context.Tasks.Remove(task);
@@ -77,17 +77,17 @@ namespace TaskManager.Api.Controllers.Tests
         {
             TaskHub.ConnectionCache.TryAdd(string.Empty, string.Empty);
             TaskController controller = new TaskController();
-            var result = await controller.GetTask(1, string.Empty, 1);
+            System.Web.Http.IHttpActionResult result = await controller.GetTask(1, string.Empty, 1).ConfigureAwait(false);
 
-            var task = (result as OkNegotiatedContentResult<WorkTask>).Content;
+            WorkTask task = (result as OkNegotiatedContentResult<WorkTask>)?.Content;
 
-            var description = Guid.NewGuid().ToString();
+            string description = Guid.NewGuid().ToString();
             task.Description = description;
 
-            await controller.PutTask(1, string.Empty, 1, task);
+            await controller.PutTask(1, string.Empty, 1, task).ConfigureAwait(false);
 
             TaskDbContext context = new TaskDbContext();
-            task = await context.Tasks.FindAsync(1);
+            task = await context.Tasks.FindAsync(1).ConfigureAwait(false);
 
             Assert.IsNotNull(task);
             Assert.AreEqual(description, task.Description, "description");
@@ -97,24 +97,24 @@ namespace TaskManager.Api.Controllers.Tests
         public async Task DeleteTest()
         {
             TaskDbContext context = new TaskDbContext();
-            string name = "test";
+            const string name = "test";
             try
             {
                 TaskHub.ConnectionCache.TryAdd(string.Empty, string.Empty);
                 WorkTask task = new WorkTask { Name = name, PriorityId = 1, StateId = 1, UserId = 1 };
                 TaskController controller = new TaskController();
-                var result = await controller.PostTask(1, string.Empty, task);
-                var resultTask = (result as CreatedAtRouteNegotiatedContentResult<WorkTask>).Content;
+                System.Web.Http.IHttpActionResult result = await controller.PostTask(1, string.Empty, task).ConfigureAwait(false);
+                WorkTask resultTask = (result as CreatedAtRouteNegotiatedContentResult<WorkTask>)?.Content;
 
-                result = await controller.DeleteTask(1, string.Empty, resultTask.Id);
+                result = await controller.DeleteTask(1, string.Empty, resultTask.Id).ConfigureAwait(false);
 
-                var dbTask = context.Tasks.FirstOrDefault(x => x.Name == name);
+                WorkTask dbTask = context.Tasks.FirstOrDefault(x => x.Name == name);
 
                 Assert.IsNull(dbTask);
             }
             finally
             {
-                var task = context.Tasks.FirstOrDefault(x => x.Name == name);
+                WorkTask task = context.Tasks.FirstOrDefault(x => x.Name == name);
                 if (task != null)
                 {
                     context.Tasks.Remove(task);

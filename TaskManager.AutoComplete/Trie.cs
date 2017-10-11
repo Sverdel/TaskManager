@@ -89,9 +89,9 @@ namespace TaskManager.AutoComplete
             return current.Words;
         }
 
-        public async Task<IEnumerable<string>> GetAsync(string substring)
+        public Task<IEnumerable<string>> GetAsync(string substring)
         {
-            return await Task.Run(() => Get(substring));
+            return Task.Run(() => Get(substring));
         }
     }
 }

@@ -22,9 +22,9 @@ namespace TaskManager.Core.Api.Controllers
         }
 
         [HttpGet]
-        public async Task<IEnumerable<State>> GetStates()
+        public Task<IEnumerable<State>> GetStates()
         {
-            return await _repository.Get().ConfigureAwait(false);
+            return _repository.Get();
         }
 
         [HttpGet("{id}")]

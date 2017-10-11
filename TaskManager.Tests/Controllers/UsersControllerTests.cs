@@ -15,9 +15,9 @@ namespace TaskManager.Api.Controllers.Tests
             UserController controller = new UserController();
             string name = "user1";
             string password = "12345";
-            var result = await controller.GetUser(name, password);
+            System.Web.Http.IHttpActionResult result = await controller.GetUser(name, password).ConfigureAwait(false);
 
-            var user = (result as OkNegotiatedContentResult<User>).Content;
+            User user = (result as OkNegotiatedContentResult<User>)?.Content;
 
             Assert.IsNotNull(user);
             Assert.AreEqual(name, user.Name, "name");
@@ -33,9 +33,9 @@ namespace TaskManager.Api.Controllers.Tests
             try
             {
                 UserController controller = new UserController();
-                var result = await controller.PostUser(name, password);
+                System.Web.Http.IHttpActionResult result = await controller.PostUser(name, password).ConfigureAwait(false);
 
-                var user = (result as CreatedAtRouteNegotiatedContentResult<User>).Content;
+                User user = (result as CreatedAtRouteNegotiatedContentResult<User>)?.Content;
 
                 Assert.IsNotNull(user);
                 Assert.AreEqual(name, user.Name, "name");
@@ -45,7 +45,7 @@ namespace TaskManager.Api.Controllers.Tests
             finally
             {
                 TaskDbContext context = new TaskDbContext();
-                var user = context.Users.FirstOrDefault(x => x.Name == name);
+                User user = context.Users.FirstOrDefault(x => x.Name == name);
                 if (user != null)
                 {
                     context.Users.Remove(user);

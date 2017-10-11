@@ -11,7 +11,7 @@ namespace TaskManager.Core.Api.Controllers
     [Route("api/autocomplete")]
     public class AutoCompleteController : Controller
     {
-        private Lazy<Trie> _trie;
+        private readonly Lazy<Trie> _trie;
 
         public AutoCompleteController(IConfiguration configuration)
         {

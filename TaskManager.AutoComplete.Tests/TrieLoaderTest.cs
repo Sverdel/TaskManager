@@ -26,7 +26,7 @@ namespace TaskManager.AutoComplete.Tests
                     Trie result = await TrieLoader.LoadAsync(reader).ConfigureAwait(false);
                     stopBytes = GC.GetTotalMemory(true);
 
-                    Console.WriteLine("Size is " + ((long)(stopBytes - startBytes)).ToString());
+                    Console.WriteLine("Size is " + (stopBytes - startBytes).ToString());
 
                     string currentLine = reader.ReadLine();
                     int count = int.Parse(currentLine);
@@ -64,7 +64,7 @@ namespace TaskManager.AutoComplete.Tests
         }
 
         [TestMethod]
-        [ExpectedException(typeof(ArgumentException))]
+        [ExpectedException(typeof(ArgumentNullException))]
         public async Task TrieLoaderTest_NullString()
         {
             await TrieLoader.LoadAsync((string)null).ConfigureAwait(false);

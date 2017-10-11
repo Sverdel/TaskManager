@@ -18,7 +18,7 @@ namespace TaskManager.AutoComplete
                 throw new ArgumentNullException("Specified path is null or empty");
             }
 
-            var fullPath = Path.GetFullPath(path);
+            string fullPath = Path.GetFullPath(path);
             if (!File.Exists(fullPath))
             {
                 throw new ArgumentException("Incorrect file path");

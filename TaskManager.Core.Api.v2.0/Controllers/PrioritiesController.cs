@@ -22,9 +22,9 @@ namespace TaskManager.Core.Api.Controllers
         }
 
         [HttpGet]
-        public async Task<IEnumerable<Priority>> GetPriorities()
+        public Task<IEnumerable<Priority>> GetPriorities()
         {
-            return await _repository.Get().ConfigureAwait(false);
+            return _repository.Get();
         }
 
         [HttpGet("{id}")]
