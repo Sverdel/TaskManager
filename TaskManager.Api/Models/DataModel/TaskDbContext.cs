@@ -1,18 +1,11 @@
-﻿using System.Data.Entity;
+﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 
 namespace TaskManager.Api.Models.DataModel
 {
-    public class TaskDbContext : DbContext
+    public class TaskDbContext : IdentityDbContext<User>
     {
-        public DbSet<User> Users { get; set; }
-
-        public DbSet<State> States { get; set; }
-
-        public DbSet<Priority> Priorities { get; set; }
-
-        public DbSet<WorkTask> Tasks { get; set; }
-
-        public TaskDbContext() : base("TaskDBConnectionString")
+        public TaskDbContext(DbContextOptions options) : base(options)
         {
         }
     }
