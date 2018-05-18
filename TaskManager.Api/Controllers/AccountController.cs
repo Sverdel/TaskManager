@@ -133,68 +133,68 @@ namespace TaskManager.Api.Controllers
             return Ok();
         }
 
-        //[HttpGet]
-        //[Route("regExternal")]
-        //public async Task<IActionResult> Register(string provider, string error = null)
-        //{
-        //    return await ExternalLogin(provider, true, error);
-        //}
+        [HttpGet]
+        [Route("regExternal")]
+        public async Task<IActionResult> Register(string provider, string error = null)
+        {
+            return await ExternalLogin(provider, true, error);
+        }
 
-        //[HttpPost]
-        //[Route("loginExternal")]
-        //public async Task<IActionResult> Login(string provider, string error = null)
-        //{
-        //    return await ExternalLogin(provider, false, error);
-        //}
+        [HttpPost]
+        [Route("loginExternal")]
+        public async Task<IActionResult> Login(string provider, string error = null)
+        {
+            return await ExternalLogin(provider, false, error);
+        }
 
-        ///// <summary>
-        ///// Register/Login via external oauth service
-        ///// </summary>
-        ///// <param name="provider"></param>
-        ///// <param name="register"></param>
-        ///// <param name="error"></param>
-        ///// <returns></returns>
-        //private async Task<IActionResult> ExternalLogin(string provider, bool register, string error = null)
-        //{
-        //    if (!User.Identity.IsAuthenticated)
-        //    {
-        //        return new ChallengeResult(provider);
-        //    }
+        /// <summary>
+        /// Register/Login via external oauth service
+        /// </summary>
+        /// <param name="provider"></param>
+        /// <param name="register"></param>
+        /// <param name="error"></param>
+        /// <returns></returns>
+        private async Task<IActionResult> ExternalLogin(string provider, bool register, string error = null)
+        {
+            if (!User.Identity.IsAuthenticated)
+            {
+                return new ChallengeResult(provider);
+            }
 
-        //    var user = Models.DataModel.User.FromIdentity(User.Identity as ClaimsIdentity);
+            var user = Models.DataModel.User.FromIdentity(User.Identity as ClaimsIdentity);
 
-        //    if (user == null)
-        //    {
-        //        return NoContent();
-        //    }
+            if (user == null)
+            {
+                return NoContent();
+            }
 
-        //    if (user.LoginProvider != provider)
-        //    {
-        //        await _signinManager.SignOutAsync();
-        //        return new ChallengeResult(provider);
-        //    }
+            if (user.LoginProvider != provider)
+            {
+                await _signinManager.SignOutAsync();
+                return new ChallengeResult(provider);
+            }
 
-        //    bool userExists = (await _userManager.FindByEmailAsync(user.Email)) != null;
+            bool userExists = (await _userManager.FindByEmailAsync(user.Email)) != null;
 
-        //    if (register)
-        //    {
-        //        if (!userExists)
-        //        {
-        //            return BadRequest("User already exists");
-        //        }
+            if (register)
+            {
+                if (!userExists)
+                {
+                    return BadRequest("User already exists");
+                }
 
-        //        await _userManager.CreateAsync(user);
-        //    }
-        //    else
-        //    {
-        //        if (userExists)
-        //        {
-        //            return BadRequest("User already exists");
-        //        }
-        //    }
+                await _userManager.CreateAsync(user);
+            }
+            else
+            {
+                if (userExists)
+                {
+                    return BadRequest("User already exists");
+                }
+            }
 
-        //    return Ok("Welcome, " + user.UserName);
-        //}
+            return Ok("Welcome, " + user.UserName);
+        }
 
         private async Task<JwtSecurityToken> GetJwtSecurityToken(User user)
         {

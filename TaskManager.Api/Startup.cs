@@ -10,6 +10,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
 using Newtonsoft.Json.Serialization;
 using Swashbuckle.AspNetCore.Swagger;
+using System.Collections.Generic;
 using System.Text;
 using TaskManager.Api.Filters;
 using TaskManager.Api.Hubs;
@@ -61,6 +62,12 @@ namespace TaskManager.Api
                            // валидация ключа безопасности
                            ValidateIssuerSigningKey = true,
                        };
+                   })
+                   .AddFacebook(facebookOptions =>
+                   {
+                       facebookOptions.AppId = Configuration["Authentication:Facebook:AppId"];
+                       facebookOptions.AppSecret = Configuration["Authentication:Facebook:AppSecret"];
+                       facebookOptions.SaveTokens = true;
                    });
 
             services.AddMvc()
@@ -70,8 +77,25 @@ namespace TaskManager.Api
             services.AddSignalR();
 
             // Register the Swagger generator, defining one or more Swagger documents
-            services.AddSwaggerGen(c => c.SwaggerDoc("v1", new Info { Title = "My API", Version = "v1" }));
-            services.ConfigureSwaggerGen(options => options.OperationFilter<AuthorizationOperationFilter>());
+            services.AddSwaggerGen(c => 
+            {
+                c.SwaggerDoc("v1", new Info { Title = "My API", Version = "v1" });
+                c.OperationFilter<AuthorizeCheckOperationFilter>();
+
+                c.AddSecurityDefinition("oauth2", new OAuth2Scheme
+                {
+                    Type = "oauth2",
+                    Flow = "implicit",
+                    AuthorizationUrl = "https://www.facebook.com/v3.0/dialog/",
+                    TokenUrl = "http://localhost:54255/signin-facebook",
+                    Scopes = new Dictionary<string, string>()
+                    {
+                        { "api1", "My API" }
+                    }
+                });
+
+            });
+            //services.ConfigureSwaggerGen(options => options.OperationFilter<AuthorizationOperationFilter>());
 
             // Add Identity Services & Stores
             services.AddIdentity<User, IdentityRole>(config =>
@@ -112,7 +136,19 @@ namespace TaskManager.Api
             app.UseSwagger();
 
             // Enable middleware to serve swagger-ui (HTML, JS, CSS etc.), specifying the Swagger JSON endpoint.
-            app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "My API V1"));
+            app.UseSwaggerUI(c => 
+            {
+                c.SwaggerEndpoint("/swagger/v1/swagger.json", "My API V1");
+
+                c.OAuthClientId(Configuration["Authentication:Facebook:AppId"]);
+                c.OAuth2RedirectUrl("/signin-facebook");
+                c.OAuthClientSecret(Configuration["Authentication:Facebook:AppSecret"]);
+                //c.OAuthRealm("test-realm");
+                //c.OAuthAppName("test-app");
+                //c.OAuthScopeSeparator(" ");
+                //c.OAuthAdditionalQueryStringParams(new { foo = "bar" });
+                //c.OAuthUseBasicAuthenticationWithAccessCodeGrant();
+            });
         }
     }
 }
