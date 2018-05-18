@@ -1,15 +1,14 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using System;
 using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
 using System.Security.Claims;
-using System.Text;
 using System.Threading.Tasks;
+using TaskManager.Api.Models.Configs;
 using TaskManager.Api.Models.DataModel;
 using TaskManager.Api.Models.Dto;
 
@@ -19,14 +18,14 @@ namespace TaskManager.Api.Controllers
     [Route("api/account")]
     public class AccountController : Controller
     {
-        private readonly IConfiguration _config;
+        private readonly IAccountConfig _config;
         private readonly UserManager<User> _userManager;
         private readonly TaskDbContext _dbContext;
         private readonly RoleManager<IdentityRole> _roleManager;
         private readonly SignInManager<User> _signinManager;
         private readonly string _role = "User";
 
-        public AccountController(TaskDbContext context, UserManager<User> userManager, RoleManager<IdentityRole> roleManager, SignInManager<User> signinManager, IConfiguration config)
+        public AccountController(TaskDbContext context, UserManager<User> userManager, RoleManager<IdentityRole> roleManager, SignInManager<User> signinManager, IAccountConfig config)
         {
             _config = config;
             _userManager = userManager;
@@ -133,69 +132,6 @@ namespace TaskManager.Api.Controllers
             return Ok();
         }
 
-        //[HttpGet]
-        //[Route("regExternal")]
-        //public async Task<IActionResult> Register(string provider, string error = null)
-        //{
-        //    return await ExternalLogin(provider, true, error);
-        //}
-
-        //[HttpPost]
-        //[Route("loginExternal")]
-        //public async Task<IActionResult> Login(string provider, string error = null)
-        //{
-        //    return await ExternalLogin(provider, false, error);
-        //}
-
-        ///// <summary>
-        ///// Register/Login via external oauth service
-        ///// </summary>
-        ///// <param name="provider"></param>
-        ///// <param name="register"></param>
-        ///// <param name="error"></param>
-        ///// <returns></returns>
-        //private async Task<IActionResult> ExternalLogin(string provider, bool register, string error = null)
-        //{
-        //    if (!User.Identity.IsAuthenticated)
-        //    {
-        //        return new ChallengeResult(provider);
-        //    }
-
-        //    var user = Models.DataModel.User.FromIdentity(User.Identity as ClaimsIdentity);
-
-        //    if (user == null)
-        //    {
-        //        return NoContent();
-        //    }
-
-        //    if (user.LoginProvider != provider)
-        //    {
-        //        await _signinManager.SignOutAsync();
-        //        return new ChallengeResult(provider);
-        //    }
-
-        //    bool userExists = (await _userManager.FindByEmailAsync(user.Email)) != null;
-
-        //    if (register)
-        //    {
-        //        if (!userExists)
-        //        {
-        //            return BadRequest("User already exists");
-        //        }
-
-        //        await _userManager.CreateAsync(user);
-        //    }
-        //    else
-        //    {
-        //        if (userExists)
-        //        {
-        //            return BadRequest("User already exists");
-        //        }
-        //    }
-
-        //    return Ok("Welcome, " + user.UserName);
-        //}
-
         private async Task<JwtSecurityToken> GetJwtSecurityToken(User user)
         {
             IList<Claim> userClaims = await _userManager.GetClaimsAsync(user).ConfigureAwait(false);
@@ -203,11 +139,11 @@ namespace TaskManager.Api.Controllers
             DateTime now = DateTime.UtcNow;
 
             return new JwtSecurityToken(
-                issuer: _config["AppSettings:Issuer"],
-                audience: _config["AppSettings:SiteUrl"],
+                issuer: _config.Issuer,
+                audience: _config.SiteUrl,
                 claims: GetTokenClaims(user, now).Union(userClaims),
-                expires: now.AddMinutes(int.Parse(_config["AppSettings:Lifetime"])),
-                signingCredentials: new SigningCredentials(new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_config["AppSettings:SecurityKey"])), SecurityAlgorithms.HmacSha256)
+                expires: now.AddMinutes(_config.LifetimeMinutes),
+                signingCredentials: new SigningCredentials(_config.Key, SecurityAlgorithms.HmacSha256)
             );
         }
 
@@ -215,7 +151,7 @@ namespace TaskManager.Api.Controllers
         {
             return new List<Claim>
             {
-                new Claim(JwtRegisteredClaimNames.Iss, _config["AppSettings:Issuer"]),
+                new Claim(JwtRegisteredClaimNames.Iss,  _config.Issuer),
                 new Claim(JwtRegisteredClaimNames.Sub, user.Id),
                 new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
                 new Claim(JwtRegisteredClaimNames.Iat, new  DateTimeOffset(now).ToUnixTimeSeconds().ToString(), ClaimValueTypes.Integer64)
