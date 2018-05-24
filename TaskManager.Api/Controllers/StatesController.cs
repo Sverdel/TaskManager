@@ -35,7 +35,7 @@ namespace TaskManager.Api.Controllers
                 return BadRequest(ModelState);
             }
 
-            State state = await _repository.Get(id).ConfigureAwait(false);
+            var state = await _repository.Get(id).ConfigureAwait(false);
 
             if (state == null)
             {
@@ -85,7 +85,7 @@ namespace TaskManager.Api.Controllers
                 return BadRequest(ModelState);
             }
 
-            State newState = await _repository.Create(state).ConfigureAwait(false);
+            var newState = await _repository.Create(state).ConfigureAwait(false);
             return CreatedAtAction("GetState", new { id = newState.Id }, newState);
         }
 
@@ -97,7 +97,7 @@ namespace TaskManager.Api.Controllers
                 return BadRequest(ModelState);
             }
 
-            State state = await _repository.Get(id).ConfigureAwait(false);
+            var state = await _repository.Get(id).ConfigureAwait(false);
             if (state == null)
             {
                 return NotFound();

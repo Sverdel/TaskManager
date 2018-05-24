@@ -35,7 +35,7 @@ namespace TaskManager.Api.Controllers
                 return BadRequest(ModelState);
             }
 
-            Priority priority = await _repository.Get(id).ConfigureAwait(false);
+            var priority = await _repository.Get(id).ConfigureAwait(false);
 
             if (priority == null)
             {
@@ -85,7 +85,7 @@ namespace TaskManager.Api.Controllers
                 return BadRequest(ModelState);
             }
 
-            Priority newPriority = await _repository.Create(priority).ConfigureAwait(false);
+            var newPriority = await _repository.Create(priority).ConfigureAwait(false);
 
             return CreatedAtAction("GetPriority", new { id = newPriority.Id }, newPriority);
         }
@@ -98,7 +98,7 @@ namespace TaskManager.Api.Controllers
                 return BadRequest(ModelState);
             }
 
-            Priority priority = await _repository.Get(id).ConfigureAwait(false);
+            var priority = await _repository.Get(id).ConfigureAwait(false);
             if (priority == null)
             {
                 return NotFound();

@@ -1,5 +1,5 @@
 ﻿import { Injectable } from "@angular/core";
-import { Http, Headers } from '@angular/http';
+import { Http, Headers, RequestOptionsArgs } from '@angular/http';
 import { Environment } from "./../environments/environment";
 import { PLATFORM_ID, Inject } from '@angular/core';
 import { isPlatformBrowser, isPlatformServer } from '@angular/common';
@@ -13,22 +13,22 @@ export class AuthHttp {
     constructor(@Inject(PLATFORM_ID) private platformId: Object, private http: Http, private env: Environment) {
     }
 
-    get(url: any, opts = {}) {
+    get(url: any, opts: RequestOptionsArgs = {}) {
         this.configureAuth(opts);
         return this.http.get(this.env.apiUrl + url, opts);
     }
 
-    post(url: any, data: any, opts = {}) {
+    post(url: any, data: any, opts: RequestOptionsArgs = {}) {
         this.configureAuth(opts);
         return this.http.post(this.env.apiUrl + url, data, opts);
     }
 
-    put(url: any, data: any, opts = {}) {
+    put(url: any, data: any, opts: RequestOptionsArgs = {}) {
         this.configureAuth(opts);
         return this.http.put(this.env.apiUrl + url, data, opts);
     }
 
-    delete(url: any, opts = {}) {
+    delete(url: any, opts: RequestOptionsArgs = {}) {
         this.configureAuth(opts);
         return this.http.delete(this.env.apiUrl + url, opts);
     }
@@ -38,19 +38,25 @@ export class AuthHttp {
         return isPlatformServer(this.platformId);
     }
 
-    private configureAuth(opts: any) {
+    private configureAuth(opts: RequestOptionsArgs) {
         if (this.isServer()) {
             return;
         }
 
-        var i = localStorage.getItem(this.authKey);
-        if (i != null) {
-            var auth = JSON.parse(i);
+        if (opts.headers == null) {
+            opts.headers = new Headers();
+        }
+
+        opts.headers.append("Access-Control-Allow-Origin", "*");
+        opts.headers.append("Access-Control-Allow-Methods", "GET, POST, OPTIONS, PUT, PATCH, DELETE");
+        opts.headers.append("Access-Control-Allow-Headers", "X-Requested-With,content-type");
+        opts.headers.append("Access-Control-Allow-Credentials", "true");
+
+        var token = localStorage.getItem(this.authKey);
+        if (token != null) {
+            var auth = JSON.parse(token);
             if (auth.accessToken != null) {
-                if (opts.headers == null) {
-                    opts.headers = new Headers();
-                }
-                opts.headers.set("Authorization", `Bearer ${auth.accessToken}`);
+                opts.headers.append("Authorization", `Bearer ${auth.accessToken}`);
             }
         }
     }

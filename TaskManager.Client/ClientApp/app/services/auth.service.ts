@@ -53,6 +53,17 @@ export class AuthService {
             });
     }
 
+    signinExt(provider: string): any {
+        var url = "account/signinExt/" + provider; // JwtProvider's LoginPath
+        var data = {};
+
+        return this.http.post(url, data)
+            .map(response => {
+                this.setUser(response.json());
+                return true;
+            });
+    }
+
     signout(): any {
         return this.http.post("account/signout", null)
             .map(response => {

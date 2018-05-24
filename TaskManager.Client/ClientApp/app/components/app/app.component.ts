@@ -25,4 +25,15 @@ export class AppComponent {
         });
         return false;
     }
+
+    signin(provider: string): boolean {
+        this.authService.signinExt(provider).subscribe((result: any) => {
+            if (result) {
+                this.router.navigate([""]);
+            }
+        })
+        
+            ;
+        return false;
+    }
 }

@@ -15,18 +15,9 @@ namespace TaskManager.Api.Models.DataModel
         [NotMapped]
         public string LoginProvider { get; private set; }
 
-        public static User FromIdentity(ClaimsIdentity identity)
+        public static User FromIdentity(ClaimsPrincipal identity)
         {
-            Claim providerKeyClaim = identity.FindFirst(ClaimTypes.NameIdentifier);
-
-            //if (!(providerKeyClaim != null
-            //    && !string.IsNullOrEmpty(providerKeyClaim.Issuer)
-            //    && !string.IsNullOrEmpty(providerKeyClaim.Value)
-            //    && providerKeyClaim.Issuer != ClaimsIdentity.DefaultIssuer))
-            //{
-            //    throw new Ar
-            //}
-            //, "authorization failed", HttpStatusCode.BadRequest);
+            var providerKeyClaim = identity.FindFirst(ClaimTypes.NameIdentifier);
 
             return new User
             {

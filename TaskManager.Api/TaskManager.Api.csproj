@@ -4,6 +4,7 @@
     <TargetFramework>netcoreapp2.0</TargetFramework>
     <RootNamespace>TaskManager.Api</RootNamespace>
     <AssemblyName>TaskManager.Api</AssemblyName>
+    <UserSecretsId>bf03ca30-5751-414b-9f6e-46616838d967</UserSecretsId>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
@@ -18,6 +19,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="AspNet.Security.OAuth.LinkedIn" Version="2.0.0-rc2-final" />
     <PackageReference Include="AutoMapper" Version="6.2.2" />
     <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="3.2.0" />
     <PackageReference Include="FluentValidation" Version="7.5.2" />

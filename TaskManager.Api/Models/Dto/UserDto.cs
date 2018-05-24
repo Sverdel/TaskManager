@@ -10,8 +10,6 @@ namespace TaskManager.Api.Models.Dto
 
         public string Password { get; set; }
 
-        public string Token { get; set; }
-
         public string Email { get; set; }
 
         public string Provider { get; set; }
@@ -19,7 +17,5 @@ namespace TaskManager.Api.Models.Dto
         public string AccessToken { get; set; }
 
         public DateTime TokenExpireDate { get; set; }
-
-        public string PhoneNumber { get; set; }
     }
 }

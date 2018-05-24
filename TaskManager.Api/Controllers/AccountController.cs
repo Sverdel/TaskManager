@@ -1,4 +1,7 @@
 ﻿using AutoMapper;
+using Microsoft.AspNetCore.Authentication.Facebook;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
@@ -49,20 +52,14 @@ namespace TaskManager.Api.Controllers
             }
             try
             {
-                User user = await _userManager.FindByNameAsync(model.Name).ConfigureAwait(false);
+                var user = await _userManager.FindByNameAsync(model.Name).ConfigureAwait(false);
 
                 if (user == null || !await _userManager.CheckPasswordAsync(user, model.Password).ConfigureAwait(false))
                 {
                     return BadRequest();
                 }
 
-                JwtSecurityToken token = await GetJwtSecurityToken(user).ConfigureAwait(false);
-
-                UserDto userDto = Mapper.Map<User, UserDto>(user);
-                userDto.AccessToken = new JwtSecurityTokenHandler().WriteToken(token);
-                userDto.TokenExpireDate = token.ValidTo;
-
-                return Ok(userDto);
+                return Ok(await CreateUserDto(user).ConfigureAwait(false));
             }
             catch (Exception ex)
             {
@@ -82,34 +79,19 @@ namespace TaskManager.Api.Controllers
             try
             {
                 // check if the Username/Email already exists
-                User user = await _userManager.FindByNameAsync(userModel.UserName).ConfigureAwait(false);
+                var user = await _userManager.FindByNameAsync(userModel.UserName).ConfigureAwait(false);
                 if (user != null)
                 {
                     return BadRequest("User name is already exists.");
                 }
 
-                user = Mapper.Map<UserDto, User>(userModel);
-                // Add the user to the Db with a random password
-                IdentityResult result = await _userManager.CreateAsync(user, userModel.Password).ConfigureAwait(false);
-                if (!result.Succeeded)
+                var errors = await CreateUser(user, userModel.Password).ConfigureAwait(false);
+                if (errors != null)
                 {
-                    return BadRequest(result.Errors);
+                    return BadRequest(errors);
                 }
 
-                // Assign the user to the 'Registered' role.
-                result = await _userManager.AddToRoleAsync(user, _role.ToUpper()).ConfigureAwait(false);
-                if (!result.Succeeded)
-                {
-                    return BadRequest(result.Errors);
-                }
-
-                // Remove Lockout and E-Mail confirmation
-                user.EmailConfirmed = true;
-                user.LockoutEnabled = false;
-
-                _dbContext.SaveChanges();
-
-                return Ok(Mapper.Map<User, UserDto>(user));
+                return Ok(await CreateUserDto(user).ConfigureAwait(false));
             }
             catch (Exception e)
             {
@@ -133,74 +115,90 @@ namespace TaskManager.Api.Controllers
             return Ok();
         }
 
-        [HttpGet]
-        [Route("regExternal")]
-        public async Task<IActionResult> Register(string provider, string error = null)
+        [HttpPost("signinExt/{provider?}")]
+        public IActionResult ExternalLogin([FromRoute]string provider = FacebookDefaults.AuthenticationScheme)
         {
-            return await ExternalLogin(provider, true, error);
+            var redirectUrl = Url.Action(nameof(ExternalLoginCallback), "Account");
+            var properties = _signinManager.ConfigureExternalAuthenticationProperties(provider, redirectUrl);
+            
+            return Challenge(properties, provider);
         }
 
-        [HttpPost]
-        [Route("loginExternal")]
-        public async Task<IActionResult> Login(string provider, string error = null)
+        [ApiExplorerSettings(IgnoreApi = true)]
+        [HttpPost("signinCallback")]
+        public async Task<IActionResult> ExternalLoginCallback(string remoteError = null)
         {
-            return await ExternalLogin(provider, false, error);
-        }
-
-        /// <summary>
-        /// Register/Login via external oauth service
-        /// </summary>
-        /// <param name="provider"></param>
-        /// <param name="register"></param>
-        /// <param name="error"></param>
-        /// <returns></returns>
-        private async Task<IActionResult> ExternalLogin(string provider, bool register, string error = null)
-        {
-            if (!User.Identity.IsAuthenticated)
+            if (remoteError != null)
             {
-                return new ChallengeResult(provider);
+                return BadRequest($"Error from external provider: {remoteError}");
             }
 
-            var user = Models.DataModel.User.FromIdentity(User.Identity as ClaimsIdentity);
-
-            if (user == null)
+            var info = await _signinManager.GetExternalLoginInfoAsync().ConfigureAwait(false);
+            if (info == null)
             {
-                return NoContent();
+                return BadRequest();
             }
 
-            if (user.LoginProvider != provider)
+            var result = await _signinManager.ExternalLoginSignInAsync(info.LoginProvider, info.ProviderKey, isPersistent: false);
+            if (!result.Succeeded)
             {
-                await _signinManager.SignOutAsync();
-                return new ChallengeResult(provider);
+                return Unauthorized();
             }
 
-            bool userExists = (await _userManager.FindByEmailAsync(user.Email)) != null;
-
-            if (register)
+            var user = Models.DataModel.User.FromIdentity(info.Principal);
+            if ((await _userManager.FindByEmailAsync(user.Email).ConfigureAwait(false)) == null)
             {
-                if (!userExists)
+                var errors = await CreateUser(user, Guid.NewGuid().ToString()).ConfigureAwait(false);
+                if (errors != null)
                 {
-                    return BadRequest("User already exists");
-                }
-
-                await _userManager.CreateAsync(user);
-            }
-            else
-            {
-                if (userExists)
-                {
-                    return BadRequest("User already exists");
+                    return BadRequest(errors);
                 }
             }
 
-            return Ok("Welcome, " + user.UserName);
+            return Ok(await CreateUserDto(user).ConfigureAwait(false));
+        }
+
+        private async Task<IEnumerable<IdentityError>> CreateUser(User user, string password)
+        {
+            // Add the user to the Db with a random password
+            var result = await _userManager.CreateAsync(user, password).ConfigureAwait(false);
+            if (!result.Succeeded)
+            {
+                return result.Errors;
+            }
+
+            // Assign the user to the 'Registered' role.
+            result = await _userManager.AddToRoleAsync(user, _role.ToUpper()).ConfigureAwait(false);
+            if (!result.Succeeded)
+            {
+                return result.Errors;
+            }
+
+            // Remove Lockout and E-Mail confirmation
+            user.EmailConfirmed = true;
+            user.LockoutEnabled = false;
+
+            _dbContext.SaveChanges();
+
+            return null;
+        }
+
+        private async Task<UserDto> CreateUserDto(User user)
+        {
+            var token = await GetJwtSecurityToken(user).ConfigureAwait(false);
+
+            var userDto = Mapper.Map<User, UserDto>(user);
+            userDto.AccessToken = new JwtSecurityTokenHandler().WriteToken(token);
+            userDto.TokenExpireDate = token.ValidTo;
+
+            return userDto;
         }
 
         private async Task<JwtSecurityToken> GetJwtSecurityToken(User user)
         {
-            IList<Claim> userClaims = await _userManager.GetClaimsAsync(user).ConfigureAwait(false);
+            var userClaims = await _userManager.GetClaimsAsync(user).ConfigureAwait(false);
 
-            DateTime now = DateTime.UtcNow;
+            var now = DateTime.UtcNow;
 
             return new JwtSecurityToken(
                 issuer: _config["AppSettings:Issuer"],
