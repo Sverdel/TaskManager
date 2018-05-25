@@ -9,5 +9,5 @@
         <input type="password" class="form-control"  name="password" required [(ngModel)]="user.password"> 
     </div>
 
-    <button type="submit" class="btn btn-default" (click)="signin()" [disabled]="user.userName == null || user.password == null" >Signin</button> <!---->
+    <button type="submit" class="btn btn-primary" (click)="signin()" [disabled]="user.userName == null || user.password == null" >Signin</button> <!---->
 </form>

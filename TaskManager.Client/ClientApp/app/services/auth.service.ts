@@ -1,9 +1,8 @@
 ﻿import { Injectable } from "@angular/core";
 import { Http, RequestOptions, Headers } from "@angular/http";
 import { AuthHttp } from "./auth.http"
-import { Observable } from "rxjs/Observable";
-import "rxjs/add/operator/map";
-import "rxjs/add/operator/catch";
+import { Observable } from "rxjs";
+import { map, catchError } from "rxjs/operators";
 import { User } from "../models/user";
 
 @Injectable()
@@ -47,10 +46,10 @@ export class AuthService {
         };
 
         return this.http.post(url, data)
-            .map(response => {
+            .pipe(map((response: any) => {
                 this.setUser(response.json());
                 return true;
-            });
+            }));
     }
 
     signinExt(provider: string): any {
@@ -58,29 +57,31 @@ export class AuthService {
         var data = {};
 
         return this.http.post(url, data)
-            .map(response => {
+            .pipe(map((response: any) => {
                 this.setUser(response.json());
                 return true;
-            });
+            }));
     }
 
     signout(): any {
         return this.http.post("account/signout", null)
-            .map(response => {
-                this.setUser(undefined);
-                return true;
-            })
-            .catch((err: any) => {
-                return Observable.throw(err);
-            });
+            .pipe(
+                map((response: any) => {
+                    this.setUser(undefined);
+                    return true;
+                }),
+                catchError((err: any) => {
+                    return Observable.throw(err);
+                })
+            );
     }
 
     signup(user: User) {
         return this.http.post("account/signup", user)
-            .map(response => response.json())
-            .catch((err: any) => {
-                return Observable.throw(err);
-            });;
+            .pipe(
+                map((response: any) => response.json()),
+                catchError((err: any) => Observable.throw(err)
+            ));
     }
 
     

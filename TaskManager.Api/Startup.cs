@@ -35,8 +35,7 @@ namespace TaskManager.Api
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddCors(c => c.AddPolicy("cors", builder => builder.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod().AllowCredentials()));
-
+            services.AddCors();
             var connectionString = Configuration["Data:DefaultConnection:ConnectionString"];
             services.AddTransient<IRepository<WorkTask, long>, TaskRepository>(serv => new TaskRepository(connectionString));
             services.AddTransient<IRepository<State, int>, StateRepository>(serv => new StateRepository(connectionString));
@@ -135,31 +134,10 @@ namespace TaskManager.Api
             }
 
             app.UseCors(builder => builder.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod().AllowCredentials());
-            //app.UseExceptionHandler(builder =>
-            //{
-            //    builder.Run(async context =>
-            //    {
-            //        context.Response.StatusCode = (int)HttpStatusCode.InternalServerError;
-            //        context.Response.Headers.Add("Access-Control-Allow-Origin", "*");
-
-            //        var error = context.Features.Get<IExceptionHandlerFeature>();
-            //        if (error != null)
-            //        {
-            //            context.Response.Headers.Add("Application-Error", error.Error.Message);
-            //            // CORS
-            //            context.Response.Headers.Add("access-control-expose-headers", "Application-Error");
-            //            await context.Response.WriteAsync(error.Error.Message).ConfigureAwait(false);
-            //        }
-            //    });
-            //});
             app.UseDefaultFiles();
             app.UseStaticFiles();
             app.UseAuthentication();
             app.UseMvc();
-            //app.UseMvc(routes =>
-            //{
-            //    //routes.MapRoute(name: "signin-facebook", template: "signin-facebook", defaults: new { controller = "Account", action = "ExternalLoginCallback" });
-            //});
 
             app.UseSignalR(r => r.MapHub<TaskHub>("/task"));
 

@@ -13,7 +13,7 @@ import {Task} from "./../../models/task";
 /** tasklist component*/
 export class TasklistComponent implements OnInit
 {
-    taskList: Task[];
+    taskList!: Task[];
     currentTaskId?: number = undefined;
 
     /** tasklist ctor */

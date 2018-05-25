@@ -18,7 +18,7 @@ export class TaskComponent implements OnInit {
     changed: boolean = false;
     currentTask?: Task;
     shadowCopy?: Task = undefined;
-    @Input() taskList: Task[];
+    @Input() taskList!: Task[];
     @Input() currentTaskId?: number;
     localTaskId?: number = undefined;
 
