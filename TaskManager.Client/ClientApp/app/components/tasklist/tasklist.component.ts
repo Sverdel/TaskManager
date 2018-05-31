@@ -27,7 +27,7 @@ export class TasklistComponent implements OnInit
         if (this.authService.user != null) {
             this.taskService.getAllTasks(this.authService.user.id)
                 .subscribe((response: any) => {
-                    this.taskList = response.json();
+                    this.taskList = response;
                 });
         }
 
@@ -42,7 +42,7 @@ export class TasklistComponent implements OnInit
         this.taskService.deleteTask(this.currentTaskId)
             .subscribe((response: any) => {
                 this.taskList = this.taskList.filter(function (e) {
-                    return e.id !== response.json().id;
+                    return e.id !== response.id;
                 });
 
                 this.currentTaskId = undefined;

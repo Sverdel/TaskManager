@@ -1,8 +1,13 @@
 ﻿import { Injectable } from "@angular/core";
-import { Http, RequestOptions, Headers } from "@angular/http";
-import { AuthHttp } from "./auth.http"
+import { HttpClient } from "@angular/common/http"
+import { PLATFORM_ID, Inject } from '@angular/core';
+import { isPlatformBrowser, isPlatformServer } from '@angular/common';
+
 import { Observable } from "rxjs";
 import { map, catchError } from "rxjs/operators";
+
+import { TokenService } from './token.service';
+import { Environment } from "./../environments/environment"
 import { User } from "../models/user";
 
 @Injectable()
@@ -11,13 +16,13 @@ export class AuthService {
     userName: string = "TestUser";
     user?: User = new User();
 
-    constructor(private http: AuthHttp) {
-        this.user = this.getUser();
+    constructor(private http: HttpClient, @Inject(PLATFORM_ID) private platformId: Object, private env: Environment, private tokenService: TokenService) {
+        this.user = this.tokenService.getUser();
     }
 
     // Returns TRUE if the user is logged in, FALSE otherwise.
     isAuthorized(): boolean {
-        if (this.http.isServer()) {
+        if (this.isServer()) {
             return false;
         }
 
@@ -39,35 +44,35 @@ export class AuthService {
     }
 
     signin(username: string, password: string): any {
-        var url = "account/signin"; // JwtProvider's LoginPath
+        var url = this.env.apiUrl + "account/signin"; // JwtProvider's LoginPath
         var data = {
             name: username,
             password: password
         };
 
-        return this.http.post(url, data)
+        return this.http.post<User>(url, data)
             .pipe(map((response: any) => {
-                this.setUser(response.json());
+                this.tokenService.setUser(response);
                 return true;
             }));
     }
 
     signinExt(provider: string): any {
-        var url = "account/signinExt/" + provider; // JwtProvider's LoginPath
+        var url = this.env.apiUrl + "account/signinExt/" + provider; // JwtProvider's LoginPath
         var data = {};
 
-        return this.http.post(url, data)
+        return this.http.post<User>(url, data)
             .pipe(map((response: any) => {
-                this.setUser(response.json());
+                this.tokenService.setUser(response);
                 return true;
             }));
     }
 
     signout(): any {
-        return this.http.post("account/signout", null)
+        return this.http.post<User>(this.env.apiUrl + "account/signout", null)
             .pipe(
                 map((response: any) => {
-                    this.setUser(undefined);
+                this.tokenService.setUser(undefined);
                     return true;
                 }),
                 catchError((err: any) => {
@@ -77,43 +82,16 @@ export class AuthService {
     }
 
     signup(user: User) {
-        return this.http.post("account/signup", user)
+        return this.http.post<User>(this.env.apiUrl + "account/signup", user)
             .pipe(
-                map((response: any) => response.json()),
                 catchError((err: any) => Observable.throw(err)
             ));
     }
 
     
-    // Persist auth into localStorage or removes it if a NULL argument is  given
-    private setUser(user?: User): boolean {
-        if (this.http.isServer()) {
-            return false;
-        }
-
-        if (user) {
-            localStorage.setItem(this.authKey, JSON.stringify(user));
-        }
-        else {
-            localStorage.removeItem(this.authKey);
-        }
-
-        this.user = user;
-        return true;
-    }
     
-    // Retrieves the auth JSON object (or NULL if none)
-    private getUser(): any {
-        if (this.http.isServer()) {
-            return;
-        }
 
-        var i = localStorage.getItem(this.authKey);
-        if (i) {
-            return JSON.parse(i);
-        }
-        else {
-            return null;
-        }
+    isServer(): boolean {
+        return isPlatformServer(this.platformId);
     }
 }

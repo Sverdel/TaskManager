@@ -2,7 +2,7 @@
 import { EventEmitter, Injectable } from '@angular/core';
 import { HubConnectionBuilder, HubConnection } from '@aspnet/signalr';
 import { Task } from "./../models/task";
-import { AuthHttp } from "./auth.http"
+import { HttpClient } from "@angular/common/http"
 
 @Injectable()
 export class SignalRService {

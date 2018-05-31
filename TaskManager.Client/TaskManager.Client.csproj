@@ -22,6 +22,7 @@
 
   <ItemGroup>
     <None Remove="ClientApp\app\environments\environment.ts" />
+    <None Remove="ClientApp\app\interceptors\jwt.interceptor.ts" />
     <None Remove="ClientApp\app\models\priority.ts" />
     <None Remove="ClientApp\app\models\state.ts" />
     <None Remove="ClientApp\app\models\task.ts" />
@@ -30,17 +31,21 @@
     <None Remove="ClientApp\app\pipes\signalr.service.ts" />
     <None Remove="ClientApp\app\services\auth.service.ts" />
     <None Remove="ClientApp\app\services\resource.service.ts" />
+    <None Remove="ClientApp\app\services\token.interceptor.ts" />
+    <None Remove="ClientApp\app\services\token.service.ts" />
   </ItemGroup>
 
   <ItemGroup>
     <TypeScriptCompile Include="ClientApp\app\environments\environment.ts" />
+    <TypeScriptCompile Include="ClientApp\app\interceptors\jwt.interceptor.ts" />
     <TypeScriptCompile Include="ClientApp\app\models\priority.ts" />
     <TypeScriptCompile Include="ClientApp\app\models\state.ts" />
     <TypeScriptCompile Include="ClientApp\app\models\task.ts" />
     <TypeScriptCompile Include="ClientApp\app\models\user.ts" />
     <TypeScriptCompile Include="ClientApp\app\pipes\fromDictionary.pipe.ts" />
+    <TypeScriptCompile Include="ClientApp\app\interceptors\token.interceptor.ts" />
+    <TypeScriptCompile Include="ClientApp\app\services\token.service.ts" />
     <TypeScriptCompile Include="ClientApp\app\services\signalr.service.ts" />
-    <TypeScriptCompile Include="ClientApp\app\services\auth.http.ts" />
     <TypeScriptCompile Include="ClientApp\app\services\auth.service.ts" />
     <TypeScriptCompile Include="ClientApp\app\services\resource.service.ts" />
     <TypeScriptCompile Include="ClientApp\app\services\task.service.ts" />

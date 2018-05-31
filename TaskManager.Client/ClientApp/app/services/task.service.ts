@@ -2,35 +2,34 @@
 import { Http, Headers, Response, RequestOptions } from "@angular/http";
 import { Observable } from "rxjs";
 import { Task } from "./../models/task";
-import { AuthHttp } from "./auth.http";
-import { HttpParams, HttpHeaders } from '@angular/common/http';
+import { HttpClient } from "@angular/common/http"
+import { HttpParams, HttpHeaders } from "@angular/common/http";
+import { Environment } from "./../environments/environment"
 
 @Injectable()
 export class TaskService {
-    private baseUrl = "tasks/"
-    constructor(private http: AuthHttp) { }
+    private baseUrl: string;
+    constructor(private http: HttpClient, env: Environment) {
+        this.baseUrl = env.apiUrl + "tasks/";
+    }
 
     getAllTasks(userId: string): any {
-        return this.http.get(this.baseUrl + "list/" + userId);
+        return this.http.get<Task[]>(this.baseUrl + "list/" + userId);
     }
 
     getTask(taskId: number): any {
-        return this.http.get(this.baseUrl + taskId);
+        return this.http.get<Task>(this.baseUrl + taskId);
     }
 
     createTask(task: Task): any {
-        let headers = new Headers({ 'Content-Type': 'application/json' });
-        let options = new RequestOptions({ headers: headers });
-        return this.http.post(this.baseUrl, JSON.stringify(task), options);
+        return this.http.post<Task>(this.baseUrl, JSON.stringify(task));
     }
 
     editTask(task: Task): any {
-        let headers = new Headers({ 'Content-Type': 'application/json' });
-        let options = new RequestOptions({ headers: headers });
-        return this.http.put(this.baseUrl + task.id, JSON.stringify(task), options);
+        return this.http.put<Task>(this.baseUrl + task.id, JSON.stringify(task));
     }
 
     deleteTask(taskId: number): any {
-        return this.http.delete(this.baseUrl + taskId);
+        return this.http.delete<Task>(this.baseUrl + taskId);
     }
 }

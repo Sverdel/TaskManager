@@ -64,9 +64,9 @@ export class TaskComponent implements OnInit {
             }
             else if (this.currentTaskId) {
                 this.taskService.getTask(this.currentTaskId)
-                    .subscribe((response: any) => {
-                        this.currentTask = response.json();
-                        this.shadowCopy = response.json();
+                    .subscribe((response: Task) => {
+                        this.currentTask = response;
+                        this.shadowCopy = response;
                     });
             }
         }
@@ -81,10 +81,10 @@ export class TaskComponent implements OnInit {
 
         if (this.currentTaskId == -1) {
             this.taskService.createTask(this.currentTask)
-                .subscribe((response: any) => {
+                .subscribe((response: Task) => {
 
-                    this.currentTask = response.json();
-                    this.shadowCopy = response.json();
+                    this.currentTask = response;
+                    this.shadowCopy = response;
                     this.changed = false;
                     if (this.currentTask) {
                         this.currentTaskId = this.currentTask.id;
@@ -98,12 +98,12 @@ export class TaskComponent implements OnInit {
                 });
         } else {
             this.taskService.editTask(this.currentTask)
-                .subscribe((response: any) => {
+                .subscribe((response: Task) => {
                     if (this.currentTaskId) {
                         this.taskService.getTask(this.currentTaskId)
                             .subscribe((response: any) => {
-                                this.currentTask = response.json();
-                                this.shadowCopy = response.json();
+                                this.currentTask = response;
+                                this.shadowCopy = response;
                             });
                     }
                 });

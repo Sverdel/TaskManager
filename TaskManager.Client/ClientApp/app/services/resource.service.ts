@@ -2,19 +2,23 @@
 import { Observable } from "rxjs";
 import { State } from "./../models/state";
 import { Priority } from "./../models/priority";
-import { AuthHttp } from "./auth.http";
+import { HttpClient } from "@angular/common/http";
 import { AuthService } from "./auth.service";
 import { map } from "rxjs/operators"
+import { Environment } from "./../environments/environment"
 
 @Injectable()
 export class ResourceService {
     public states?: State[] = undefined;
     public priorities?: Priority[] = undefined;
-    private stateUrl = "states/"
-    private priorityUrl = "priorities/"
+    private stateUrl: string;
+    private priorityUrl: string;
 
-    constructor(private http: AuthHttp, private authService: AuthService) {
+    constructor(private http: HttpClient, private authService: AuthService, env: Environment) {
+        this.stateUrl = env.apiUrl + "states/";
+        this.priorityUrl = env.apiUrl + "priorities/";
         this.init();
+        
     }
 
     init() {
@@ -22,12 +26,12 @@ export class ResourceService {
             return;
         }
 
-        this.getStates()
+        this.http.get<State[]>(this.stateUrl)
             .subscribe((states: State[]) => {
                 this.states = states;
             });
 
-        this.getPriorities()
+        this.http.get<Priority[]>(this.priorityUrl)
             .subscribe((priorities: Priority[]) => {
                 this.priorities = priorities;
             });
@@ -35,19 +39,5 @@ export class ResourceService {
 
     isInitialized() {
         return this.states != null && this.priorities != null;
-    }
-
-    private getStates(): Observable<State[]> {
-        return this.http.get(this.stateUrl)
-            .pipe(map((response: any) => {
-                return response.json();
-            }));
-    }
-
-    private getPriorities(): Observable<Priority[]> {
-        return this.http.get(this.priorityUrl)
-            .pipe(map((response: any) => {
-                return response.json();
-            }));
     }
 }
