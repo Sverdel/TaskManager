@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { HttpModule } from '@angular/http';
 import { RouterModule } from '@angular/router';
+import { BrowserModule } from '@angular/platform-browser';
 
 import { AppComponent } from './components/app/app.component';
 import { SigninComponent } from './components/signin/signin.component';
@@ -21,35 +22,41 @@ import { SignalRService } from './services/signalr.service';
 import { FromDictionaryPipe } from './pipes/fromDictionary.pipe';
 
 @NgModule({
-    declarations: [
-        AppComponent,
-        SigninComponent,
-        SignupComponent,
-        PageNotFoundComponent,
-        TasklistComponent,
-        TaskComponent,
+  declarations: [
+    AppComponent,
+    SigninComponent,
+    SignupComponent,
+    PageNotFoundComponent,
+    TasklistComponent,
+    TaskComponent,
 
-        FromDictionaryPipe
-    ],
-    providers: [
-        Environment,
-        AuthService,
-        AuthHttp,
-        ResourceService,
-        TaskService,
-        SignalRService,
-    ],
-    imports: [
-        CommonModule,
-        HttpModule,
-        FormsModule,
-        RouterModule.forRoot([
-            { path: '', component: TasklistComponent },
-            { path: "signup", component: SignupComponent },
-            { path: "signin", component: SigninComponent },
-            { path: "**", component: PageNotFoundComponent }
-        ])
-    ]
+    FromDictionaryPipe
+  ],
+  providers: [
+    AuthService,
+    AuthHttp,
+    ResourceService,
+    TaskService,
+    SignalRService,
+    { provide: 'BASE_URL', useFactory: getBaseUrl }
+  ],
+  imports: [
+    CommonModule,
+    BrowserModule,
+    HttpModule,
+    FormsModule,
+    RouterModule.forRoot([
+      { path: '', component: TasklistComponent },
+      { path: "signup", component: SignupComponent },
+      { path: "signin", component: SigninComponent },
+      { path: "**", component: PageNotFoundComponent }
+    ])
+  ],
+  bootstrap: [AppComponent]
 })
-export class AppModuleShared {
+export class AppModule {
+}
+
+export function getBaseUrl() {
+  return document.getElementsByTagName('base')[0].href;
 }

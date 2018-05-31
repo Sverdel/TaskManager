@@ -1,8 +1,8 @@
-﻿import { Environment } from "./../environments/environment";
 import { EventEmitter, Injectable } from '@angular/core';
 import { HubConnectionBuilder, HubConnection } from '@aspnet/signalr';
 import { Task } from "./../models/task";
-import { AuthHttp } from "./auth.http"
+import { AuthHttp } from "./auth.http";
+import { Environment } from "../environments/environment";
 
 @Injectable()
 export class SignalRService {
@@ -13,10 +13,10 @@ export class SignalRService {
     
     private _hubConnection: HubConnection;
 
-    constructor(private env: Environment) {
+    constructor() {
 
         this._hubConnection = new HubConnectionBuilder()
-            .withUrl(env.baseUrl + 'task')
+            .withUrl(Environment.baseUrl + 'task')
             .build();
       
         this.registerOnServerEvents();
