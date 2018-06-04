@@ -2,20 +2,16 @@
 using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Rewrite;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
 using Swashbuckle.AspNetCore.Swagger;
 using System.Collections.Generic;
-using System.Net;
 using System.Text;
-using System.Threading.Tasks;
 using TaskManager.Api.Hubs;
 using TaskManager.Api.Models.DataModel;
 using TaskManager.Core.Model;
@@ -64,15 +60,17 @@ namespace TaskManager.Api
                         facebookOptions.AppSecret = Configuration["Authentication:Facebook:AppSecret"];
                         facebookOptions.SaveTokens = true;
 
-                    }).AddLinkedIn(options =>
+                    })
+                    .AddLinkedIn(options =>
                     {
                         options.ClientId = Configuration["Authentication:LinkedIn:AppId"];
                         options.ClientSecret = Configuration["Authentication:LinkedIn:AppSecret"];
                     });
 
             services.AddMvc()
-                    .AddFluentValidation(cfg => cfg.RegisterValidatorsFromAssemblyContaining<Startup>());
-
+                    .AddFluentValidation(cfg => cfg.RegisterValidatorsFromAssemblyContaining<Startup>())
+                    .SetCompatibilityVersion(CompatibilityVersion.Latest);
+            
             services.AddAutoMapper();
             services.AddSignalR();
 
@@ -131,6 +129,11 @@ namespace TaskManager.Api
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
+            }
+            else
+            {
+                app.UseExceptionHandler("/Error");
+                app.UseHsts();
             }
 
             app.UseCors(builder => builder.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod().AllowCredentials());
