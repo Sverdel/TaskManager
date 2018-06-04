@@ -42,7 +42,7 @@ namespace TaskManager.Api.Controllers
         /// <param name="model"></param>
         /// <returns></returns>
         [HttpPost("signin")]
-        public async Task<IActionResult> SignIn(CredentialsDto model)
+        public async Task<ActionResult<UserDto>> SignIn(CredentialsDto model)
         {
             try
             {
@@ -53,7 +53,7 @@ namespace TaskManager.Api.Controllers
                     return BadRequest();
                 }
 
-                return Ok(await CreateUserDto(user).ConfigureAwait(false));
+                return await CreateUserDto(user).ConfigureAwait(false);
             }
             catch (Exception ex)
             {
@@ -68,7 +68,7 @@ namespace TaskManager.Api.Controllers
         /// <param name="userModel"></param>
         /// <returns></returns>
         [HttpPost("signup")]
-        public async Task<IActionResult> SignUp(UserDto userModel)
+        public async Task<ActionResult<UserDto>> SignUp(UserDto userModel)
         {
             try
             {
@@ -85,7 +85,7 @@ namespace TaskManager.Api.Controllers
                     return BadRequest(errors);
                 }
 
-                return Ok(await CreateUserDto(user).ConfigureAwait(false));
+                return await CreateUserDto(user).ConfigureAwait(false);
             }
             catch (Exception e)
             {
@@ -120,7 +120,7 @@ namespace TaskManager.Api.Controllers
 
         [ApiExplorerSettings(IgnoreApi = true)]
         [HttpPost("signinCallback")]
-        public async Task<IActionResult> ExternalLoginCallback(string remoteError = null)
+        public async Task<ActionResult<UserDto>> ExternalLoginCallback(string remoteError = null)
         {
             if (remoteError != null)
             {
@@ -149,7 +149,7 @@ namespace TaskManager.Api.Controllers
                 }
             }
 
-            return Ok(await CreateUserDto(user).ConfigureAwait(false));
+            return await CreateUserDto(user).ConfigureAwait(false);
         }
 
         private async Task<IEnumerable<IdentityError>> CreateUser(User user, string password)

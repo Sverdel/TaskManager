@@ -37,7 +37,7 @@ export class TaskComponent implements OnInit {
         this.signalRService.taskChanged.subscribe((task: Task) => {
             if (task && this.currentTaskId == task.id) {
                 this.currentTask = task;
-                this.shadowCopy = JSON.parse(JSON.stringify(task));
+                this.shadowCopy = { ...task };
             }
         });
     }
@@ -66,7 +66,7 @@ export class TaskComponent implements OnInit {
                 this.taskService.getTask(this.currentTaskId)
                     .subscribe((response: Task) => {
                         this.currentTask = response;
-                        this.shadowCopy = JSON.parse(JSON.stringify(response));
+                        this.shadowCopy = { ...response };
                     });
             }
         }
@@ -84,7 +84,7 @@ export class TaskComponent implements OnInit {
                 .subscribe((response: Task) => {
 
                     this.currentTask = response;
-                    this.shadowCopy = JSON.parse(JSON.stringify(response));
+                    this.shadowCopy = { ...response };
                     this.changed = false;
                     if (this.currentTask) {
                         this.currentTaskId = this.currentTask.id;
@@ -103,7 +103,7 @@ export class TaskComponent implements OnInit {
                         this.taskService.getTask(this.currentTaskId)
                             .subscribe((response: any) => {
                                 this.currentTask = response;
-                                this.shadowCopy = JSON.parse(JSON.stringify(response));
+                                this.shadowCopy = { ...response };
                             });
                     }
                 });
@@ -115,7 +115,7 @@ export class TaskComponent implements OnInit {
             this.currentTaskId = this.localTaskId = undefined;
             this.currentTask = this.shadowCopy = undefined;
         } else {
-            this.currentTask = JSON.parse(JSON.stringify(this.shadowCopy));
+            this.currentTask = { ...this.shadowCopy }; 
         }
     }
 

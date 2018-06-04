@@ -29,7 +29,7 @@ namespace TaskManager.Api.Controllers
         }
 
         [HttpGet("{id}")]
-        public async Task<IActionResult> GetPriority(int id)
+        public async Task<ActionResult<Priority>> GetPriority(int id)
         {
             var priority = await _repository.Get(id).ConfigureAwait(false);
 
@@ -38,7 +38,7 @@ namespace TaskManager.Api.Controllers
                 return NotFound();
             }
 
-            return Ok(priority);
+            return priority;
         }
 
         [HttpPut("{id}")]
@@ -69,7 +69,7 @@ namespace TaskManager.Api.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> PostPriority(Priority priority)
+        public async Task<ActionResult<Priority>> PostPriority(Priority priority)
         {
             var newPriority = await _repository.Create(priority).ConfigureAwait(false);
 
@@ -77,7 +77,7 @@ namespace TaskManager.Api.Controllers
         }
 
         [HttpDelete("{id}")]
-        public async Task<IActionResult> DeletePriority(int id)
+        public async Task<ActionResult<Priority>> DeletePriority(int id)
         {
             var priority = await _repository.Get(id).ConfigureAwait(false);
             if (priority == null)
@@ -87,7 +87,7 @@ namespace TaskManager.Api.Controllers
 
             await _repository.Delete(id).ConfigureAwait(false);
 
-            return Ok(priority);
+            return priority;
         }
 
         private async Task<bool> PriorityExists(int id)

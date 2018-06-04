@@ -29,7 +29,7 @@ namespace TaskManager.Api.Controllers
         }
 
         [HttpGet("{id}")]
-        public async Task<IActionResult> GetState(int id)
+        public async Task<ActionResult<State>> GetState(int id)
         {
             var state = await _repository.Get(id).ConfigureAwait(false);
 
@@ -38,7 +38,7 @@ namespace TaskManager.Api.Controllers
                 return NotFound();
             }
 
-            return Ok(state);
+            return state;
         }
 
         [HttpPut("{id}")]
@@ -69,14 +69,14 @@ namespace TaskManager.Api.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> PostState(State state)
+        public async Task<ActionResult<State>> PostState(State state)
         {
             var newState = await _repository.Create(state).ConfigureAwait(false);
             return CreatedAtAction("GetState", new { id = newState.Id }, newState);
         }
 
         [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteState(int id)
+        public async Task<ActionResult<State>> DeleteState(int id)
         {
             var state = await _repository.Get(id).ConfigureAwait(false);
             if (state == null)
@@ -85,7 +85,7 @@ namespace TaskManager.Api.Controllers
             }
 
             await _repository.Delete(id).ConfigureAwait(false);
-            return Ok(state);
+            return state;
         }
 
         private async Task<bool> StateExists(int id)

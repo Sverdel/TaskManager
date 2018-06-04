@@ -5,6 +5,8 @@ import { HttpClientModule } from '@angular/common/http';
 import { RouterModule } from '@angular/router';
 import { BrowserModule } from '@angular/platform-browser';
 
+import { AlertModule } from 'ngx-bootstrap/alert';
+
 import { HTTP_INTERCEPTORS } from '@angular/common/http';
 import { TokenInterceptor } from './interceptors/token.interceptor';
 import { JwtInterceptor } from './interceptors/jwt.interceptor';
@@ -58,6 +60,7 @@ import { FromDictionaryPipe } from './pipes/fromDictionary.pipe';
         BrowserModule,
         HttpClientModule,
         FormsModule,
+        AlertModule.forRoot(),
         RouterModule.forRoot([
             { path: '', component: TasklistComponent },
             { path: "signup", component: SignupComponent },

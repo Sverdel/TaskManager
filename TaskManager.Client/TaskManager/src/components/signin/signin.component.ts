@@ -9,16 +9,13 @@ import { AuthService } from "./../../services/auth.service";
     templateUrl: './signin.component.html',
     styleUrls: ['./signin.component.css']
 })
-/** signin component*/
-export class SigninComponent implements OnInit
+export class SigninComponent 
 {
     user: User = new User();
+    alertMessage: string = undefined;
 
-    /** signin ctor */
     constructor(private authService: AuthService, private router: Router) { }
 
-    /** Called by Angular after signin component initialized */
-    ngOnInit(): void { }
 
     signin() {
         if (this.user == null || this.user.userName == null || this.user.password == null) {
@@ -31,6 +28,11 @@ export class SigninComponent implements OnInit
             },
             (err: any) => {
                 console.log(err);
+                this.alertMessage = "Incorrect user name or password";
             });
+    }
+
+    clearAlert(): void {
+        this.alertMessage = undefined;
     }
 }

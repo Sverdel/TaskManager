@@ -41,7 +41,7 @@ namespace TaskManager.Api.Controllers
         }
 
         [HttpGet("{id}")]
-        public async Task<IActionResult> GetWorkTask(long id)
+        public async Task<ActionResult<TaskDto>> GetWorkTask(long id)
         {
             var workTask = await _repository.Get(id).ConfigureAwait(false);
 
@@ -50,7 +50,7 @@ namespace TaskManager.Api.Controllers
                 return NotFound();
             }
 
-            return Ok(Mapper.Map<WorkTask, TaskDto>(workTask));
+            return Mapper.Map<WorkTask, TaskDto>(workTask);
         }
 
         [HttpPut("{id}")]
@@ -82,7 +82,7 @@ namespace TaskManager.Api.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> PostWorkTask(TaskDto workTask)
+        public async Task<ActionResult<TaskDto>> PostWorkTask(TaskDto workTask)
         {
             var task = await _repository.Create(Mapper.Map<TaskDto, WorkTask>(workTask)).ConfigureAwait(false);
 
@@ -92,7 +92,7 @@ namespace TaskManager.Api.Controllers
         }
 
         [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteWorkTask(long id)
+        public async Task<ActionResult<TaskDto>> DeleteWorkTask(long id)
         {
             var workTask = await _repository.Get(id).ConfigureAwait(false);
             if (workTask == null)
@@ -104,7 +104,7 @@ namespace TaskManager.Api.Controllers
 
             var dto = Mapper.Map<WorkTask, TaskDto>(workTask);
             await _taskHub.Clients.All.SendAsync("deleteTask", dto).ConfigureAwait(false);
-            return Ok(dto);
+            return dto;
         }
 
         private async Task<bool> WorkTaskExists(long id)
