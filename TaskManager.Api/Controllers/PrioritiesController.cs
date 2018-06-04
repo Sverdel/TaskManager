@@ -12,6 +12,7 @@ namespace TaskManager.Api.Controllers
     [Produces("application/json")]
     [Route("api/priorities")]
     [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+    [ApiController]
     public class PrioritiesController : Controller
     {
         private readonly IRepository<Priority, int> _repository;
@@ -28,14 +29,9 @@ namespace TaskManager.Api.Controllers
         }
 
         [HttpGet("{id}")]
-        public async Task<IActionResult> GetPriority([FromRoute] int id)
+        public async Task<IActionResult> GetPriority(int id)
         {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
-
-            Priority priority = await _repository.Get(id).ConfigureAwait(false);
+            var priority = await _repository.Get(id).ConfigureAwait(false);
 
             if (priority == null)
             {
@@ -46,13 +42,8 @@ namespace TaskManager.Api.Controllers
         }
 
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutPriority([FromRoute] int id, [FromBody] Priority priority)
+        public async Task<IActionResult> PutPriority(int id, Priority priority)
         {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
-
             if (id != priority.Id)
             {
                 return BadRequest();
@@ -78,27 +69,17 @@ namespace TaskManager.Api.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> PostPriority([FromBody] Priority priority)
+        public async Task<IActionResult> PostPriority(Priority priority)
         {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
-
-            Priority newPriority = await _repository.Create(priority).ConfigureAwait(false);
+            var newPriority = await _repository.Create(priority).ConfigureAwait(false);
 
             return CreatedAtAction("GetPriority", new { id = newPriority.Id }, newPriority);
         }
 
         [HttpDelete("{id}")]
-        public async Task<IActionResult> DeletePriority([FromRoute] int id)
+        public async Task<IActionResult> DeletePriority(int id)
         {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
-
-            Priority priority = await _repository.Get(id).ConfigureAwait(false);
+            var priority = await _repository.Get(id).ConfigureAwait(false);
             if (priority == null)
             {
                 return NotFound();

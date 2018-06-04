@@ -16,6 +16,7 @@ namespace TaskManager.Api.Controllers
     [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     [Produces("application/json")]
     [Route("api/tasks")]
+    [ApiController]
     public class WorkTasksController : Controller
     {
         private readonly IRepository<WorkTask, long> _repository;
@@ -34,25 +35,15 @@ namespace TaskManager.Api.Controllers
         }
 
         [HttpGet("list/{userId}")]
-        public async Task<IActionResult> GetWorkTasks([FromRoute]string userId)
+        public async Task<IActionResult> GetWorkTasks(string userId)
         {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
-
             return Ok(await _repository.Get(userId).ConfigureAwait(false));
         }
 
         [HttpGet("{id}")]
-        public async Task<IActionResult> GetWorkTask([FromRoute] long id)
+        public async Task<IActionResult> GetWorkTask(long id)
         {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
-
-            WorkTask workTask = await _repository.Get(id).ConfigureAwait(false);
+            var workTask = await _repository.Get(id).ConfigureAwait(false);
 
             if (workTask == null)
             {
@@ -63,13 +54,8 @@ namespace TaskManager.Api.Controllers
         }
 
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutWorkTask([FromRoute] long id, [FromBody] TaskDto workTask)
+        public async Task<IActionResult> PutWorkTask(long id, TaskDto workTask)
         {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
-
             if (id != workTask.Id)
             {
                 return BadRequest();
@@ -77,7 +63,7 @@ namespace TaskManager.Api.Controllers
 
             try
             {
-                WorkTask task = await _repository.Update(Mapper.Map<TaskDto, WorkTask>(workTask)).ConfigureAwait(false);
+                var task = await _repository.Update(Mapper.Map<TaskDto, WorkTask>(workTask)).ConfigureAwait(false);
                 await _taskHub.Clients.All.SendAsync("editTask", Mapper.Map<WorkTask, TaskDto>(task)).ConfigureAwait(false);
             }
             catch (DbUpdateConcurrencyException)
@@ -96,29 +82,19 @@ namespace TaskManager.Api.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> PostWorkTask([FromBody] TaskDto workTask)
+        public async Task<IActionResult> PostWorkTask(TaskDto workTask)
         {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
+            var task = await _repository.Create(Mapper.Map<TaskDto, WorkTask>(workTask)).ConfigureAwait(false);
 
-            WorkTask task = await _repository.Create(Mapper.Map<TaskDto, WorkTask>(workTask)).ConfigureAwait(false);
-
-            TaskDto dto = Mapper.Map<WorkTask, TaskDto>(task);
+            var dto = Mapper.Map<WorkTask, TaskDto>(task);
             await _taskHub.Clients.All.SendAsync("createTask", dto).ConfigureAwait(false);
             return CreatedAtAction("GetWorkTask", new { id = dto.Id }, dto);
         }
 
         [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteWorkTask([FromRoute] long id)
+        public async Task<IActionResult> DeleteWorkTask(long id)
         {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
-
-            WorkTask workTask = await _repository.Get(id).ConfigureAwait(false);
+            var workTask = await _repository.Get(id).ConfigureAwait(false);
             if (workTask == null)
             {
                 return NotFound();
@@ -126,7 +102,7 @@ namespace TaskManager.Api.Controllers
 
             await _repository.Delete(id).ConfigureAwait(false);
 
-            TaskDto dto = Mapper.Map<WorkTask, TaskDto>(workTask);
+            var dto = Mapper.Map<WorkTask, TaskDto>(workTask);
             await _taskHub.Clients.All.SendAsync("deleteTask", dto).ConfigureAwait(false);
             return Ok(dto);
         }

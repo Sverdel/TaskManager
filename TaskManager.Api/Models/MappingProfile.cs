@@ -9,7 +9,7 @@ namespace TaskManager.Api.Models
     {
         public MappingProfile()
         {
-            CreateMap<User, UserDto>().ReverseMap();
+            CreateMap<User, UserDto>().ForMember(nameof(UserDto.Provider), opt => opt.MapFrom(nameof(User.LoginProvider))).ReverseMap();
             CreateMap<WorkTask, TaskDto>().ReverseMap();
         }
     }

@@ -12,6 +12,7 @@ namespace TaskManager.Api.Controllers
     [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     [Produces("application/json")]
     [Route("api/states")]
+    [ApiController]
     public class StatesController : Controller
     {
         private readonly IRepository<State, int> _repository;
@@ -28,14 +29,9 @@ namespace TaskManager.Api.Controllers
         }
 
         [HttpGet("{id}")]
-        public async Task<IActionResult> GetState([FromRoute] int id)
+        public async Task<IActionResult> GetState(int id)
         {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
-
-            State state = await _repository.Get(id).ConfigureAwait(false);
+            var state = await _repository.Get(id).ConfigureAwait(false);
 
             if (state == null)
             {
@@ -46,13 +42,8 @@ namespace TaskManager.Api.Controllers
         }
 
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutState([FromRoute] int id, [FromBody] State state)
+        public async Task<IActionResult> PutState(int id, State state)
         {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
-
             if (id != state.Id)
             {
                 return BadRequest();
@@ -78,26 +69,16 @@ namespace TaskManager.Api.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> PostState([FromBody] State state)
+        public async Task<IActionResult> PostState(State state)
         {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
-
-            State newState = await _repository.Create(state).ConfigureAwait(false);
+            var newState = await _repository.Create(state).ConfigureAwait(false);
             return CreatedAtAction("GetState", new { id = newState.Id }, newState);
         }
 
         [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteState([FromRoute] int id)
+        public async Task<IActionResult> DeleteState(int id)
         {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
-
-            State state = await _repository.Get(id).ConfigureAwait(false);
+            var state = await _repository.Get(id).ConfigureAwait(false);
             if (state == null)
             {
                 return NotFound();

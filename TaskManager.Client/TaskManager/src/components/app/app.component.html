@@ -1,0 +1,38 @@
+<div class="container-fluid">
+    <nav class="navbar navbar-expand-lg navbar-light bg-light mb-2">
+        <a [routerLink]="['']" class="navbar-header navbar-brand">{{title}}</a>
+        <div class="collapse navbar-collapse">
+            <div class="my-2 my-lg-0" *ngIf='!isAuthorized()'>
+                <a class="btn btn-primary mr-1" [routerLink]="['signin']">Sign in</a>
+                <a class="btn btn-light mr-1" [routerLink]="['signup']">Sign up</a>
+                <a class="btn btn-light text-secondary mr-1" (click)="signin('Facebook')"><i class="fab fa-facebook fa-lg"></i></a>
+                <a class="btn btn-light text-secondary mr-1" (click)="signin('LinkedIn')"><i class="fab fa-linkedin fa-lg"></i></a>
+            </div>
+            <div class="dropdown navbar-form col-md-6" role="form" *ngIf="isAuthorized()">
+                <button id="dropdownMenuButton" class="dropdown-toggle btn btn-light" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+                    {{ this.authService.user.userName }} <span class="caret"></span>
+                </button>
+                <div class="dropdown-menu" aria-labeledby="dropdownMenuButton">
+                    <a href="#" (click)="signout()" class="dropdown-item">SignOut</a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!--<div *ngIf="alertMessage == null">
+        <alert  [type]="danger" dismissible="true" (close)="alertMessage == null">
+            {{ alertMessage }}
+        </alert>
+    </div>-->
+    <!--<div class="container">
+        <div class="alert alert-danger alert-dismissible" role="alert" uib-collapse="alertMessage == null">
+            <button type="button" class="close" aria-label="Close" (click)="alertMessage = null"><span aria-hidden="true">&times;</span></button>
+            <strong>Warning!</strong> {{ alertMessage }}
+        </div>
+    </div>-->
+
+    <div class="container-fluid">
+        <router-outlet></router-outlet>
+    </div>
+
+</div>
