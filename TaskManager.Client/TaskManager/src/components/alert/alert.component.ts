@@ -11,8 +11,8 @@ export class AlertComponent {
 
     constructor(private alert: AlertService) { }
     
-    clearAlert(): void {
-        this.alert.message = undefined;
+    clearAlert(message): void {
+        this.alert.clearAlert(message);
     }
 
 }

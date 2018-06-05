@@ -14,7 +14,7 @@ export class ErrorInterceptor implements HttpInterceptor {
             (event: HttpEvent<any>) => { },
             (err: any) => {
                 if (err instanceof HttpErrorResponse) {
-                    this.alert.setError(JSON.stringify(err.error));
+                    this.alert.setError(err.message + ':' + JSON.stringify(err.error));
                 }
             }));
     }

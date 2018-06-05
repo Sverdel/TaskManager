@@ -1,7 +1,6 @@
 ﻿import { Component, OnInit } from '@angular/core';
 import { Router } from "@angular/router";
 import { AuthService } from "../../services/auth.service";
-import { AlertService } from "../../services/alert.service";
 import { User } from "./../../models/user";
 
 @Component({
@@ -16,7 +15,7 @@ export class SignupComponent implements OnInit
     /** Called by Angular after signup component initialized */
     ngOnInit(): void { }
 
-    constructor(private authService: AuthService, private router: Router, private alert: AlertService) { }
+    constructor(private authService: AuthService, private router: Router) { }
     signup() {
         if (this.newUser == null) {
             return;
@@ -25,10 +24,6 @@ export class SignupComponent implements OnInit
         this.authService.signup(this.newUser)
             .subscribe((data: any) => {
                 this.router.navigate([""]);
-            },
-            (err: any) => {
-                console.log(err);
-                this.alert.setError("Failed to create user");
             });
     }
 }

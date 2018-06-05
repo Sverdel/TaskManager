@@ -50,15 +50,14 @@ namespace TaskManager.Api.Controllers
 
                 if (user == null || !await _userManager.CheckPasswordAsync(user, model.Password).ConfigureAwait(false))
                 {
-                    return BadRequest();
+                    return BadRequest("Incorrect user name or password");
                 }
 
                 return await CreateUserDto(user).ConfigureAwait(false);
             }
             catch (Exception ex)
             {
-                Console.WriteLine(ex);
-                throw;
+                return BadRequest(ex.Message);
             }
         }
 
@@ -131,7 +130,7 @@ namespace TaskManager.Api.Controllers
             var info = await _signinManager.GetExternalLoginInfoAsync().ConfigureAwait(false);
             if (info == null)
             {
-                return BadRequest();
+                return BadRequest("Can't signin using external service");
             }
 
             var result = await _signinManager.ExternalLoginSignInAsync(info.LoginProvider, info.ProviderKey, isPersistent: false);

@@ -4,7 +4,6 @@ import { AuthService } from "../../services/auth.service";
 import { SignalRService } from "../../services/signalr.service";
 import { ResourceService } from "../../services/resource.service";
 import { Task } from "./../../models/task";
-import { AlertService } from "./../../services/alert.service";
 
 @Component({
     selector: 'tasklist',
@@ -21,8 +20,7 @@ export class TasklistComponent implements OnInit
     constructor(public taskService: TaskService,
         public authService: AuthService,
         public resourceService: ResourceService,
-        private signalRService: SignalRService,
-        private alert: AlertService) { }
+        private signalRService: SignalRService) { }
 
     /** Called by Angular after tasklist component initialized */
     ngOnInit(): void {
@@ -30,9 +28,6 @@ export class TasklistComponent implements OnInit
             this.taskService.getAllTasks(this.authService.user.id)
                 .subscribe((response: Task[]) => {
                     this.taskList = response;
-                }, (err: any) => {
-                    console.log(err);
-                    this.alert.setError("Error on getting tasks. Can't get task list");
                 });
         }
 
@@ -51,9 +46,6 @@ export class TasklistComponent implements OnInit
                 });
 
                 this.currentTaskId = undefined;
-            }, (err: any) => {
-                console.log(err);
-                this.alert.setError("Error on deleting tasks. Task wasn't deleted");
             });
     }
 

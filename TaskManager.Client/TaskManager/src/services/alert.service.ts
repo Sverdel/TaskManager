@@ -5,14 +5,20 @@ export class AlertService {
 
     // make list of errors 
     constructor() { }
-    message: string = undefined;
+    messages: string[];
 
-    clearAlert(): void {
-        this.message = undefined;
+    clearAlert(message: string): void {
+        this.messages = this.messages.filter(x => x != message);
+    }
+
+    clearAll(): void {
+        this.messages = undefined;
     }
 
     setError(message: string): void {
-        this.message = message;
-    }
+        if (!this.messages)
+            this.messages = [];
 
+        this.messages.push(message);
+    }
 }
