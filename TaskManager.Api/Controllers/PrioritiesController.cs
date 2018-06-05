@@ -42,7 +42,7 @@ namespace TaskManager.Api.Controllers
         }
 
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutPriority(int id, Priority priority)
+        public async Task<ActionResult<Priority>> PutPriority(int id, Priority priority)
         {
             if (id != priority.Id)
             {
@@ -51,11 +51,11 @@ namespace TaskManager.Api.Controllers
 
             try
             {
-                await _repository.Update(priority).ConfigureAwait(false);
+                return await _repository.Update(priority).ConfigureAwait(false);
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (! await PriorityExists(id).ConfigureAwait(false))
+                if (!await PriorityExists(id).ConfigureAwait(false))
                 {
                     return NotFound();
                 }
@@ -64,8 +64,6 @@ namespace TaskManager.Api.Controllers
                     throw;
                 }
             }
-
-            return NoContent();
         }
 
         [HttpPost]

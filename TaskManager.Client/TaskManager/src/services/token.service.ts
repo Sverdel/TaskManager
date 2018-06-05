@@ -20,13 +20,21 @@ export class TokenService {
     }
 
     getUser(): User | undefined {
-        var i = localStorage.getItem(this.authKey);
-        if (i) {
-            return JSON.parse(i);
-        }
-        else {
+        var userStr = localStorage.getItem(this.authKey);
+        if (!userStr) {
             return undefined;
         }
+
+        var user = JSON.parse(userStr);
+        var authDate = new Date(user.tokenExpireDate);
+        var current = new Date();
+
+        if (authDate < current) {
+            this.setUser(undefined);
+            return undefined
+        }
+
+        return user;
     }
 
     getToken(): string | undefined {

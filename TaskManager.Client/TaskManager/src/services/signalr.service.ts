@@ -31,7 +31,7 @@ export class SignalRService {
                 console.log('Hub connection started');
             })
             .catch(err => {
-                console.log('Error while establishing connection')
+                console.log(`Error while establishing connection: ${err}`);
             });
     }
 

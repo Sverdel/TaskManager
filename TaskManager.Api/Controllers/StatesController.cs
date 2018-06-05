@@ -42,7 +42,7 @@ namespace TaskManager.Api.Controllers
         }
 
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutState(int id, State state)
+        public async Task<ActionResult<State>> PutState(int id, State state)
         {
             if (id != state.Id)
             {
@@ -51,7 +51,7 @@ namespace TaskManager.Api.Controllers
 
             try
             {
-                await _repository.Update(state).ConfigureAwait(false);
+                return await _repository.Update(state).ConfigureAwait(false);
             }
             catch (DbUpdateConcurrencyException)
             {
@@ -64,8 +64,6 @@ namespace TaskManager.Api.Controllers
                     throw;
                 }
             }
-
-            return NoContent();
         }
 
         [HttpPost]

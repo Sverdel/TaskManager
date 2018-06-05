@@ -10,6 +10,7 @@ import { AlertModule } from 'ngx-bootstrap/alert';
 import { HTTP_INTERCEPTORS } from '@angular/common/http';
 import { TokenInterceptor } from './interceptors/token.interceptor';
 import { JwtInterceptor } from './interceptors/jwt.interceptor';
+import { ErrorInterceptor } from './interceptors/error.interceptor';
 
 import { AppComponent } from './components/app/app.component';
 import { SigninComponent } from './components/signin/signin.component';
@@ -17,12 +18,14 @@ import { SignupComponent } from './components/signup/signup.component';
 import { PageNotFoundComponent } from './components/page-not-found/page-not-found.component';
 import { TasklistComponent } from './components/tasklist/tasklist.component';
 import { TaskComponent } from './components/task/task.component';
+import { AlertComponent } from './components/alert/alert.component';
 
 import { AuthService } from './services/auth.service';
 import { ResourceService } from './services/resource.service';
 import { TaskService } from './services/task.service';
 import { SignalRService } from './services/signalr.service';
 import { TokenService } from './services/token.service';
+import { AlertService } from './services/alert.service';
 
 import { FromDictionaryPipe } from './pipes/fromDictionary.pipe';
 
@@ -34,8 +37,11 @@ import { FromDictionaryPipe } from './pipes/fromDictionary.pipe';
         PageNotFoundComponent,
         TasklistComponent,
         TaskComponent,
+        AlertComponent,
 
-        FromDictionaryPipe
+        FromDictionaryPipe,
+
+        AlertComponent
     ],
     providers: [
         AuthService,
@@ -43,9 +49,15 @@ import { FromDictionaryPipe } from './pipes/fromDictionary.pipe';
         TaskService,
         SignalRService,
         TokenService,
+        AlertService,
         {
             provide: HTTP_INTERCEPTORS,
             useClass: TokenInterceptor,
+            multi: true
+        },
+        {
+            provide: HTTP_INTERCEPTORS,
+            useClass: ErrorInterceptor,
             multi: true
         },
         {

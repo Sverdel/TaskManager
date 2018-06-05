@@ -79,6 +79,7 @@ namespace TaskManager.Api.Controllers
                     return BadRequest("User name is already exists.");
                 }
 
+                user = Mapper.Map<UserDto, User>(userModel);
                 var errors = await CreateUser(user, userModel.Password).ConfigureAwait(false);
                 if (errors != null)
                 {

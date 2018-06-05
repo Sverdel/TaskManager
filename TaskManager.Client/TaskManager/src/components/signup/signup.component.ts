@@ -1,6 +1,7 @@
 ﻿import { Component, OnInit } from '@angular/core';
-import { AuthService } from "../../services/auth.service";
 import { Router } from "@angular/router";
+import { AuthService } from "../../services/auth.service";
+import { AlertService } from "../../services/alert.service";
 import { User } from "./../../models/user";
 
 @Component({
@@ -14,8 +15,8 @@ export class SignupComponent implements OnInit
     newUser: User = new User();
     /** Called by Angular after signup component initialized */
     ngOnInit(): void { }
-    
-    constructor(public authService: AuthService, public router: Router) { }
+
+    constructor(private authService: AuthService, private router: Router, private alert: AlertService) { }
     signup() {
         if (this.newUser == null) {
             return;
@@ -23,20 +24,11 @@ export class SignupComponent implements OnInit
 
         this.authService.signup(this.newUser)
             .subscribe((data: any) => {
-                if (this.newUser == null || this.newUser.userName == null || this.newUser.password == null) {
-                    return;
-                }
-
-                this.authService.signin(this.newUser.userName, this.newUser.password)
-                    .subscribe((data: any) => {
-                        this.router.navigate([""]);
-                    },
-                    (err: any) => {
-                        console.log(err);
-                    });
+                this.router.navigate([""]);
             },
             (err: any) => {
                 console.log(err);
+                this.alert.setError("Failed to create user");
             });
     }
 }

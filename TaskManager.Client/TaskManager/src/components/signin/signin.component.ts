@@ -2,7 +2,7 @@
 import { Router } from "@angular/router";
 import { User } from "./../../models/user";
 import { AuthService } from "./../../services/auth.service";
-
+import { AlertService } from "./../../services/alert.service";
 
 @Component({
     selector: 'signin',
@@ -12,12 +12,11 @@ import { AuthService } from "./../../services/auth.service";
 export class SigninComponent 
 {
     user: User = new User();
-    alertMessage: string = undefined;
 
-    constructor(private authService: AuthService, private router: Router) { }
+    constructor(private authService: AuthService, private router: Router, private alert: AlertService) { }
 
 
-    signin() {
+    signin() : void {
         if (this.user == null || this.user.userName == null || this.user.password == null) {
             return;
         }
@@ -28,11 +27,7 @@ export class SigninComponent
             },
             (err: any) => {
                 console.log(err);
-                this.alertMessage = "Incorrect user name or password";
+                this.alert.setError("Incorrect user name or password");
             });
-    }
-
-    clearAlert(): void {
-        this.alertMessage = undefined;
     }
 }

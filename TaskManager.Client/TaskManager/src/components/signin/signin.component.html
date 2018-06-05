@@ -11,7 +11,4 @@
 
     <button type="submit" class="btn btn-primary" (click)="signin()" [disabled]="user.userName == null || user.password == null">Signin</button>
 
-    <div class="mt-2">
-        <alert *ngIf="alertMessage" type="danger" dismissible="dismissible" (onClosed)="clearAlert()">{{ alertMessage }}</alert>
-    </div>
 </form>

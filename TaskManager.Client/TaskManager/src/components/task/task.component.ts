@@ -7,6 +7,8 @@ import { TaskService } from "./../../services/task.service";
 import { AuthService } from "./../../services/auth.service";
 import { ResourceService } from "./../../services/resource.service";
 import { SignalRService } from "../../services/signalr.service";
+import { AlertService } from "./../../services/alert.service";
+import { HttpErrorResponse } from "@angular/common/http";
 
 @Component({
     selector: 'task',
@@ -28,7 +30,8 @@ export class TaskComponent implements OnInit {
         private taskService: TaskService,
         private authService: AuthService,
         private resourceService: ResourceService,
-        private signalRService: SignalRService) {
+        private signalRService: SignalRService,
+        private alert: AlertService) {
 
     }
 
@@ -67,6 +70,9 @@ export class TaskComponent implements OnInit {
                     .subscribe((response: Task) => {
                         this.currentTask = response;
                         this.shadowCopy = { ...response };
+                    }, (err: HttpErrorResponse) => {
+                        console.log(err);
+                        this.alert.setError("Error on getting task. Can't get task");
                     });
             }
         }
@@ -95,17 +101,22 @@ export class TaskComponent implements OnInit {
 
                         this.taskList.push(this.currentTask);
                     }
+                }, (err: any) => {
+                    console.log(err);
+                    this.alert.setError("Error on saving task. Task wasn't added");
                 });
         } else {
             this.taskService.editTask(this.currentTask)
                 .subscribe((response: Task) => {
-                    if (this.currentTaskId) {
-                        this.taskService.getTask(this.currentTaskId)
-                            .subscribe((response: any) => {
-                                this.currentTask = response;
-                                this.shadowCopy = { ...response };
-                            });
+                    this.currentTask = response;
+                    this.shadowCopy = { ...response };
+                    if (this.currentTask) {
+                        this.currentTaskId = this.currentTask.id;
+                        this.localTaskId = this.currentTask.id;
                     }
+                }, (err: any) => {
+                    console.log(err);
+                    //this.alert.setError("Error on saving task. Task wasn't changes");
                 });
         }
     }

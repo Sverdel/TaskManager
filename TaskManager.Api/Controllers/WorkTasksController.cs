@@ -54,7 +54,7 @@ namespace TaskManager.Api.Controllers
         }
 
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutWorkTask(long id, TaskDto workTask)
+        public async Task<ActionResult<TaskDto>> PutWorkTask(long id, TaskDto workTask)
         {
             if (id != workTask.Id)
             {
@@ -64,7 +64,9 @@ namespace TaskManager.Api.Controllers
             try
             {
                 var task = await _repository.Update(Mapper.Map<TaskDto, WorkTask>(workTask)).ConfigureAwait(false);
-                await _taskHub.Clients.All.SendAsync("editTask", Mapper.Map<WorkTask, TaskDto>(task)).ConfigureAwait(false);
+                var result = Mapper.Map<WorkTask, TaskDto>(task);
+                await _taskHub.Clients.All.SendAsync("editTask", result).ConfigureAwait(false);
+                return result;
             }
             catch (DbUpdateConcurrencyException)
             {
@@ -77,8 +79,6 @@ namespace TaskManager.Api.Controllers
                     throw;
                 }
             }
-
-            return NoContent();
         }
 
         [HttpPost]

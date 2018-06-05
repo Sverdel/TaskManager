@@ -26,18 +26,10 @@ export class AuthService {
         var user = this.tokenService.getUser();
         if (!user) return false;
 
-        var authDate = new Date(user.tokenExpireDate);
-        var current = new Date();
-        if (authDate < current) {
-            this.tokenService.setUser(undefined);
-            return false;
-        }
-
-
         return true;
     }
 
-    signin(username: string, password: string): any {
+    signin(username: string, password: string): Observable<boolean> {
         var url = Environment.apiUrl + "account/signin"; // JwtProvider's LoginPath
         var data = {
             name: username,
@@ -45,41 +37,42 @@ export class AuthService {
         };
 
         return this.http.post<User>(url, data)
-            .pipe(map((response: any) => {
+            .pipe(map((response: User) => {
+                this.user = response;
                 this.tokenService.setUser(response);
                 return true;
             }));
     }
 
-    signinExt(provider: string): any {
+    signinExt(provider: string): Observable<boolean> {
         var url = Environment.apiUrl + "account/signinExt/" + provider; // JwtProvider's LoginPath
         var data = {};
 
         return this.http.post<User>(url, data)
-            .pipe(map((response: any) => {
+            .pipe(map((response: User) => {
+                this.user = response;
                 this.tokenService.setUser(response);
                 return true;
             }));
     }
 
-    signout(): any {
+    signout(): Observable<boolean> {
         return this.http.post<User>(Environment.apiUrl + "account/signout", null)
             .pipe(
                 map((response: any) => {
                     this.tokenService.setUser(undefined);
                     return true;
-                }),
-                catchError((err: any) => {
-                    return Observable.throw(err);
                 })
             );
     }
 
-    signup(user: User) {
+    signup(user: User): Observable<boolean> {
         return this.http.post<User>(Environment.apiUrl + "account/signup", user)
-            .pipe(
-                catchError((err: any) => Observable.throw(err)
-                ));
+            .pipe(map((response: User) => {
+                this.user = response;
+                this.tokenService.setUser(response);
+                return true;
+        }));
     }
 
     isServer(): boolean {

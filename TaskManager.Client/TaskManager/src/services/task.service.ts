@@ -1,11 +1,9 @@
-﻿import { Injectable, EventEmitter } from "@angular/core";
+﻿import { Injectable } from "@angular/core";
 import { Observable } from "rxjs";
-import { Task } from "./../models/task";
 import { HttpClient } from "@angular/common/http"
-import { HttpParams, HttpHeaders } from "@angular/common/http";
+import { HttpHeaders } from "@angular/common/http";
 import { Environment } from "./../environments/environment"
-
-
+import { Task } from "./../models/task";
 
 @Injectable()
 export class TaskService {
@@ -18,23 +16,23 @@ export class TaskService {
         this.baseUrl = Environment.apiUrl + "tasks/";
     }
 
-    getAllTasks(userId: string): any {
+    getAllTasks(userId: string): Observable<Task[]> {
         return this.http.get<Task[]>(this.baseUrl + "list/" + userId);
     }
 
-    getTask(taskId: number): any {
+    getTask(taskId: number): Observable<Task> {
         return this.http.get<Task>(this.baseUrl + taskId);
     }
 
-    createTask(task: Task): any {
+    createTask(task: Task): Observable<Task> {
         return this.http.post<Task>(this.baseUrl, task, this.httpOptions);
     }
 
-    editTask(task: Task): any {
+    editTask(task: Task): Observable<Task> {
         return this.http.put<Task>(this.baseUrl + task.id, task, this.httpOptions);
     }
 
-    deleteTask(taskId: number): any {
+    deleteTask(taskId: number): Observable<Task> {
         return this.http.delete<Task>(this.baseUrl + taskId);
     }
 }

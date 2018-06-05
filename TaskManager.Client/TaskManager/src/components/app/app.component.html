@@ -18,19 +18,7 @@
             </div>
         </div>
     </nav>
-
-    <!--<div *ngIf="alertMessage == null">
-        <alert  [type]="danger" dismissible="true" (close)="alertMessage == null">
-            {{ alertMessage }}
-        </alert>
-    </div>-->
-    <!--<div class="container">
-        <div class="alert alert-danger alert-dismissible" role="alert" uib-collapse="alertMessage == null">
-            <button type="button" class="close" aria-label="Close" (click)="alertMessage = null"><span aria-hidden="true">&times;</span></button>
-            <strong>Warning!</strong> {{ alertMessage }}
-        </div>
-    </div>-->
-
+    <alert-msg></alert-msg>
     <div class="container-fluid">
         <router-outlet></router-outlet>
     </div>
