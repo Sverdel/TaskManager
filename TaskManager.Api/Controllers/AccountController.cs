@@ -78,7 +78,7 @@ namespace TaskManager.Api.Controllers
                     return BadRequest("User name is already exists.");
                 }
 
-                user = Mapper.Map<UserDto, User>(userModel);
+                user = Mapper.Map<User>(userModel);
                 var errors = await CreateUser(user, userModel.Password).ConfigureAwait(false);
                 if (errors != null)
                 {
@@ -181,7 +181,7 @@ namespace TaskManager.Api.Controllers
         {
             var token = await GetJwtSecurityToken(user).ConfigureAwait(false);
 
-            var userDto = Mapper.Map<User, UserDto>(user);
+            var userDto = Mapper.Map<UserDto>(user);
             userDto.AccessToken = new JwtSecurityTokenHandler().WriteToken(token);
             userDto.TokenExpireDate = token.ValidTo;
 

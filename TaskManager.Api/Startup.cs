@@ -11,11 +11,14 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 using Microsoft.IdentityModel.Tokens;
 using Swashbuckle.AspNetCore.Swagger;
 using TaskManager.Api.Hubs;
 using TaskManager.Api.Models.Configs;
 using TaskManager.Api.Models.DataModel;
+using TaskManager.Api.Services;
+using TaskManager.Core.Exchange;
 using TaskManager.Core.Model;
 using TaskManager.Core.Repository;
 
@@ -42,7 +45,11 @@ namespace TaskManager.Api
             services.AddTransient<IRepository<WorkTask, long>, TaskRepository>(serv => new TaskRepository(connectionString));
             services.AddTransient<IRepository<State, int>, StateRepository>(serv => new StateRepository(connectionString));
             services.AddTransient<IRepository<Priority, int>, PriorityRepository>(serv => new PriorityRepository(connectionString));
+            services.AddTransient<IExchangeRepository, ExchangeRepository>(serv => new ExchangeRepository(connectionString));
+            services.AddTransient<IRateGatter, RateGatter>();
+            services.AddTransient<IExchangeRateJob, ExchangeRateJob>();
             services.AddSingleton<IAccountConfig, AccountConfig>(serv => accountConfig);
+            services.AddSingleton<IHostedService, ExchangeService>();
 
             services.AddDbContext<TaskDbContext>(options => options.UseSqlServer(connectionString));
 
@@ -132,7 +139,7 @@ namespace TaskManager.Api
             services.AddMemoryCache();
         }
 
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env)
+        public void Configure(IApplicationBuilder app, Microsoft.AspNetCore.Hosting.IHostingEnvironment env)
         {
             if (env.IsDevelopment())
             {

@@ -31,7 +31,7 @@ namespace TaskManager.Api.Controllers
         [HttpGet]
         public async Task<IEnumerable<TaskDto>> GetWorkTasks()
         {
-            return Mapper.Map<IEnumerable<WorkTask>, IEnumerable<TaskDto>>(await _repository.Get().ConfigureAwait(false));
+            return Mapper.Map<IEnumerable<TaskDto>>(await _repository.Get().ConfigureAwait(false));
         }
 
         [HttpGet("list/{userId}")]
@@ -50,7 +50,7 @@ namespace TaskManager.Api.Controllers
                 return NotFound();
             }
 
-            return Mapper.Map<WorkTask, TaskDto>(workTask);
+            return Mapper.Map<TaskDto>(workTask);
         }
 
         [HttpPut("{id}")]
@@ -63,8 +63,8 @@ namespace TaskManager.Api.Controllers
 
             try
             {
-                var task = await _repository.Update(Mapper.Map<TaskDto, WorkTask>(workTask)).ConfigureAwait(false);
-                var result = Mapper.Map<WorkTask, TaskDto>(task);
+                var task = await _repository.Update(Mapper.Map<WorkTask>(workTask)).ConfigureAwait(false);
+                var result = Mapper.Map<TaskDto>(task);
                 await _taskHub.Clients.All.SendAsync("editTask", result).ConfigureAwait(false);
                 return result;
             }
@@ -84,9 +84,9 @@ namespace TaskManager.Api.Controllers
         [HttpPost]
         public async Task<ActionResult<TaskDto>> PostWorkTask(TaskDto workTask)
         {
-            var task = await _repository.Create(Mapper.Map<TaskDto, WorkTask>(workTask)).ConfigureAwait(false);
+            var task = await _repository.Create(Mapper.Map<WorkTask>(workTask)).ConfigureAwait(false);
 
-            var dto = Mapper.Map<WorkTask, TaskDto>(task);
+            var dto = Mapper.Map<TaskDto>(task);
             await _taskHub.Clients.All.SendAsync("createTask", dto).ConfigureAwait(false);
             return CreatedAtAction("GetWorkTask", new { id = dto.Id }, dto);
         }
@@ -102,7 +102,7 @@ namespace TaskManager.Api.Controllers
 
             await _repository.Delete(id).ConfigureAwait(false);
 
-            var dto = Mapper.Map<WorkTask, TaskDto>(workTask);
+            var dto = Mapper.Map<TaskDto>(workTask);
             await _taskHub.Clients.All.SendAsync("deleteTask", dto).ConfigureAwait(false);
             return dto;
         }

@@ -11,6 +11,7 @@ namespace TaskManager.Api.Models
         {
             CreateMap<User, UserDto>().ForMember(nameof(UserDto.Provider), opt => opt.MapFrom(nameof(User.LoginProvider))).ReverseMap();
             CreateMap<WorkTask, TaskDto>().ReverseMap();
+            CreateMap<ExchangeRate, ExchangeRateDto>().ReverseMap();
         }
     }
 }
