@@ -5,6 +5,6 @@ namespace TaskManager.Core.Exchange
 {
     public interface IExchangeRateJob
     {
-        Task Execute(CancellationToken stoppingToken = default);
+        Task ExecuteAsync(CancellationToken stoppingToken = default);
     }
 }

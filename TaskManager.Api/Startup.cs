@@ -42,13 +42,13 @@ namespace TaskManager.Api
             var accountConfig = new AccountConfig(Configuration);
             string connectionString = Configuration["Data:DefaultConnection:ConnectionString"];
             services.AddCors();
-            services.AddTransient<IRepository<WorkTask, long>, TaskRepository>(serv => new TaskRepository(connectionString));
-            services.AddTransient<IRepository<State, int>, StateRepository>(serv => new StateRepository(connectionString));
-            services.AddTransient<IRepository<Priority, int>, PriorityRepository>(serv => new PriorityRepository(connectionString));
-            services.AddTransient<IExchangeRepository, ExchangeRepository>(serv => new ExchangeRepository(connectionString));
+            services.AddTransient<IRepository<WorkTask, long>>(serv => new TaskRepository(connectionString));
+            services.AddTransient<IRepository<State, int>>(serv => new StateRepository(connectionString));
+            services.AddTransient<IRepository<Priority, int>>(serv => new PriorityRepository(connectionString));
+            services.AddTransient<IExchangeRepository>(serv => new ExchangeRepository(connectionString));
             services.AddTransient<IRateGatter, RateGatter>();
             services.AddTransient<IExchangeRateJob, ExchangeRateJob>();
-            services.AddSingleton<IAccountConfig, AccountConfig>(serv => accountConfig);
+            services.AddSingleton<IAccountConfig>(serv => accountConfig);
             services.AddSingleton<IHostedService, ExchangeService>();
 
             services.AddDbContext<TaskDbContext>(options => options.UseSqlServer(connectionString));

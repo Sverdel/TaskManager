@@ -39,11 +39,11 @@ namespace TaskManager.Core.Repository
             }
         }
 
-        public async Task<DateTime?> GetLastDateTime()
+        public async Task<DateTime> GetLastDateTime()
         {
             using (IDbConnection db = new SqlConnection(_connectionString))
             {
-                return await db.ExecuteScalarAsync<DateTime?>("SELECT TOP 1 Date FROM dbo.ExchangeRate order by Date desc").ConfigureAwait(false);
+                return await db.ExecuteScalarAsync<DateTime?>("SELECT TOP 1 Date FROM dbo.ExchangeRate order by Date desc").ConfigureAwait(false) ?? DateTime.MinValue;
             }
         }
     }

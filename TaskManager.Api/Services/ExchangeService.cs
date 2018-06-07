@@ -14,6 +14,6 @@ namespace TaskManager.Api.Services
             _job = job;
         }
 
-        protected override Task ExecuteAsync(CancellationToken stoppingToken) => _job.Execute(stoppingToken);
+        protected override Task ExecuteAsync(CancellationToken stoppingToken) => _job.ExecuteAsync(stoppingToken);
     }
 }

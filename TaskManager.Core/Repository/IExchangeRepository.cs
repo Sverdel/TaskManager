@@ -10,6 +10,6 @@ namespace TaskManager.Core.Repository
 
         Task<ExchangeRate> GetLatest(Currency currency);
 
-        Task<DateTime?> GetLastDateTime();
+        Task<DateTime> GetLastDateTime();
     }
 }
