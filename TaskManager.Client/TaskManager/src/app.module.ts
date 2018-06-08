@@ -26,8 +26,10 @@ import { TaskService } from './services/task.service';
 import { SignalRService } from './services/signalr.service';
 import { TokenService } from './services/token.service';
 import { AlertService } from './services/alert.service';
+import { ExchangeRateService } from './services/exchange-rate.service';
 
 import { FromDictionaryPipe } from './pipes/fromDictionary.pipe';
+import { ExchangeRateComponent } from './components/exchange-rate/exchange-rate.component';
 
 @NgModule({
     declarations: [
@@ -38,10 +40,10 @@ import { FromDictionaryPipe } from './pipes/fromDictionary.pipe';
         TasklistComponent,
         TaskComponent,
         AlertComponent,
+        AlertComponent,
+        ExchangeRateComponent,
 
-        FromDictionaryPipe,
-
-        AlertComponent
+        FromDictionaryPipe
     ],
     providers: [
         AuthService,
@@ -50,6 +52,7 @@ import { FromDictionaryPipe } from './pipes/fromDictionary.pipe';
         SignalRService,
         TokenService,
         AlertService,
+        ExchangeRateService,
         {
             provide: HTTP_INTERCEPTORS,
             useClass: TokenInterceptor,
