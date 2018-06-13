@@ -20,8 +20,8 @@ export class ExchangeRateService {
             return undefined;
         }
 
-        let usd = this.http.get(this.exchangeUrl + "USD");
-        let eur = this.http.get(this.exchangeUrl + "EUR");
+        let usd = this.http.get<ExchangeRate>(this.exchangeUrl + "USD");
+        let eur = this.http.get<ExchangeRate>(this.exchangeUrl + "EUR");
         
         forkJoin([usd, eur]).subscribe(results => {
             this.rates = <ExchangeRate[]><any>results;

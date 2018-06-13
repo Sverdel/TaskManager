@@ -40,14 +40,9 @@ namespace TaskManager.Api
         public void ConfigureServices(IServiceCollection services)
         {
             var accountConfig = new AccountConfig(Configuration);
-            string connectionString = Configuration["Data:DefaultConnection:ConnectionString"];
+            var connectionString = Configuration["Data:DefaultConnection:ConnectionString"];
             services.AddCors();
-            services.AddTransient<IRepository<WorkTask, long>>(serv => new TaskRepository(connectionString));
-            services.AddTransient<IRepository<State, int>>(serv => new StateRepository(connectionString));
-            services.AddTransient<IRepository<Priority, int>>(serv => new PriorityRepository(connectionString));
-            services.AddTransient<IExchangeRepository>(serv => new ExchangeRepository(connectionString));
-            services.AddTransient<IRateGatter, RateGatter>();
-            services.AddTransient<IExchangeRateJob, ExchangeRateJob>();
+            Core.Startup.ConfigureServices(services, connectionString);
             services.AddSingleton<IAccountConfig>(serv => accountConfig);
             services.AddSingleton<IHostedService, ExchangeService>();
 
