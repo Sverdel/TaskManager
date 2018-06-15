@@ -1,6 +1,7 @@
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Runtime.InteropServices;
 using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Hosting.WindowsServices;
@@ -11,6 +12,17 @@ namespace TaskManager.Client
     {
         public static void Main(string[] args)
         {
+            if (!RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+            {
+                WebHost.CreateDefaultBuilder(args)
+                    .UseStartup<Startup>()
+                    .UseUrls("http://localhost:5002/")
+                    .Build()
+                    .Run();
+
+                return;
+            }
+
             var isService = !Debugger.IsAttached && !args.Contains("--console");
 
             var contentRoot = isService
