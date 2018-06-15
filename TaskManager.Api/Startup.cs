@@ -102,22 +102,6 @@ namespace TaskManager.Api
 
             });
 
-            //services.AddSwaggerGen(c =>
-            //{
-            //    c.SwaggerDoc("v1", new Info { Title = "My API", Version = "v1" });
-
-            //    c.AddSecurityDefinition("oauth2", new OAuth2Scheme
-            //    {
-            //        Flow = "implicit",
-            //        AuthorizationUrl = "https://www.facebook.com/v2.6/dialog/oauth",
-            //        //Scopes = new Dictionary<string, string> {
-            //        //    { "public_profile", "public_profile"},
-            //        //    { "email", "email" }
-            //        //},
-            //        //TokenUrl = "/signin-facebook"
-            //    });
-            //});
-
             services.AddIdentity<User, IdentityRole>(config =>
             {
                 config.User.RequireUniqueEmail = false;
@@ -147,6 +131,7 @@ namespace TaskManager.Api
             }
 
             app.UseCors(builder => builder.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod().AllowCredentials());
+            app.UseHttpsRedirection();
             app.UseDefaultFiles();
             app.UseStaticFiles();
             app.UseAuthentication();
@@ -156,16 +141,6 @@ namespace TaskManager.Api
 
             app.UseSwagger();
             app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "My API V1"));
-            //app.UseSwaggerUI(c =>
-            //{
-            //    c.SwaggerEndpoint("/swagger/v1/swagger.json", "My API V1");
-
-            //    c.OAuthAppName("TestAuth");
-            //    c.OAuthClientId(Configuration["Authentication:Facebook:AppId"]);
-            //    c.OAuthClientSecret(Configuration["Authentication:Facebook:AppSecret"]);
-            //    c.OAuth2RedirectUrl("http://localhost:54255/signin-facebook");
-            //    c.OAuthUseBasicAuthenticationWithAccessCodeGrant();
-            //});
         }
     }
 }

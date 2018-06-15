@@ -41,6 +41,7 @@ namespace TaskManager.Client
             app.UseCors(builder => builder.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod().AllowCredentials());
             app.UseStaticFiles();
             app.UseSpaStaticFiles();
+            app.UseHttpsRedirection();
 
             app.UseSpa(spa =>
             {

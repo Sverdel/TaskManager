@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Threading.Tasks;
 using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Mvc;
 using TaskManager.Api.Models.Dto;
 using TaskManager.Core.Model;
@@ -11,6 +13,7 @@ namespace TaskManager.Api.Controllers
     [Produces("application/json")]
     [Route("api/rate")]
     [ApiController]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     public class ExchangeRateController : ControllerBase
     {
         private readonly IExchangeRepository _repository;
