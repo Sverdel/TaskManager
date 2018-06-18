@@ -19,6 +19,7 @@ import { PageNotFoundComponent } from './components/page-not-found/page-not-foun
 import { TasklistComponent } from './components/tasklist/tasklist.component';
 import { TaskComponent } from './components/task/task.component';
 import { AlertComponent } from './components/alert/alert.component';
+import { ClockComponent } from './components/clock/clock.component';
 
 import { AuthService } from './services/auth.service';
 import { ResourceService } from './services/resource.service';
@@ -30,6 +31,7 @@ import { ExchangeRateService } from './services/exchange-rate.service';
 
 import { FromDictionaryPipe } from './pipes/fromDictionary.pipe';
 import { ExchangeRateComponent } from './components/exchange-rate/exchange-rate.component';
+
 
 @NgModule({
     declarations: [
@@ -43,7 +45,9 @@ import { ExchangeRateComponent } from './components/exchange-rate/exchange-rate.
         AlertComponent,
         ExchangeRateComponent,
 
-        FromDictionaryPipe
+        FromDictionaryPipe,
+
+        ClockComponent
     ],
     providers: [
         AuthService,
