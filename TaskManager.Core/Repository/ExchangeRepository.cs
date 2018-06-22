@@ -19,7 +19,7 @@ namespace TaskManager.Core.Repository
         {
             using (IDbConnection db = new SqlConnection(_connectionString))
             {
-                return await db.QueryFirstAsync<ExchangeRate>(
+                return await db.QueryFirstOrDefaultAsync<ExchangeRate>(
                                 @"select top 1 
                                     Id, Date, Currency, Rate 
                                 from dbo.ExchangeRate 

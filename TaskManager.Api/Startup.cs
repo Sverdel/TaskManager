@@ -18,9 +18,6 @@ using TaskManager.Api.Hubs;
 using TaskManager.Api.Models.Configs;
 using TaskManager.Api.Models.DataModel;
 using TaskManager.Api.Services;
-using TaskManager.Core.Exchange;
-using TaskManager.Core.Model;
-using TaskManager.Core.Repository;
 
 namespace TaskManager.Api
 {
@@ -137,7 +134,11 @@ namespace TaskManager.Api
             app.UseAuthentication();
             app.UseMvc();
 
-            app.UseSignalR(r => r.MapHub<TaskHub>("/task"));
+            app.UseSignalR(r =>
+            {
+                r.MapHub<TaskHub>("/task");
+                r.MapHub<ExchangeHub>("/exchange");
+            });
 
             app.UseSwagger();
             app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "My API V1"));
