@@ -5,6 +5,7 @@ namespace TaskManager.Core.Model
     public class WorkTask
     {
         public long Id { get; set; }
+
         public string Name { get; set; }
 
         public string Description { get; set; }

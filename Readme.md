@@ -1,1 +1,1 @@
-[![Build Status](https://travis-ci.org/Sverdel/TaskManager.svg?branch=master)](https://travis-ci.org/Sverdel/TaskManager)
+Last build: [![Build Status](https://travis-ci.org/Sverdel/TaskManager.svg?branch=master)](https://travis-ci.org/Sverdel/TaskManager)
