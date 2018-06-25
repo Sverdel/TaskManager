@@ -1,2 +1,3 @@
 language: csharp
 solution: TaskManager.sln
+os: windows
