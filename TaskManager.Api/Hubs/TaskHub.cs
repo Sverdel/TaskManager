@@ -8,17 +8,17 @@ namespace TaskManager.Api.Hubs
     {
         public void CreateTask(TaskDto task)
         {
-            Clients.AllExcept(new List<string> { this.Context.ConnectionId }).createTask(task);
+            Clients.AllExcept(new List<string> { Context.ConnectionId }).createTask(task);
         }
 
         public void EditTask(TaskDto task)
         {
-            Clients.AllExcept(new List<string> { this.Context.ConnectionId }).editTask(task);
+            Clients.AllExcept(new List<string> { Context.ConnectionId }).editTask(task);
         }
 
         public void DeleteTask(TaskDto task)
         {
-            Clients.AllExcept(new List<string> { this.Context.ConnectionId }).deleteTask(task);
+            Clients.AllExcept(new List<string> { Context.ConnectionId }).deleteTask(task);
         }
     }
 }

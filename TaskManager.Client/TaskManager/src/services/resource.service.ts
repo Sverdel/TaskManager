@@ -1,11 +1,11 @@
 ﻿import { Injectable } from "@angular/core";
 import { Observable } from "rxjs";
-import { State } from "./../models/state";
-import { Priority } from "./../models/priority";
+import { State } from "@models/state";
+import { Priority } from "@models/priority";
 import { HttpClient } from "@angular/common/http";
-import { AuthService } from "./auth.service";
+import { AuthService } from "@services/auth.service";
 import { map } from "rxjs/operators"
-import { Environment } from "./../environments/environment"
+import { Environment } from "@environments/environment"
 
 @Injectable()
 export class ResourceService {

@@ -3,7 +3,7 @@ import { Router } from "@angular/router";
 import { HttpRequest, HttpHandler, HttpEvent, HttpInterceptor, HttpResponse, HttpErrorResponse } from '@angular/common/http';
 import { Observable } from "rxjs";
 import { tap } from 'rxjs/operators';
-import { AlertService } from "./../services/alert.service";
+import { AlertService } from "@services/alert.service";
 
 @Injectable()
 export class ErrorInterceptor implements HttpInterceptor {

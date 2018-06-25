@@ -6,9 +6,9 @@ import { isPlatformBrowser, isPlatformServer } from '@angular/common';
 import { Observable } from "rxjs";
 import { map, catchError } from "rxjs/operators";
 
-import { TokenService } from './token.service';
-import { Environment } from "./../environments/environment"
-import { User } from "../models/user";
+import { TokenService } from '@services/token.service';
+import { Environment } from "@environments/environment"
+import { User } from "@models/user";
 
 @Injectable()
 export class AuthService {

@@ -8,7 +8,7 @@ namespace TaskManager.Api.Hubs
     {
         public void rateChanged(ExchangeRateDto rate)
         {
-            Clients.AllExcept(new List<string> { this.Context.ConnectionId }).rateChanged(rate);
+            Clients.AllExcept(new List<string> { Context.ConnectionId }).rateChanged(rate);
         }
     }
 }

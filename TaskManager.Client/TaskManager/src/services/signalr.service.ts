@@ -1,9 +1,9 @@
 import { EventEmitter, Injectable } from '@angular/core';
 import { HubConnectionBuilder, HubConnection } from '@aspnet/signalr';
-import { Task } from "./../models/task";
-import { ExchangeRate } from "./../models/exchange-rate";
+import { Task } from "@models/task";
+import { ExchangeRate } from "@models/exchange-rate";
 import { HttpClient } from "@angular/common/http"
-import { Environment } from "../environments/environment";
+import { Environment } from "@environments/environment";
 
 @Injectable()
 export class SignalRService {

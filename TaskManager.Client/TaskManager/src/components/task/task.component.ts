@@ -1,12 +1,12 @@
 ﻿import { Component, NgZone, Input, OnInit } from "@angular/core";
 import { Router } from "@angular/router";
-import { Task } from "./../../models/task";
-import { State } from "./../../models/state";
-import { Priority } from "./../../models/priority";
-import { TaskService } from "./../../services/task.service";
-import { AuthService } from "./../../services/auth.service";
-import { ResourceService } from "./../../services/resource.service";
-import { SignalRService } from "../../services/signalr.service";
+import { Task } from "@models/task";
+import { State } from "@models/state";
+import { Priority } from "@models/priority";
+import { TaskService } from "@services/task.service";
+import { AuthService } from "@services/auth.service";
+import { ResourceService } from "@services/resource.service";
+import { SignalRService } from "@services/signalr.service";
 import { HttpErrorResponse } from "@angular/common/http";
 
 @Component({

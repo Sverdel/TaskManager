@@ -1,9 +1,9 @@
 ﻿import { Component, OnInit } from '@angular/core';
-import { TaskService } from "../../services/task.service";
-import { AuthService } from "../../services/auth.service";
-import { SignalRService } from "../../services/signalr.service";
-import { ResourceService } from "../../services/resource.service";
-import { Task } from "./../../models/task";
+import { TaskService } from "@services/task.service";
+import { AuthService } from "@services/auth.service";
+import { SignalRService } from "@services/signalr.service";
+import { ResourceService } from "@services/resource.service";
+import { Task } from "@models/task";
 
 @Component({
     selector: 'tasklist',
