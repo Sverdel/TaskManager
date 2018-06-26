@@ -5,5 +5,4 @@
         public bool Success { get; set; }
         public Rates Rates { get; set; }
     }
-
 }

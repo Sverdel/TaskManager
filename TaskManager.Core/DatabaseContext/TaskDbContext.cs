@@ -1,10 +1,9 @@
-﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using TaskManager.Core.Model;
 
-namespace TaskManager.Api.Models.DataModel
+namespace TaskManager.Core.DatabaseContext
 {
-    public class TaskDbContext : IdentityDbContext<User>
+    public class TaskDbContext : DbContext
     {
         public virtual DbSet<ExchangeRate> ExchangeRate { get; set; }
         public virtual DbSet<Priority> Priorities { get; set; }
@@ -14,8 +13,6 @@ namespace TaskManager.Api.Models.DataModel
         public TaskDbContext(DbContextOptions options) : base(options)
         {
         }
-
-        public TaskDbContext CreateDbContext(string[] args) => throw new System.NotImplementedException();
 
         protected override void OnModelCreating(ModelBuilder builder)
         {

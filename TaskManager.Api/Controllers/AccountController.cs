@@ -10,6 +10,7 @@ using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using TaskManager.Api.Models.Configs;
+using TaskManager.Api.Models.DatabaseContext;
 using TaskManager.Api.Models.DataModel;
 using TaskManager.Api.Models.Dto;
 
@@ -22,12 +23,12 @@ namespace TaskManager.Api.Controllers
     {
         private readonly IAccountConfig _config;
         private readonly UserManager<User> _userManager;
-        private readonly TaskDbContext _dbContext;
+        private readonly TaskIdentityContext _dbContext;
         private readonly RoleManager<IdentityRole> _roleManager;
         private readonly SignInManager<User> _signinManager;
         private readonly string _role = "User";
 
-        public AccountController(TaskDbContext context, UserManager<User> userManager, RoleManager<IdentityRole> roleManager, SignInManager<User> signinManager, IAccountConfig config)
+        public AccountController(TaskIdentityContext context, UserManager<User> userManager, RoleManager<IdentityRole> roleManager, SignInManager<User> signinManager, IAccountConfig config)
         {
             _config = config;
             _userManager = userManager;

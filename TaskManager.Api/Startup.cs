@@ -16,6 +16,7 @@ using Microsoft.IdentityModel.Tokens;
 using Swashbuckle.AspNetCore.Swagger;
 using TaskManager.Api.Hubs;
 using TaskManager.Api.Models.Configs;
+using TaskManager.Api.Models.DatabaseContext;
 using TaskManager.Api.Models.DataModel;
 using TaskManager.Api.Services;
 
@@ -43,7 +44,7 @@ namespace TaskManager.Api
             services.AddSingleton<IAccountConfig>(serv => accountConfig);
             services.AddSingleton<IHostedService, ExchangeService>();
 
-            services.AddDbContext<TaskDbContext>(options => options.UseSqlServer(connectionString));
+            services.AddDbContext<TaskIdentityContext>(options => options.UseSqlServer(connectionString));
 
             
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
@@ -109,7 +110,7 @@ namespace TaskManager.Api
                 config.Password.RequireLowercase = false;
                 config.Password.RequireDigit = false;
             })
-            .AddEntityFrameworkStores<TaskDbContext>()
+            .AddEntityFrameworkStores<TaskIdentityContext>()
             .AddDefaultTokenProviders();
 
             services.AddMemoryCache();

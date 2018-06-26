@@ -3,15 +3,18 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
+using TaskManager.Api.Models.DatabaseContext;
 using TaskManager.Api.Models.DataModel;
 
 namespace TaskManager.Api.Migrations
 {
-    [DbContext(typeof(TaskDbContext))]
-    partial class TaskDbContextModelSnapshot : ModelSnapshot
+    [DbContext(typeof(TaskIdentityContext))]
+    [Migration("20180626023724_InitialCreate")]
+    partial class InitialCreate
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -178,94 +181,6 @@ namespace TaskManager.Api.Migrations
                         .HasFilter("[NormalizedUserName] IS NOT NULL");
 
                     b.ToTable("AspNetUsers");
-                });
-
-            modelBuilder.Entity("TaskManager.Core.Model.ExchangeRate", b =>
-                {
-                    b.Property<int?>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<int>("Currency");
-
-                    b.Property<DateTime>("Date");
-
-                    b.Property<decimal>("Rate");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("ExchangeRate");
-                });
-
-            modelBuilder.Entity("TaskManager.Core.Model.Priority", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<string>("Name");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Priorities");
-
-                    b.HasData(
-                        new { Id = 1, Name = "Hight" },
-                        new { Id = 2, Name = "Normal" },
-                        new { Id = 3, Name = "Low" }
-                    );
-                });
-
-            modelBuilder.Entity("TaskManager.Core.Model.State", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<string>("Name");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("States");
-
-                    b.HasData(
-                        new { Id = 1, Name = "Created" },
-                        new { Id = 2, Name = "Active" },
-                        new { Id = 3, Name = "Closed" }
-                    );
-                });
-
-            modelBuilder.Entity("TaskManager.Core.Model.WorkTask", b =>
-                {
-                    b.Property<long>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<double>("ActualTimeCost");
-
-                    b.Property<DateTime>("ChangeDatetime");
-
-                    b.Property<DateTime>("CreateDateTime");
-
-                    b.Property<string>("Description");
-
-                    b.Property<string>("Name");
-
-                    b.Property<double>("PlanedTimeCost");
-
-                    b.Property<int>("PriorityId");
-
-                    b.Property<double>("RemainingTimeCost");
-
-                    b.Property<int>("StateId");
-
-                    b.Property<string>("UserId");
-
-                    b.Property<int>("Version");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("WorkTasks");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
