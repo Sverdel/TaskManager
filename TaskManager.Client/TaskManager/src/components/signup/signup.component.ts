@@ -1,7 +1,7 @@
 ﻿import { Component, OnInit } from '@angular/core';
 import { Router } from "@angular/router";
 import { AuthService } from "@services/auth.service";
-import { User } from "@models/user";
+import { Credentials } from "@models/credentials";
 
 @Component({
     selector: 'signup',
@@ -11,7 +11,7 @@ import { User } from "@models/user";
 /** signup component*/
 export class SignupComponent implements OnInit
 {
-    newUser: User = new User();
+    newUser: Credentials = new Credentials();
     /** Called by Angular after signup component initialized */
     ngOnInit(): void { }
 

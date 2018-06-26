@@ -16,7 +16,14 @@ namespace TaskManager.Core.DatabaseContext
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
-            base.OnModelCreating(builder);
+            builder.Entity<ExchangeRate>()
+                   .Property(b => b.Date)
+                   .HasDefaultValueSql("getdate()");
+
+            builder.Entity<ExchangeRate>()
+                   .Property(b => b.Id)
+                   .UseSqlServerIdentityColumn();
+
             builder.Entity<Priority>().HasData(
                 new Priority { Id = 1, Name = "Hight" },
                 new Priority { Id = 2, Name = "Normal" },

@@ -68,12 +68,12 @@ namespace TaskManager.Api.Controllers
         /// <param name="userModel"></param>
         /// <returns></returns>
         [HttpPost("signup")]
-        public async Task<ActionResult<UserDto>> SignUp(UserDto userModel)
+        public async Task<ActionResult<UserDto>> SignUp(CredentialsDto userModel)
         {
             try
             {
                 // check if the Username/Email already exists
-                var user = await _userManager.FindByNameAsync(userModel.UserName).ConfigureAwait(false);
+                var user = await _userManager.FindByNameAsync(userModel.Name).ConfigureAwait(false);
                 if (user != null)
                 {
                     return BadRequest("User name is already exists.");

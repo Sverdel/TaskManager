@@ -14,7 +14,7 @@ namespace TaskManager.Core.Migrations
                 {
                     Id = table.Column<int>(nullable: false)
                         .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
-                    Date = table.Column<DateTime>(nullable: false),
+                    Date = table.Column<DateTime>(nullable: false, defaultValueSql: "getdate()"),
                     Rate = table.Column<decimal>(nullable: false),
                     Currency = table.Column<int>(nullable: false)
                 },

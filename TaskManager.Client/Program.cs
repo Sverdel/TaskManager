@@ -1,3 +1,4 @@
+using System;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
@@ -5,49 +6,65 @@ using System.Runtime.InteropServices;
 using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Hosting.WindowsServices;
+using Microsoft.Extensions.Configuration;
+using Serilog;
+using TaskManager.Client.Extensions;
 
 namespace TaskManager.Client
 {
-    public class Program
+    public static class Program
     {
         public static void Main(string[] args)
         {
-            if (!RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
-            {
-                WebHost.CreateDefaultBuilder(args)
-                    .UseStartup<Startup>()
-                    .UseUrls("http://localhost:5002/")
-                    .Build()
-                    .Run();
-
-                return;
-            }
-
-            var isService = !Debugger.IsAttached && !args.Contains("--console");
-
+            var isService = RuntimeInformation.IsOSPlatform(OSPlatform.Windows) && !Debugger.IsAttached && !args.Contains("--console");
             var contentRoot = isService
-                ? Path.GetDirectoryName(Process.GetCurrentProcess().MainModule.FileName)
-                : Directory.GetCurrentDirectory();
+                    ? Path.GetDirectoryName(Process.GetCurrentProcess().MainModule.FileName)
+                    : Directory.GetCurrentDirectory();
 
-            var webHostArgs = args.Where(arg => arg != "--console").ToArray();
+            var configuration = new ConfigurationBuilder()
+               .SetBasePath(contentRoot)
+               .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
+               .AddJsonFile($"appsettings.{Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT") ?? "Production"}.json", optional: true)
+               .AddEnvironmentVariables()
+               .Build();
 
-            var host = BuildWebHost(webHostArgs, contentRoot);
+            Log.Logger = new LoggerConfiguration()
+                .ReadFrom.Configuration(configuration)
+                .CreateLogger();
 
-            if (isService)
+
+            var host = BuildWebHost(args.Where(arg => arg != "--console").ToArray(), contentRoot);
+
+            try
             {
-                host.RunAsService();
+                Log.Information("Getting started...");
+
+                if (isService)
+                {
+                    host.RunAsService();
+                }
+                else
+                {
+                    host.Run();
+                }
             }
-            else
+            catch (Exception ex)
             {
-                host.Run();
+                Log.Fatal(ex, "Host terminated unexpectedly");
+            }
+            finally
+            {
+                Log.CloseAndFlush();
             }
         }
 
-        public static IWebHost BuildWebHost(string[] args, string contentRoot) =>
-            WebHost.CreateDefaultBuilder(args)
-                .UseStartup<Startup>()
-                .UseContentRoot(contentRoot)
-                .UseUrls("http://localhost:5002/")
-                .Build();
+        public static IWebHost BuildWebHost(string[] args, string contentRoot = null)
+        {
+            return WebHost.CreateDefaultBuilder<Startup>(args)
+                          .UseContentRootSafe(contentRoot)
+                          .UseUrls("http://localhost:5002/")
+                          .UseSerilog()
+                          .Build();
+        }
     }
 }

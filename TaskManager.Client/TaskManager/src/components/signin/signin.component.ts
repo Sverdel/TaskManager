@@ -1,6 +1,6 @@
 ﻿import { Component, OnInit } from '@angular/core';
 import { Router } from "@angular/router";
-import { User } from "@models/user";
+import { Credentials } from "@models/credentials";
 import { AuthService } from "@services/auth.service";
 
 @Component({
@@ -10,17 +10,17 @@ import { AuthService } from "@services/auth.service";
 })
 export class SigninComponent 
 {
-    user: User = new User();
+    user: Credentials = new Credentials();
 
     constructor(private authService: AuthService, private router: Router) { }
 
 
     signin() : void {
-        if (this.user == null || this.user.userName == null || this.user.password == null) {
+        if (this.user == null || this.user.name == null || this.user.password == null) {
             return;
         }
 
-        this.authService.signin(this.user.userName, this.user.password)
+        this.authService.signin(this.user)
             .subscribe((data: any) => {
                 this.router.navigate([""]);
             });

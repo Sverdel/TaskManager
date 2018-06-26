@@ -4,12 +4,13 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Migrations;
+using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using TaskManager.Core.DatabaseContext;
 
 namespace TaskManager.Core.Migrations
 {
     [DbContext(typeof(TaskDbContext))]
-    [Migration("20180626023547_InitialCreate")]
+    [Migration("20180626033118_InitialCreate")]
     partial class InitialCreate
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -28,7 +29,9 @@ namespace TaskManager.Core.Migrations
 
                     b.Property<int>("Currency");
 
-                    b.Property<DateTime>("Date");
+                    b.Property<DateTime>("Date")
+                        .ValueGeneratedOnAdd()
+                        .HasDefaultValueSql("getdate()");
 
                     b.Property<decimal>("Rate");
 

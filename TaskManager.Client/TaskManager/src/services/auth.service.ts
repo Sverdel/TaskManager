@@ -9,6 +9,7 @@ import { map, catchError } from "rxjs/operators";
 import { TokenService } from '@services/token.service';
 import { Environment } from "@environments/environment"
 import { User } from "@models/user";
+import { Credentials } from "@models/credentials";
 
 @Injectable()
 export class AuthService {
@@ -29,14 +30,10 @@ export class AuthService {
         return true;
     }
 
-    signin(username: string, password: string): Observable<boolean> {
+    signin(user: Credentials): Observable<boolean> {
         var url = Environment.apiUrl + "account/signin"; // JwtProvider's LoginPath
-        var data = {
-            name: username,
-            password: password
-        };
 
-        return this.http.post<User>(url, data)
+        return this.http.post<Credentials>(url, user)
             .pipe(map((response: User) => {
                 this.user = response;
                 this.tokenService.setUser(response);
@@ -57,7 +54,7 @@ export class AuthService {
     }
 
     signout(): Observable<boolean> {
-        return this.http.post<User>(Environment.apiUrl + "account/signout", null)
+        return this.http.post(Environment.apiUrl + "account/signout", null)
             .pipe(
                 map((response: any) => {
                     this.tokenService.setUser(undefined);
@@ -66,8 +63,8 @@ export class AuthService {
             );
     }
 
-    signup(user: User): Observable<boolean> {
-        return this.http.post<User>(Environment.apiUrl + "account/signup", user)
+    signup(user: Credentials): Observable<boolean> {
+        return this.http.post<Credentials>(Environment.apiUrl + "account/signup", user)
             .pipe(map((response: User) => {
                 this.user = response;
                 this.tokenService.setUser(response);

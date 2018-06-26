@@ -5,7 +5,6 @@ using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using TaskManager.Core.DatabaseContext;
-using TaskManager.Core.Model;
 
 namespace TaskManager.Core.Migrations
 {
@@ -28,7 +27,9 @@ namespace TaskManager.Core.Migrations
 
                     b.Property<int>("Currency");
 
-                    b.Property<DateTime>("Date");
+                    b.Property<DateTime>("Date")
+                        .ValueGeneratedOnAdd()
+                        .HasDefaultValueSql("getdate()");
 
                     b.Property<decimal>("Rate");
 
