@@ -21,6 +21,8 @@
 bld/
 [Bb]in/
 [Oo]bj/
+logs/
+.vscode/
 
 # Visual Studio 2015 cache/options directory
 .vs/

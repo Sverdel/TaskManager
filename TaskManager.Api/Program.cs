@@ -32,7 +32,6 @@ namespace TaskManager.Api
                 .ReadFrom.Configuration(configuration)
                 .CreateLogger();
 
-
             var host = BuildWebHost(args.Where(arg => arg != "--console").ToArray(), contentRoot);
 
             try
