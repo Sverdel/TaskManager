@@ -18,7 +18,9 @@ namespace TaskManager.Core
         public IEnumerable<ExchangeRate> Convert(ExchangeRates source, IEnumerable<ExchangeRate> destination, ResolutionContext context)
         {
             if (!source.Success)
+            {
                 yield break;
+            }
 
             foreach (Currency currency in Enum.GetValues(typeof(Currency)))
             {

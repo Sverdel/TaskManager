@@ -12,7 +12,7 @@ namespace TaskManager.Core.Exchange
         private readonly IExchangeRepository _repository;
         private readonly IRateGatter _getter;
         private readonly CronExpression _scheduler;
-        private Random rnd = new Random((int)DateTime.Now.Ticks);
+        private readonly Random rnd = new Random((int)DateTime.Now.Ticks);
 
         public ExchangeRateJob(IExchangeRepository repository, IRateGatter getter)
         {
