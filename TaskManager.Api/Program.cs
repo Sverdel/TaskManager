@@ -61,7 +61,7 @@ namespace TaskManager.Api
         {
             return WebHost.CreateDefaultBuilder<Startup>(args)
                           .UseContentRootSafe(contentRoot)
-                          .UseUrls("http://localhost:54255/")
+                          .UseUrls("http://*:54255/", "https://*:54256/")
                           .UseSerilog()
                           .Build();
         }

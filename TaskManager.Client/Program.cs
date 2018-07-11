@@ -62,7 +62,7 @@ namespace TaskManager.Client
         {
             return WebHost.CreateDefaultBuilder<Startup>(args)
                           .UseContentRootSafe(contentRoot)
-                          .UseUrls("http://localhost:5002/")
+                          .UseUrls("http://*:5002/", "https://*:5003/")
                           .UseSerilog()
                           .Build();
         }
