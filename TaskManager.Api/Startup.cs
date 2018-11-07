@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
+using App.Metrics.Health;
 using AutoMapper;
 using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -16,6 +17,7 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.IdentityModel.Tokens;
 using Swashbuckle.AspNetCore.Swagger;
 using TaskManager.Api.Hubs;
+using TaskManager.Api.Models;
 using TaskManager.Api.Models.Configs;
 using TaskManager.Api.Models.DatabaseContext;
 using TaskManager.Api.Models.DataModel;
@@ -47,7 +49,7 @@ namespace TaskManager.Api
 
             services.AddDbContext<TaskIdentityContext>(options => options.UseSqlServer(connectionString));
 
-            
+
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
                     .AddJwtBearer(options =>
                     {
@@ -79,9 +81,17 @@ namespace TaskManager.Api
             services.AddMvc()
                     .AddFluentValidation(cfg => cfg.RegisterValidatorsFromAssemblyContaining<Startup>())
                     .SetCompatibilityVersion(CompatibilityVersion.Latest);
+
             
+            Mapper.Initialize(x => x.AddProfile<MappingProfile>());
             services.AddAutoMapper();
             services.AddSignalR();
+            var metrics = AppMetricsHealth.CreateDefaultBuilder()
+                                          .HealthChecks.RegisterFromAssembly(services)
+                                          .BuildAndAddTo(services);
+
+            services.AddHealth(metrics);
+            services.AddHealthEndpoints();
 
             services.AddSwaggerGen(c =>
             {
@@ -134,6 +144,7 @@ namespace TaskManager.Api
             app.UseDefaultFiles();
             app.UseStaticFiles();
             app.UseAuthentication();
+            app.UseHealthAllEndpoints();
             app.UseMvc();
 
             app.UseSignalR(r =>
@@ -150,7 +161,7 @@ namespace TaskManager.Api
         private async Task CreateUserRoles(IServiceProvider serviceProvider)
         {
             var RoleManager = serviceProvider.GetRequiredService<RoleManager<IdentityRole>>();
-            
+
             if (!(await RoleManager.RoleExistsAsync("User").ConfigureAwait(false)))
             {
                 await RoleManager.CreateAsync(new IdentityRole("User")).ConfigureAwait(false);
